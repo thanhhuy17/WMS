@@ -20,6 +20,12 @@ const Login = () => {
     <div>
       <Card>
         <div className="text-center">
+          <img
+            width={"100px"}
+            height={"100px"}
+            src="https://firebasestorage.googleapis.com/v0/b/whms-81447.appspot.com/o/Logo2.png?alt=media&token=20160d42-27f1-4983-be07-d949cf994828"
+            alt=""
+          />
           <Title>Log in to your account</Title>
           <Paragraph type="secondary">
             Welcome back! Please enter your details.
