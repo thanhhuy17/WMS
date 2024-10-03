@@ -103,7 +103,7 @@ const SignUp = () => {
         <div className="mt-3 text-center">
           <Space>
             <Text type="secondary">Already have an account?</Text>
-            <Link to={"/login"}>Login</Link>
+            <Link to={"/"}>Login</Link>
           </Space>
         </div>
       </Card>

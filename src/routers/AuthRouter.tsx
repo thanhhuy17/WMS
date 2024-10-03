@@ -9,7 +9,7 @@ const AuthRouter = () => {
     <div className="container">
       <div className="row">
         {/* className="d-none d-sm-block" */}
-        <div className="col content-center flex-column">
+        <div className="col text-center flex-column my-auto d-none d-lg-block">
           <div className="mb-4">
             <img
               style={{ objectFit: "cover" }}
@@ -21,12 +21,12 @@ const AuthRouter = () => {
           <Title className="">WHMS</Title>
         </div>
 
-        <div className="col content-center">
+        <div className="col-sm-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3 content-center">
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Login />} />
 
-              <Route path="/login" element={<Login />} />
+              {/* <Route path="/login" element={<Login />} /> */}
               <Route path="/sign-up" element={<SignUp />} />
             </Routes>
           </BrowserRouter>
