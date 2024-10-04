@@ -1,7 +1,17 @@
-import { Button, Card, Checkbox, Form, Input, Space, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Form,
+  Input,
+  message,
+  Space,
+  Typography,
+} from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import SocialLogin from "./components/SocialLogin";
+import handleAPI from "../../apis/handleAPI";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -12,8 +22,24 @@ const SignUp = () => {
 
   const [form] = Form.useForm();
 
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log(values);
+  const handleRegister = async (values: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) => {
+    const api = `/auth/register`;
+    console.log("HuyMau: ", values);
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api, values, "post");
+      console.log(res);
+    } catch (error: any) {
+      console.log(error);
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,7 +62,7 @@ const SignUp = () => {
         <Form
           layout="vertical"
           form={form}
-          onFinish={handleLogin}
+          onFinish={handleRegister}
           disabled={isLoading}
           size="large"
         >
@@ -62,7 +88,20 @@ const SignUp = () => {
           <Form.Item
             name={"password"}
             label={"Password"}
-            rules={[{ required: true, message: "Enter your password!" }]}
+            rules={[
+              { required: true, message: "Enter your password!" },
+              () => ({
+                validator: (_, value) => {
+                  if (value.length < 8) {
+                    return Promise.reject(
+                      new Error(`Mật khẩu phải có ít nhất 8 ký tự!.`)
+                    );
+                  } else {
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
             <Input.Password
               maxLength={100}
@@ -73,7 +112,32 @@ const SignUp = () => {
           <Form.Item
             name={"confirmPassword"}
             label={"Confirm Password"}
-            rules={[{ required: true, message: "Enter your password!" }]}
+            rules={[
+              { required: true, message: "Enter your password!" },
+
+              () => ({
+                validator: (_, value) => {
+                  if (value.length < 8) {
+                    return Promise.reject(
+                      new Error(`Mật khẩu phải có ít nhất 8 ký tự!.`)
+                    );
+                  } else {
+                  }
+                  return Promise.resolve();
+                },
+              }),
+              // So sánh 2 Password để Confirm
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu khác nhau, mời nhập lại.")
+                  );
+                },
+              }),
+            ]}
           >
             <Input.Password
               maxLength={100}
@@ -91,12 +155,13 @@ const SignUp = () => {
 
         <div className="mt-4 mb-3">
           <Button
+            loading={isLoading}
             onClick={() => form.submit()}
             type="primary"
             style={{ width: "100%" }}
             size="large"
           >
-            Get started
+            Sign Up
           </Button>
         </div>
         <SocialLogin />
