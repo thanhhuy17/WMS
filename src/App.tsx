@@ -1,6 +1,14 @@
-import { ConfigProvider } from "antd";
+import { ConfigProvider, message } from "antd";
 import "./App.css";
 import Routers from "./routers/Routers";
+
+message.config({
+  top: 100,
+  duration: 2,
+  maxCount: 3,
+  rtl: true,
+  prefixCls: "my-message",
+});
 
 function App() {
   return (
