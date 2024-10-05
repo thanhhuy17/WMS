@@ -71,7 +71,7 @@ const SignUp = () => {
             label={"Name"}
             rules={[{ required: true, message: "Enter your name!" }]}
           >
-            <Input allowClear placeholder="Enter your name!" />
+            <Input allowClear placeholder="Please Enter your name!" />
           </Form.Item>
           <Form.Item
             name={"email"}
