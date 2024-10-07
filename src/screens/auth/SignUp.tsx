@@ -35,7 +35,7 @@ const SignUp = () => {
     try {
       const res = await handleAPI(api, values, "post");
       if (res.data.data) {
-        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data));
+        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data));
         dispatch(addAuth(res.data.data));
       }
       console.log("Phan hoi tu API: ", res.data.data);
