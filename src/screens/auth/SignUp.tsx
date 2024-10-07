@@ -12,28 +12,33 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import SocialLogin from "./components/SocialLogin";
 import handleAPI from "../../apis/handleAPI";
+import { useDispatch } from "react-redux";
+import { addAuth } from "../../redux/reducers/authReducer";
+import { localDataNames } from "../../constants/appInfos";
 
 const { Title, Paragraph, Text } = Typography;
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const [isRemember, setIsRemember] = useState(false);
-
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const handleRegister = async (values: {
     name: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    // confirmPassword: string;
   }) => {
     const api = `/auth/register`;
-    console.log("HuyMau: ", values);
+    console.log("Gia tri dua qua server: ", values);
     setIsLoading(true);
     try {
       const res = await handleAPI(api, values, "post");
-      console.log(res);
+      if (res.data.data) {
+        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data));
+        dispatch(addAuth(res.data.data));
+      }
+      console.log("Phan hoi tu API: ", res.data.data);
     } catch (error: any) {
       console.log(error);
       message.error(error.message);
@@ -109,7 +114,7 @@ const SignUp = () => {
               placeholder="Create a password!"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name={"confirmPassword"}
             label={"Confirm Password"}
             rules={[
@@ -144,7 +149,7 @@ const SignUp = () => {
               type="password"
               placeholder="Confirm Password!"
             />
-          </Form.Item>
+          </Form.Item> */}
         </Form>
 
         <div className="row">

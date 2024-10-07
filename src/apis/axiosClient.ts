@@ -21,15 +21,15 @@ axiosClient.interceptors.request.use(async (config: any) => {
 axios.interceptors.response.use(
     (res) => {
         if (res.data && res.status >= 200 && res.status < 300) {
-            return res.data
+            return res.data.data
         }
         else {
-            return Promise.reject(res.data)
+            return Promise.reject(res.data.data)
         }
     },
     (error) => {
         const { response } = error
-        return Promise.reject(response.data)
+        return Promise.reject(response.data.data)
     }
 )
 export default axiosClient
