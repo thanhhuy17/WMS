@@ -10,6 +10,13 @@
 
 - npm start
 
+# User Login:
+
+username: Nguyen Thanh Huy
+
+*email: huynguyen@gmail.com
+*pass: HuyBen99
+
 npx create-react-app kanban --template typescript
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

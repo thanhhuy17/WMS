@@ -33,12 +33,13 @@ const SignUp = () => {
     console.log("Gia tri dua qua server: ", values);
     setIsLoading(true);
     try {
-      const res = await handleAPI(api, values, "post");
-      if (res.data.data) {
-        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data));
-        dispatch(addAuth(res.data.data));
+      const res: any = await handleAPI(api, values, "post");
+      if (res.data) {
+        // localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data));
+        message.success(res.message);
+        dispatch(addAuth(res.data));
       }
-      console.log("Phan hoi tu API: ", res.data.data);
+      console.log("Phan hoi tu API: ", res.data);
     } catch (error: any) {
       console.log(error);
       message.error(error.message);
