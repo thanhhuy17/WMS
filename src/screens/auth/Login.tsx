@@ -23,18 +23,22 @@ const Login = () => {
   const [isRemember, setIsRemember] = useState(false);
 
   const [form] = Form.useForm();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleLogin = async (values: { email: string; password: string }) => {
+    setIsLoading(true);
     console.log("Info Login Send to Server: ", values);
     try {
       const res: any = await handleAPI("/auth/login", values, "post");
       message.success(res.message);
 
-      res.data && dispatch(addAuth(res.data))
-
+      res.data && dispatch(addAuth(res.data));
     } catch (error: any) {
       message.error(error.message);
+
+      console.log("Check sai pass: ", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -102,6 +106,7 @@ const Login = () => {
 
         <div className="mt-4 mb-3">
           <Button
+            loading={isLoading}
             onClick={() => form.submit()}
             type="primary"
             style={{ width: "100%" }}
