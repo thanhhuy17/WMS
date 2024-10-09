@@ -4,7 +4,7 @@ import Routers from "./routers/Routers";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
-console.log("Check ENV: ", process.env.REACT_APP_apiKey);
+// console.log("Check ENV: ", process.env.REACT_APP_apiKey);
 
 message.config({
   top: 100,
