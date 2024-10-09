@@ -22,7 +22,7 @@ const authSlice = createSlice({
     reducers: {
         addAuth: (state, action) => {
             state.data = action.payload
-            syncLocal(action.payload)
+            // syncLocal(action.payload) // when to check isRemember => save in localStorage
         },
         removeAuth: (state, _action) => {
             state.data = initialState

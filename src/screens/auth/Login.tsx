@@ -14,6 +14,7 @@ import SocialLogin from "./components/SocialLogin";
 import handleAPI from "../../apis/handleAPI";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../redux/reducers/authReducer";
+import { localDataNames } from "../../constants/appInfos";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -27,16 +28,19 @@ const Login = () => {
 
   const handleLogin = async (values: { email: string; password: string }) => {
     setIsLoading(true);
-    console.log("Info Login Send to Server: ", values);
+    // console.log("Info Login Send to Server: ", values);
     try {
       const res: any = await handleAPI("/auth/login", values, "post");
       message.success(res.message);
 
       res.data && dispatch(addAuth(res.data));
+
+      // Checkbox isRemember = true
+      if (isRemember) {
+        localStorage.setItem(localDataNames.authData, JSON.stringify(res.data));
+      }
     } catch (error: any) {
       message.error(error.message);
-
-      console.log("Check sai pass: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +119,7 @@ const Login = () => {
             Login
           </Button>
         </div>
-        <SocialLogin />
+        <SocialLogin isRemember={isRemember} />
         <div className="mt-3 text-center">
           <Space>
             <Text type="secondary">Don't have an account?</Text>
