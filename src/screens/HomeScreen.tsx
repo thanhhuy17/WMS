@@ -1,10 +1,16 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { removeAuth } from "../redux/reducers/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  authSelector,
+  refreshToken,
+  removeAuth,
+} from "../redux/reducers/authReducer";
 import handleAPI from "../apis/handleAPI";
 
 const HomeScreen = () => {
+  const auth = useSelector(authSelector);
+  console.log("Check error h: ",auth);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,19 +20,25 @@ const HomeScreen = () => {
 
   const getProducts = async () => {
     const api = `/storage/products`;
-    // console.log(object);
-    setIsLoading(true);
     try {
       const res: any = await handleAPI(api);
       console.log("Check Get Data from Storage: ", res);
-      if(res.data){
-        message.success(res.message)
-      }
     } catch (error: any) {
+      console.log(error.error);
+      if (error.error === "jwt expired") {
+        handleRefreshToken();
+      }
+    }
+  };
+
+  const handleRefreshToken = async () => {
+    const api = `auth/refresh-token?id=${auth._id}`;
+    try {
+      const res = await handleAPI(api);
+      console.log("Check API refresh Token: ", res);
+      dispatch(refreshToken(res.data.token));
+    } catch (error) {
       console.log(error);
-      message.error(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
