@@ -21,7 +21,7 @@ const { Title, Paragraph, Text } = Typography;
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm(); // ???
 
   const handleRegister = async (values: {
     name: string;
@@ -34,12 +34,13 @@ const SignUp = () => {
     setIsLoading(true);
     try {
       const res: any = await handleAPI(api, values, "post");
+      console.log("Kiểm lỗi: ", res);
       if (res.data) {
         // localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data));
         message.success(res.message);
         dispatch(addAuth(res.data));
       }
-      console.log("Phan hoi tu API: ", res.data);
+      console.log("Phan hoi tu API Register: ", res.data);
     } catch (error: any) {
       console.log(error);
       message.error(error.message);

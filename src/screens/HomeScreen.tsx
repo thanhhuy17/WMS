@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,7 +10,7 @@ import handleAPI from "../apis/handleAPI";
 
 const HomeScreen = () => {
   const auth = useSelector(authSelector);
-  console.log("Check error h: ",auth);
+  console.log("Check error h: ", auth);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,6 +23,8 @@ const HomeScreen = () => {
     try {
       const res: any = await handleAPI(api);
       console.log("Check Get Data from Storage: ", res);
+      message.success(res?.message);
+
     } catch (error: any) {
       console.log(error.error);
       if (error.error === "jwt expired") {
@@ -36,9 +38,10 @@ const HomeScreen = () => {
     try {
       const res = await handleAPI(api);
       console.log("Check API refresh Token: ", res);
+      message.warning("Hết thời hạn hiệu lực \n Mời đăng nhập lại");
       dispatch(refreshToken(res.data.token));
     } catch (error) {
-      console.log(error);
+      console.log("Timeout Refresh Token: ", error);
     }
   };
 

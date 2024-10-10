@@ -18,15 +18,12 @@ axiosClient.interceptors.request.use(async (config: any) => {
     const accessToken = getAccessToken();
 
     config.headers = {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
         Accept: 'application/json',
         ...config.headers,
     };
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    config.data;
 
-    // console.log("Check config: ", config);
-    return config
+    return { ...config, data: config.data ?? null }
 })
 
 axiosClient.interceptors.response.use(
