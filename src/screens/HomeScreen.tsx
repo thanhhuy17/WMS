@@ -10,7 +10,7 @@ import handleAPI from "../apis/handleAPI";
 
 const HomeScreen = () => {
   const auth = useSelector(authSelector);
-  console.log("Check error h: ", auth);
+  // console.log("Check error h: ", auth);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 

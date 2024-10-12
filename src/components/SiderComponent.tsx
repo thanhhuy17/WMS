@@ -6,6 +6,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { PiShippingContainer } from "react-icons/pi";
 import { CgNotes } from "react-icons/cg";
 import { IoBarChartOutline } from "react-icons/io5";
+import { logo } from "../constants/appInfos";
 
 const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
@@ -68,7 +69,14 @@ const SiderComponent = () => {
   ];
   return (
     <Sider theme="light">
-      WHMS
+      <div className="mt-2 mb-2 text-center">
+        <img
+          width={"100px"}
+          height={"100px"}
+          src={logo}
+          alt="imgHome"
+        />
+      </div>
       <Menu items={items} theme="light" />
     </Sider>
   );
