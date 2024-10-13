@@ -100,7 +100,7 @@ const SiderComponent = () => {
     },
   ];
   return (
-    <Sider theme="light" style={{ height: "100vh" }}>
+    <Sider width={250} theme="light" style={{ height: "100vh" }}>
       <div className="d-flex mt-2 mb-2 align-items-center justify-content-center p-2">
         <img
           className="mx-2"

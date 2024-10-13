@@ -15,7 +15,7 @@ import {
 } from "../screens";
 import { HeaderComponent, SiderComponent } from "../components";
 // Chia Layout
-const { Header, Footer, Content } = Layout;
+const { Footer, Content } = Layout;
 const MainRouter = () => {
   return (
     <BrowserRouter>
@@ -23,7 +23,7 @@ const MainRouter = () => {
         <SiderComponent />
         <Layout>
           <HeaderComponent />
-          <Content>
+          <Content className="mt-3 mb-3 container bg-white">
             <Routes>
               <Route path="/" element={<HomeScreen />} />
               <Route path="/inventory" element={<InventoryScreen />} />
