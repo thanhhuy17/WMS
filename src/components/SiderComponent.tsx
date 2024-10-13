@@ -1,4 +1,4 @@
-import { Layout, Menu, MenuProps } from "antd";
+import { Layout, Menu, MenuProps, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { TfiShoppingCartFull } from "react-icons/tfi";
 import { TbHomeStats } from "react-icons/tb";
@@ -7,10 +7,22 @@ import { PiShippingContainer } from "react-icons/pi";
 import { CgNotes } from "react-icons/cg";
 import { IoBarChartOutline } from "react-icons/io5";
 import { appInfo } from "../constants/appInfos";
+import { colors } from "../constants/colors";
+import { FiSettings } from "react-icons/fi";
+import { IoLogOutOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { removeAuth } from "../redux/reducers/authReducer";
 
 const { Sider } = Layout;
+const { Text } = Typography;
 type MenuItem = Required<MenuProps>["items"][number];
+
 const SiderComponent = () => {
+  const dispatch = useDispatch();
+  const handleLogout = ()=>{
+    dispatch(removeAuth({}))
+  }
+
   const items: MenuItem[] = [
     {
       key: "dashboard",
@@ -67,13 +79,54 @@ const SiderComponent = () => {
       icon: <CgNotes size={20} />,
     },
   ];
+  const itemsSetting: MenuItem[] = [
+    {
+      key: "settings",
+      label: (
+        <Link to={"/settings"} style={{ textDecoration: "none" }}>
+          Settings
+        </Link>
+      ),
+      icon: <FiSettings size={20} />,
+    },
+    {
+      key: "logout",
+      label: (
+        <Link to = {'/'} style={{ textDecoration: "none" }} onClick={handleLogout}>
+          Log Out
+        </Link>
+      ),
+      icon: <IoLogOutOutline size={20} />,
+    },
+  ];
   return (
-    <Sider theme="light">
-      <div className="mt-2 mb-2 text-center">
-        <h2>{appInfo.title}</h2>
-        <img width={"80px"} height={"80px"} src={appInfo.logo} alt="imgHome" />
+    <Sider theme="light" style={{ height: "100vh" }}>
+      <div className="d-flex mt-2 mb-2 align-items-center justify-content-center p-2">
+        <img
+          className="mx-2"
+          width={"50px"}
+          height={"50px"}
+          src={appInfo.logo}
+          alt="imgHome"
+        />
+        <Text
+          style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            color: `${colors.mainColor}`,
+          }}
+        >
+          {appInfo.title}
+        </Text>
       </div>
-      <Menu items={items} theme="light" />
+
+      <div>
+        <Menu items={items} theme="light" />
+      </div>
+      {/*  fix */}
+      <div className="mt-5">
+        <Menu items={itemsSetting} theme="light" />
+      </div>
     </Sider>
   );
 };

@@ -1,0 +1,1 @@
+export const colors = { mainColor: '#7E7067' }  
