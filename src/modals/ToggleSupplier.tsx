@@ -1,7 +1,9 @@
-import { Button, Form, Input, message, Modal, Select } from "antd";
-import { useState } from "react";
+import { Avatar, Button, Form, Input, message, Modal, Select } from "antd";
+import { useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
+import { UserAdd } from "iconsax-react";
+import Paragraph from "antd/es/typography/Paragraph";
 
 interface Props {
   visible: boolean;
@@ -14,21 +16,38 @@ const ToggleSupplier = (props: Props) => {
   const { visible, onClose, onAddNew, supplier } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [isTaking, setIsTaking] = useState<boolean>();
-  const [form] = Form.useForm();
+  const [file, setFile] = useState();
+  const [form] = Form.useForm<any>();
+  const inpRef = useRef<any>();
 
   // ---------- SEND DATA TO BACKEND ------------
-  const addNewSupplier = async (values: Props) => {
+  const addNewSupplier = async (values: any) => {
     setIsLoading(true);
+    const data: any = {}
+    for(const i in values){
+      data[i] = values[i] ?? ''
+    }
+
+    data.price = values.price ? parseInt(values.price) : 0
+
+    data.isTaking = isTaking ? 1: 0
+
+    console.log("Check data Supplier to Server: ",data);
     try {
-      const res: any = await handleAPI(
-        "/supplier/add-new-supplier",
-        values,
-        "post"
-      );
-      message.success(res.message);
+      // const res: any = await handleAPI(
+      //   "/supplier/add-new-supplier",
+      //   data,
+      //   "post"
+      // );
+      // message.success(res.message);
       // dispatch to redux
-    } catch (error) {}
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  //-------------- CLOSE TOGGLE ---------------
   const handleClose = () => {
     form.resetFields();
     onClose();
@@ -36,17 +55,44 @@ const ToggleSupplier = (props: Props) => {
   return (
     <div>
       <Modal
+        loading={isLoading}
         // width={720}
         open={visible}
         onClose={handleClose}
         onCancel={handleClose}
-        // title="Add Supplier"
+        onOk={() => form.submit()}
         title={
           <span style={{ color: `${colors.mainColor}` }}>Add Supplier</span>
         }
         okText="Add Supplier"
         cancelText="Discard"
       >
+        <label
+          htmlFor="inpFile"
+          className="p-2 mb-3 text-center d-flex justify-content-center gap-3"
+        >
+          {file ? (
+            <Avatar size={80} src={URL.createObjectURL(file)} />
+          ) : (
+            <Avatar
+              size={80}
+              style={{
+                backgroundColor: "white",
+                border: `2px dashed ${colors.gray_100}`,
+              }}
+            >
+              <UserAdd size={60} color={colors.gray_300} />
+            </Avatar>
+          )}
+
+          <div className="">
+            <Paragraph className="mb-0">Drag Image here</Paragraph>
+            <Paragraph className="mb-0">Or</Paragraph>
+            <Button onClick={() => inpRef.current.click()} type="link">
+              Browse Image
+            </Button>
+          </div>
+        </label>
         <Form
           onFinish={addNewSupplier}
           layout="horizontal"
@@ -104,7 +150,7 @@ const ToggleSupplier = (props: Props) => {
             name={"contact-number"}
             label={
               <span style={{ color: `${colors.mainColor}` }}>
-                Supplier Name
+                Contact Number
               </span>
             }
             colon={false}
@@ -132,6 +178,18 @@ const ToggleSupplier = (props: Props) => {
             </Button>
           </Form.Item>
         </Form>
+        <div className="d-none">
+          <input
+            accept="image/*"
+            ref={inpRef}
+            type="file"
+            name=""
+            id="inpFile"
+            onChange={(val: any) => {
+              setFile(val.target.files[0]);
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );
