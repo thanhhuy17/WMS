@@ -19,9 +19,9 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 const SiderComponent = () => {
   const dispatch = useDispatch();
-  const handleLogout = ()=>{
-    dispatch(removeAuth({}))
-  }
+  const handleLogout = () => {
+    dispatch(removeAuth({}));
+  };
 
   const items: MenuItem[] = [
     {
@@ -92,7 +92,11 @@ const SiderComponent = () => {
     {
       key: "logout",
       label: (
-        <Link to = {'/'} style={{ textDecoration: "none" }} onClick={handleLogout}>
+        <Link
+          to={"/"}
+          style={{ textDecoration: "none" }}
+          onClick={handleLogout}
+        >
           Log Out
         </Link>
       ),
@@ -100,8 +104,14 @@ const SiderComponent = () => {
     },
   ];
   return (
-    <Sider width={250} theme="light" style={{ height: "100vh" }}>
-      <div className="d-flex mt-2 mb-2 align-items-center justify-content-center p-2">
+    <Sider
+      width={250}
+      theme="light"
+      style={{ height: "100vh" }}
+      breakpoint="lg"
+      collapsedWidth="80"
+    >
+      <div className="d-flex mt-2 mb-2 align-items-center justify-content-center p-2 ">
         <img
           className="mx-2"
           width={"50px"}

@@ -23,16 +23,20 @@ const ToggleSupplier = (props: Props) => {
   // ---------- SEND DATA TO BACKEND ------------
   const addNewSupplier = async (values: any) => {
     setIsLoading(true);
-    const data: any = {}
-    for(const i in values){
-      data[i] = values[i] ?? ''
+    const data: any = {};
+    for (const i in values) {
+      data[i] = values[i] ?? "";
     }
 
-    data.price = values.price ? parseInt(values.price) : 0
+    data.price = values.price ? parseInt(values.price) : 0;
 
-    data.isTaking = isTaking ? 1: 0
+    data.isTaking = isTaking ? 1 : 0;
 
-    console.log("Check data Supplier to Server: ",data);
+    if (file) {
+      console.log(file);
+    }
+
+    // console.log("Check data Supplier to Server: ", data);
     try {
       // const res: any = await handleAPI(
       //   "/supplier/add-new-supplier",
@@ -138,7 +142,7 @@ const ToggleSupplier = (props: Props) => {
             <Select options={[]} placeholder="Select product category" />
           </Form.Item>
           <Form.Item
-            name={"buying-price"}
+            name={"buyingPrice"}
             label={
               <span style={{ color: `${colors.mainColor}` }}>Buying Price</span>
             }
@@ -147,7 +151,7 @@ const ToggleSupplier = (props: Props) => {
             <Input placeholder="Enter buying price" allowClear />
           </Form.Item>
           <Form.Item
-            name={"contact-number"}
+            name={"contactNumber"}
             label={
               <span style={{ color: `${colors.mainColor}` }}>
                 Contact Number
@@ -162,20 +166,24 @@ const ToggleSupplier = (props: Props) => {
             label={<span style={{ color: `${colors.mainColor}` }}>Type</span>}
             colon={false}
           >
-            <div className="mb-2">
+            <div>
+              <div className="mb-2">
+                <Button
+                  size="small"
+                  onClick={() => setIsTaking(false)}
+                  type={isTaking === false ? "primary" : "default"}
+                >
+                  Not taking return
+                </Button>
+              </div>
               <Button
-                onClick={() => setIsTaking(false)}
-                type={isTaking === false ? "primary" : "default"}
+                size="small"
+                onClick={() => setIsTaking(true)}
+                type={isTaking ? "primary" : "default"}
               >
-                Not taking return
+                Taking return
               </Button>
             </div>
-            <Button
-              onClick={() => setIsTaking(true)}
-              type={isTaking ? "primary" : "default"}
-            >
-              Taking return
-            </Button>
           </Form.Item>
         </Form>
         <div className="d-none">
@@ -186,7 +194,10 @@ const ToggleSupplier = (props: Props) => {
             name=""
             id="inpFile"
             onChange={(val: any) => {
-              setFile(val.target.files[0]);
+              const selectedFile = val.target.files[0];
+              if (selectedFile) {
+                setFile(selectedFile);
+              }
             }}
           />
         </div>
