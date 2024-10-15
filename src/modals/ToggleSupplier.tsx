@@ -5,14 +5,14 @@ import { colors } from "../constants/colors";
 import { UserAdd } from "iconsax-react";
 import Paragraph from "antd/es/typography/Paragraph";
 import { uploadFile } from "../utils/uploadFile";
-import { replace } from "react-router-dom";
 import { replaceName } from "../utils/replaceName";
+import { SupplierModel } from "../models/SupplierModel";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
-  onAddNew: (val: any) => void;
-  supplier?: any;
+  onAddNew: (val: SupplierModel) => void;
+  supplier?: SupplierModel;
 }
 
 const ToggleSupplier = (props: Props) => {
@@ -31,26 +31,23 @@ const ToggleSupplier = (props: Props) => {
       data[i] = values[i] ?? "";
     }
 
-    data.price = values.price ? parseInt(values.price) : 0;
+    data.price = values.buyingPrice ? parseInt(values.buyingPrice) : 0;
 
     data.isTaking = isTaking ? 1 : 0;
 
     if (file) {
-      // console.log(file);
       data.photoUrl = await uploadFile(file);
     }
 
     data.slug = replaceName(values.name);
-
-    console.log(data);
-    // console.log("Check data Supplier to Server: ", data);
+    const api = "/supplier/add-new-supplier";
     try {
-      // const res: any = await handleAPI(
-      //   "/supplier/add-new-supplier",
-      //   data,
-      //   "post"
-      // );
-      // message.success(res.message);
+      const res: any = await handleAPI(api, data, "post");
+      message.success(res.message);
+      console.log("Check data Supplier to Server: ", data);
+      console.log("Check response from Server: ", res);
+      onAddNew(res.data)
+      handleClose()
       // dispatch to redux
     } catch (error: any) {
       console.log(error.message);
@@ -66,12 +63,14 @@ const ToggleSupplier = (props: Props) => {
   return (
     <div>
       <Modal
+        closable={!isLoading}
         // loading={isLoading}
         // width={720}
         open={visible}
         onClose={handleClose}
         onCancel={handleClose}
         onOk={() => form.submit()}
+        okButtonProps={{ loading: isLoading }}
         title={
           <span style={{ color: `${colors.mainColor}` }}>Add Supplier</span>
         }

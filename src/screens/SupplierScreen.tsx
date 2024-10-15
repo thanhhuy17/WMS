@@ -7,11 +7,12 @@ import { PiExportLight } from "react-icons/pi";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { useState } from "react";
 import ToggleSupplier from "../modals";
+import { SupplierModel } from "../models/SupplierModel";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const { Title } = Typography;
-  const columns: ColumnProps<any>[] = [];
+  const columns: ColumnProps<SupplierModel>[] = [];
   return (
     <div>
       <Table
@@ -44,6 +45,7 @@ const SupplierScreen = () => {
       <ToggleSupplier
         visible={isVisibleAddNew}
         onClose={() => setIsVisibleAddNew(false)}
+        // Add Supplier
         onAddNew={(val) => {
           console.log(val);
         }}
