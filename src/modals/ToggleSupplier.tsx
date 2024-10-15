@@ -4,6 +4,9 @@ import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
 import { UserAdd } from "iconsax-react";
 import Paragraph from "antd/es/typography/Paragraph";
+import { uploadFile } from "../utils/uploadFile";
+import { replace } from "react-router-dom";
+import { replaceName } from "../utils/replaceName";
 
 interface Props {
   visible: boolean;
@@ -33,9 +36,13 @@ const ToggleSupplier = (props: Props) => {
     data.isTaking = isTaking ? 1 : 0;
 
     if (file) {
-      console.log(file);
+      // console.log(file);
+      data.photoUrl = await uploadFile(file);
     }
 
+    data.slug = replaceName(values.name);
+
+    console.log(data);
     // console.log("Check data Supplier to Server: ", data);
     try {
       // const res: any = await handleAPI(
@@ -59,7 +66,7 @@ const ToggleSupplier = (props: Props) => {
   return (
     <div>
       <Modal
-        loading={isLoading}
+        // loading={isLoading}
         // width={720}
         open={visible}
         onClose={handleClose}
@@ -98,6 +105,7 @@ const ToggleSupplier = (props: Props) => {
           </div>
         </label>
         <Form
+          disabled={isLoading}
           onFinish={addNewSupplier}
           layout="horizontal"
           labelCol={{ span: 6 }}
