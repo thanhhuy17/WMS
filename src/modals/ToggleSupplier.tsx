@@ -131,6 +131,23 @@ const ToggleSupplier = (props: Props) => {
             <Input placeholder="Enter Supplier Name" allowClear />
           </Form.Item>
           <Form.Item
+            name={"email"}
+            rules={[
+              {
+                required: true,
+                message: "Please Enter Email!",
+              },
+            ]}
+            label={
+              <span style={{ color: `${colors.mainColor}` }}>
+                Email
+              </span>
+            }
+            colon={false}
+          >
+            <Input placeholder="Enter Supplier Email" allowClear />
+          </Form.Item>
+          <Form.Item
             name={"product"}
             label={
               <span style={{ color: `${colors.mainColor}` }}>Product</span>
