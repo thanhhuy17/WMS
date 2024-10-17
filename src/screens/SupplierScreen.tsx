@@ -1,4 +1,12 @@
-import { Avatar, Button, message, Space, Table, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  message,
+  Space,
+  Table,
+  Tooltip,
+  Typography,
+} from "antd";
 import { ColumnProps } from "antd/es/table";
 
 import { colors } from "../constants/colors";
@@ -9,12 +17,15 @@ import { useEffect, useState } from "react";
 import ToggleSupplier from "../modals";
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
+import { Edit2, UserRemove } from "iconsax-react";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { Title } = Typography;
+  const [isLoading, setIsLoading] = useState(true);
+  const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
+
+  const { Title, Text } = Typography;
   //-------------- ADD TABLE SUPPLIER ------------------
   const columns: ColumnProps<SupplierModel>[] = [
     {
@@ -47,15 +58,42 @@ const SupplierScreen = () => {
       key: "isTaking",
       title: "Type",
       dataIndex: `isTaking`,
-      render: (isTaking: number) => (
-        <span
-          style={{
-            color: isTaking === 1 ? "green" : "red",
-            fontWeight: "bold",
-          }}
-        >
-          {isTaking === 1 ? "Taking Return" : "Not Taking Return"}
-        </span>
+      render: (isTaking: boolean) => (
+        <Text type={isTaking ? "success" : "danger"}>
+          {isTaking ? "Taking Return" : "Not Taking Return"}
+        </Text>
+      ),
+    },
+    {
+      key: "onTheWay",
+      title: "On the way",
+      dataIndex: "",
+    },
+    {
+      key: "buttonContainer",
+      title: "Actions",
+      dataIndex: "",
+      fixed: "right",
+      align: "center",
+      render: (item: SupplierModel) => (
+        <Space>
+          <Tooltip title="Edit">
+            <Button
+              icon={<Edit2 size={20} className="text-info" />}
+              onClick={() => {
+                setSupplierSelected(item);
+                setIsVisibleAddNew(true);
+              }}
+            />
+          </Tooltip>
+
+          <Tooltip title="Delete">
+            <Button
+              icon={<UserRemove size={20} className="text-danger" />}
+              onClick={(val) => {}}
+            />
+          </Tooltip>
+        </Space>
       ),
     },
   ];
@@ -79,6 +117,8 @@ const SupplierScreen = () => {
   return (
     <div>
       <Table
+        scroll={{ x: "max-content" }}
+        // pagination={false}
         loading={isLoading}
         dataSource={suppliers}
         columns={columns}
@@ -108,21 +148,14 @@ const SupplierScreen = () => {
       />
       <ToggleSupplier
         visible={isVisibleAddNew}
-        onClose={() => setIsVisibleAddNew(false)}
-        // Add Supplier
-        // onAddNew={(val) => {
-        //   console.log(val);
-        // }}
-        onAddNew={async () => {
-          try {
-            // Sau khi thêm nhà cung cấp, gọi lại hàm getSuppliers để tải dữ liệu mới
-            await getSuppliers();
-            console.log("Loading Page Suppliers Success");
-            // message.success("Thêm nhà cung cấp thành công!");
-          } catch (error: any) {
-            message.error("Cập nhật danh sách thất bại: " + error.message);
-          }
+        onClose={() => {
+          setIsVisibleAddNew(false);
+          setSupplierSelected(undefined);
         }}
+        // Add Supplier
+        // Sau khi thêm nhà cung cấp, gọi lại hàm getSuppliers để tải dữ liệu mới
+        onAddNew={(val) => setSuppliers([...suppliers, val])}
+        supplier={supplierSelected}
       />
     </div>
   );

@@ -6,7 +6,7 @@ export interface SupplierModel {
   categories: any[]
   price: number
   contactNumber: string
-  isTaking: number
+  isTaking: boolean
   photoUrl: string
   createdAt: string
   updatedAt: string

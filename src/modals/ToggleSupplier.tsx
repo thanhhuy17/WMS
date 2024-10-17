@@ -1,5 +1,5 @@
 import { Avatar, Button, Form, Input, message, Modal, Select } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
 import { UserAdd } from "iconsax-react";
@@ -22,6 +22,12 @@ const ToggleSupplier = (props: Props) => {
   const [file, setFile] = useState();
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
+
+  useEffect(() => {
+    if (supplier) {
+      form.setFieldsValue(supplier);
+    }
+  }, [supplier]);
 
   // ---------- SEND DATA TO BACKEND ------------
   const addNewSupplier = async (values: any) => {
@@ -46,8 +52,8 @@ const ToggleSupplier = (props: Props) => {
       message.success(res.message);
       console.log("Check data Supplier to Server: ", data);
       console.log("Check response from Server: ", res);
-      onAddNew(res.data)
-      handleClose()
+      onAddNew(res.data);
+      handleClose();
       // dispatch to redux
     } catch (error: any) {
       console.log(error.message);
@@ -72,9 +78,11 @@ const ToggleSupplier = (props: Props) => {
         onOk={() => form.submit()}
         okButtonProps={{ loading: isLoading }}
         title={
-          <span style={{ color: `${colors.mainColor}` }}>Add Supplier</span>
+          <span style={{ color: `${colors.mainColor}` }}>
+            {supplier ? "Edit Supplier" : "Add Supplier"}
+          </span>
         }
-        okText="Add Supplier"
+        okText={supplier ? "Update" : "Add Supplier"}
         cancelText="Discard"
       >
         <label
@@ -138,11 +146,7 @@ const ToggleSupplier = (props: Props) => {
                 message: "Please Enter Email!",
               },
             ]}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>
-                Email
-              </span>
-            }
+            label={<span style={{ color: `${colors.mainColor}` }}>Email</span>}
             colon={false}
           >
             <Input placeholder="Enter Supplier Email" allowClear />
