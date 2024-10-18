@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   message,
+  Modal,
   Space,
   Table,
   Tooltip,
@@ -26,6 +27,7 @@ const SupplierScreen = () => {
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
 
   const { Title, Text } = Typography;
+  const {confirm} = Modal
   //-------------- ADD TABLE SUPPLIER ------------------
   const columns: ColumnProps<SupplierModel>[] = [
     {
@@ -33,6 +35,7 @@ const SupplierScreen = () => {
       title: "Logo",
       dataIndex: "photoUrl",
       render: (url) => <Avatar src={url} />,
+      fixed: "left",
     },
     {
       key: "nameSupplier",
@@ -90,7 +93,12 @@ const SupplierScreen = () => {
           <Tooltip title="Delete">
             <Button
               icon={<UserRemove size={20} className="text-danger" />}
-              onClick={(val) => {}}
+              onClick={(val) => confirm({
+                title: 'Confirm',
+                content: `Are you sure want to Delete this Supplier?`,
+                onOk: ()=> handleDeleteSupplier(item._id),
+                
+              })}
             />
           </Tooltip>
         </Space>
@@ -114,6 +122,18 @@ const SupplierScreen = () => {
       setIsLoading(false);
     }
   };
+
+  //  ---------------- SORT DELETE ---------------
+  const handleDeleteSupplier = async (id: string)=>{
+    console.log(id);
+    // Sort Delete
+    try {
+      await handleAPI(`/supplier/update-supplier?id=${id}`, {isDeleted: true}, 'put')
+      getSuppliers()
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div>
       <Table
@@ -149,6 +169,7 @@ const SupplierScreen = () => {
       <ToggleSupplier
         visible={isVisibleAddNew}
         onClose={() => {
+          supplierSelected && getSuppliers()
           setIsVisibleAddNew(false);
           setSupplierSelected(undefined);
         }}

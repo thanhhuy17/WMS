@@ -26,6 +26,7 @@ const ToggleSupplier = (props: Props) => {
   useEffect(() => {
     if (supplier) {
       form.setFieldsValue(supplier);
+      setIsTaking(supplier.isTaking);
     }
   }, [supplier]);
 
@@ -37,7 +38,7 @@ const ToggleSupplier = (props: Props) => {
       data[i] = values[i] ?? "";
     }
 
-    data.price = values.buyingPrice ? parseInt(values.buyingPrice) : 0;
+    data.price = values.price ? parseInt(values.price) : 0;
 
     data.isTaking = isTaking ? 1 : 0;
 
@@ -46,13 +47,15 @@ const ToggleSupplier = (props: Props) => {
     }
 
     data.slug = replaceName(values.name);
-    const api = "/supplier/add-new-supplier";
+    const api = `/supplier/${
+      supplier ? `update-supplier?id=${supplier._id}` : `add-new-supplier`
+    }`;
     try {
-      const res: any = await handleAPI(api, data, "post");
+      const res: any = await handleAPI(api, data, supplier ? "put" : "post");
       message.success(res.message);
       console.log("Check data Supplier to Server: ", data);
       console.log("Check response from Server: ", res);
-      onAddNew(res.data);
+      !supplier && onAddNew(res.data);
       handleClose();
       // dispatch to redux
     } catch (error: any) {
@@ -66,6 +69,8 @@ const ToggleSupplier = (props: Props) => {
     form.resetFields();
     onClose();
   };
+
+  //--------------- MAIN LOGIC -----------------
   return (
     <div>
       <Modal
@@ -91,6 +96,8 @@ const ToggleSupplier = (props: Props) => {
         >
           {file ? (
             <Avatar size={80} src={URL.createObjectURL(file)} />
+          ) : supplier ? (
+            <Avatar size={80} src={supplier.photoUrl} />
           ) : (
             <Avatar
               size={80}
@@ -170,7 +177,7 @@ const ToggleSupplier = (props: Props) => {
             <Select options={[]} placeholder="Select product category" />
           </Form.Item>
           <Form.Item
-            name={"buyingPrice"}
+            name={"price"}
             label={
               <span style={{ color: `${colors.mainColor}` }}>Buying Price</span>
             }
