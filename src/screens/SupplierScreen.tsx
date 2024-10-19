@@ -27,7 +27,7 @@ const SupplierScreen = () => {
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
 
   const { Title, Text } = Typography;
-  const {confirm} = Modal
+  const { confirm } = Modal;
   //-------------- ADD TABLE SUPPLIER ------------------
   const columns: ColumnProps<SupplierModel>[] = [
     {
@@ -93,12 +93,13 @@ const SupplierScreen = () => {
           <Tooltip title="Delete">
             <Button
               icon={<UserRemove size={20} className="text-danger" />}
-              onClick={(val) => confirm({
-                title: 'Confirm',
-                content: `Are you sure want to Delete this Supplier?`,
-                onOk: ()=> handleDeleteSupplier(item._id),
-                
-              })}
+              onClick={(val) =>
+                confirm({
+                  title: "Confirm",
+                  content: `Are you sure want to Delete this Supplier?`,
+                  onOk: () => handleDeleteSupplier(item._id),
+                })
+              }
             />
           </Tooltip>
         </Space>
@@ -124,16 +125,24 @@ const SupplierScreen = () => {
   };
 
   //  ---------------- SORT DELETE ---------------
-  const handleDeleteSupplier = async (id: string)=>{
+  const handleDeleteSupplier = async (id: string) => {
     console.log(id);
-    // Sort Delete
+    // Sort Delete (Xoá mềm)
     try {
-      await handleAPI(`/supplier/update-supplier?id=${id}`, {isDeleted: true}, 'put')
-      getSuppliers()
+      // await handleAPI(`/supplier/update-supplier?id=${id}`, {isDeleted: true}, 'put')
+      // Delete (Xoá cứng)
+      const res: any = await handleAPI(
+        `/supplier/delete-supplier?id=${id}`,
+        undefined,
+        "delete"
+      );
+      message.success(res.message);
+
+      getSuppliers();
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div>
       <Table
@@ -169,7 +178,7 @@ const SupplierScreen = () => {
       <ToggleSupplier
         visible={isVisibleAddNew}
         onClose={() => {
-          supplierSelected && getSuppliers()
+          supplierSelected && getSuppliers();
           setIsVisibleAddNew(false);
           setSupplierSelected(undefined);
         }}
