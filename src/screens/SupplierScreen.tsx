@@ -70,7 +70,7 @@ const SupplierScreen = () => {
     {
       key: "onTheWay",
       title: "On the way",
-      dataIndex: "",
+      dataIndex: "active",
     },
     {
       key: "buttonContainer",
@@ -127,8 +127,8 @@ const SupplierScreen = () => {
   //  ---------------- SORT DELETE ---------------
   const handleDeleteSupplier = async (id: string) => {
     console.log(id);
-    // Sort Delete (Xoá mềm)
     try {
+      // Sort Delete (Xoá mềm)
       // await handleAPI(`/supplier/update-supplier?id=${id}`, {isDeleted: true}, 'put')
       // Delete (Xoá cứng)
       const res: any = await handleAPI(
@@ -137,7 +137,6 @@ const SupplierScreen = () => {
         "delete"
       );
       message.success(res.message);
-
       getSuppliers();
     } catch (error) {
       console.log(error);

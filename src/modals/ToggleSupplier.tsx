@@ -74,6 +74,7 @@ const ToggleSupplier = (props: Props) => {
   return (
     <div>
       <Modal
+      
         closable={!isLoading}
         // loading={isLoading}
         // width={720}
@@ -156,7 +157,7 @@ const ToggleSupplier = (props: Props) => {
             label={<span style={{ color: `${colors.mainColor}` }}>Email</span>}
             colon={false}
           >
-            <Input placeholder="Enter Supplier Email" allowClear />
+            <Input placeholder="Enter Supplier Email" allowClear type="email"/>
           </Form.Item>
           <Form.Item
             name={"product"}
@@ -195,6 +196,17 @@ const ToggleSupplier = (props: Props) => {
             colon={false}
           >
             <Input placeholder="Enter supplier contact number" allowClear />
+          </Form.Item>
+          <Form.Item
+            name={"active"}
+            label={
+              <span style={{ color: `${colors.mainColor}` }}>
+                Active
+              </span>
+            }
+            colon={false}
+          >
+            <Input placeholder="Enter Active number" allowClear type="number" />
           </Form.Item>
           <Form.Item
             name={"type"}

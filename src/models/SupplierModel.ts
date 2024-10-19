@@ -3,6 +3,7 @@ export interface SupplierModel {
   slug: string
   product: string
   email: string
+  active:number
   categories: any[]
   price: number
   contactNumber: string
