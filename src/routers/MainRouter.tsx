@@ -1,7 +1,7 @@
 // import SiderComponent from "@/components/SiderComponent";
 // import HomeScreen from "@/screens/HomeScreen";
 
-import { Layout } from "antd";
+import { Affix, Layout } from "antd";
 
 import HomeScreen from "../screens/HomeScreen";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -12,7 +12,6 @@ import {
   ReportScreen,
   SettingScreen,
   SupplierScreen,
-  
 } from "../screens";
 import { HeaderComponent, SiderComponent } from "../components";
 // Chia Layout
@@ -21,9 +20,13 @@ const MainRouter = () => {
   return (
     <BrowserRouter>
       <Layout>
-        <SiderComponent />
+        <Affix offsetTop={0}>
+          <SiderComponent />
+        </Affix>
         <Layout>
-          <HeaderComponent />
+          <Affix offsetTop={0}>
+            <HeaderComponent />
+          </Affix>
           <Content className="mt-3 mb-3 container bg-white">
             <Routes>
               <Route path="/" element={<HomeScreen />} />

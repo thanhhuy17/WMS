@@ -6,13 +6,8 @@ import handleAPI from "../apis/handleAPI";
 
 const HomeScreen = () => {
   const auth = useSelector(authSelector);
-  // console.log("Check error h: ", auth);
-  const dispatch = useDispatch();
-  // const [isLoading, setIsLoading] = useState(false);
 
-  // const handleLogout = () => {
-  //     dispatch(removeAuth({}));
-  //   };
+  const dispatch = useDispatch();
 
   const getProducts = async () => {
     const api = `/storage/products`;
@@ -31,7 +26,7 @@ const HomeScreen = () => {
   const handleRefreshToken = async () => {
     const api = `auth/refresh-token?id=${auth._id}`;
     try {
-      const res = await handleAPI(api);
+      const res :any = await handleAPI(api);
       console.log("Check API refresh Token: ", res);
       message.warning("Hết thời hạn hiệu lực \n Mời đăng nhập lại");
       dispatch(refreshToken(res.data.token));
@@ -42,7 +37,6 @@ const HomeScreen = () => {
 
   return (
     <div>
-      {/* <Button onClick={() => handleLogout()}>Logout</Button> */}
       <Button size="large" onClick={getProducts}>
         Get Product
       </Button>

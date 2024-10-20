@@ -130,7 +130,7 @@ const SupplierScreen = () => {
   }, []);
   // ------------- GET SUPPLIERS FROM BACKEND-----------------
   const getSuppliers = async () => {
-    const api = "/supplier";
+    const api = `/supplier?page=1&pageSize=10`;
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
