@@ -8,7 +8,6 @@ import {
   Tooltip,
   Typography,
   Pagination,
-  Switch,
 } from "antd";
 import { ColumnProps } from "antd/es/table";
 
@@ -28,7 +27,6 @@ const SupplierScreen = () => {
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
-  const [fixedTop, setFixedTop] = useState(false);
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
@@ -157,24 +155,8 @@ const SupplierScreen = () => {
   return (
     <div>
       <Table
-        summary={() => (
-          <Table.Summary fixed={"top" }>
-          {/* <Table.Summary fixed={fixedTop ? "top" : "bottom"}> */}
-            {/* <Table.Summary.Row>
-              <Table.Summary.Cell index={0} colSpan={2}>
-                <Switch
-                  checkedChildren="Fixed Top"
-                  unCheckedChildren="Fixed Top"
-                  checked={fixedTop}
-                  onChange={() => {
-                    setFixedTop(!fixedTop);
-                  }}
-                />
-              </Table.Summary.Cell>
-            </Table.Summary.Row> */}
-          </Table.Summary>
-        )}
-        scroll={{ x: "max-content"}}
+        summary={() => <Table.Summary fixed={"top"} />}
+        scroll={{ x: "max-content" }}
         // scroll={{ x: 1500 , y: 500}}
         // pagination={false}
         loading={isLoading}

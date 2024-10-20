@@ -28,7 +28,7 @@ const ToggleSupplier = (props: Props) => {
       form.setFieldsValue(supplier);
       setIsTaking(supplier.isTaking);
     }
-  }, [supplier]);
+  }, [form, supplier]);
 
   // ---------- SEND DATA TO BACKEND ------------
   const addNewSupplier = async (values: any) => {
