@@ -158,8 +158,9 @@ const SupplierScreen = () => {
     <div>
       <Table
         summary={() => (
-          <Table.Summary fixed={fixedTop ? "top" : "bottom"}>
-            <Table.Summary.Row>
+          <Table.Summary fixed={"top" }>
+          {/* <Table.Summary fixed={fixedTop ? "top" : "bottom"}> */}
+            {/* <Table.Summary.Row>
               <Table.Summary.Cell index={0} colSpan={2}>
                 <Switch
                   checkedChildren="Fixed Top"
@@ -170,10 +171,10 @@ const SupplierScreen = () => {
                   }}
                 />
               </Table.Summary.Cell>
-            </Table.Summary.Row>
+            </Table.Summary.Row> */}
           </Table.Summary>
         )}
-        scroll={{ x: "max-content" }}
+        scroll={{ x: "max-content"}}
         // scroll={{ x: 1500 , y: 500}}
         // pagination={false}
         loading={isLoading}
