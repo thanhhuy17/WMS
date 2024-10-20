@@ -7,6 +7,8 @@ import {
   Table,
   Tooltip,
   Typography,
+  Pagination,
+  Switch,
 } from "antd";
 import { ColumnProps } from "antd/es/table";
 
@@ -20,11 +22,13 @@ import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 import { Edit2, UserRemove } from "iconsax-react";
 
+<Pagination defaultCurrent={6} total={500} />;
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
+  const [fixedTop, setFixedTop] = useState(false);
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
@@ -35,6 +39,13 @@ const SupplierScreen = () => {
       title: "Logo",
       dataIndex: "photoUrl",
       render: (url) => <Avatar src={url} />,
+      fixed: "left",
+    },
+    {
+      key: "status",
+      title: "Status",
+      dataIndex: "",
+      render: (url) => ({}),
       fixed: "left",
     },
     {
@@ -68,9 +79,10 @@ const SupplierScreen = () => {
       ),
     },
     {
-      key: "onTheWay",
+      key: "active",
       title: "On the way",
       dataIndex: "active",
+      render: (num) => (num ? num : `-`),
     },
     {
       key: "buttonContainer",
@@ -145,7 +157,24 @@ const SupplierScreen = () => {
   return (
     <div>
       <Table
+        summary={() => (
+          <Table.Summary fixed={fixedTop ? "top" : "bottom"}>
+            <Table.Summary.Row>
+              <Table.Summary.Cell index={0} colSpan={2}>
+                <Switch
+                  checkedChildren="Fixed Top"
+                  unCheckedChildren="Fixed Top"
+                  checked={fixedTop}
+                  onChange={() => {
+                    setFixedTop(!fixedTop);
+                  }}
+                />
+              </Table.Summary.Cell>
+            </Table.Summary.Row>
+          </Table.Summary>
+        )}
         scroll={{ x: "max-content" }}
+        // scroll={{ x: 1500 , y: 500}}
         // pagination={false}
         loading={isLoading}
         dataSource={suppliers}
