@@ -21,9 +21,12 @@ import ToggleSupplier from "../modals";
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 import { Edit2, UserRemove } from "iconsax-react";
-import { demoData } from "../data/demoData";
-import { replace } from "react-router-dom";
-import { replaceName } from "../utils/replaceName";
+import { User, UserProfile } from "firebase/auth";
+import { useSelector } from "react-redux";
+// import { demoData } from "../data/demoData";
+// import { replace } from "react-router-dom";
+// import { replaceName } from "../utils/replaceName";
+// import { current } from "@reduxjs/toolkit";
 
 <Pagination defaultCurrent={6} total={500} />;
 const SupplierScreen = () => {
@@ -31,6 +34,12 @@ const SupplierScreen = () => {
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState<number>(10)
+  const userAuth = useSelector((state: any)=> state.authReducer)
+  const user = userAuth.data?.name
+  console.log(user);
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
@@ -91,6 +100,13 @@ const SupplierScreen = () => {
       render: (num) => (num ? num : `-`),
     },
     {
+      key: "userCreated",
+      title: "User Created",
+      dataIndex: ``,
+      render:()=> user,
+    },
+    
+    {
       key: "buttonContainer",
       title: "Actions",
       dataIndex: "",
@@ -127,14 +143,16 @@ const SupplierScreen = () => {
 
   useEffect(() => {
     getSuppliers();
-  }, []);
+  }, [page, pageSize]);
   // ------------- GET SUPPLIERS FROM BACKEND-----------------
   const getSuppliers = async () => {
-    const api = `/supplier?page=1&pageSize=10`;
+    const api = `/supplier?page=${page}&pageSize=${pageSize}`;
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      res.data && setSuppliers(res.data);
+      res.data && setSuppliers(res.data.items);
+      setTotal(res.data.total)
+      console.log("Check Total Row: ",res);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -161,44 +179,44 @@ const SupplierScreen = () => {
     }
   };
   //  ---------------- ADD DEMO DATA ---------------
-//   const handleAddDemoData = () => {
-//     /*
-//   {
-//     "name": "VietTiep",
-//     "email": "viettiep@gmail.com",
-//     "product": "Lock 502",
-//     "category": "",
-//     "price": 680000,
-//     "contactNumber": "0379849760",
-//     "active": "2",
-//     "type": "",
-//     "isTaking": 1,
-//     "photoUrl": "https://firebasestorage.googleapis.com/v0/b/whms-81447.appspot.com/o/images%2Fcolor.png?alt=media&token=ae6472ad-1f6e-4964-9aac-1d47aee0e7ea",
-//     "slug": "viettiep"
-// }
-//   */
-//     demoData.forEach(async (item: any) => {
-//       const data = {
-//         name: item.name,
-//         email: "viettiep@gmail.com",
-//         product: "Lock 502",
-//         category: "",
-//         price: Math.floor(Math.random() * 100000),
-//         contactNumber: "0379849760",
-//         active: "2",
-//         type: "",
-//         isTaking: 1,
-//         slug: replaceName(item.title),
-//       };
-//       const api = `/supplier/add-new-supplier`;
-//       try {
-//         await handleAPI(api, data, "post");
-//         console.log("Add Data Demo Done!");
-//       } catch (error: any) {
-//         console.log(error);
-//       }
-//     });
-//   };
+  //   const handleAddDemoData = () => {
+  //     /*
+  //   {
+  //     "name": "VietTiep",
+  //     "email": "viettiep@gmail.com",
+  //     "product": "Lock 502",
+  //     "category": "",
+  //     "price": 680000,
+  //     "contactNumber": "0379849760",
+  //     "active": "2",
+  //     "type": "",
+  //     "isTaking": 1,
+  //     "photoUrl": "https://firebasestorage.googleapis.com/v0/b/whms-81447.appspot.com/o/images%2Fcolor.png?alt=media&token=ae6472ad-1f6e-4964-9aac-1d47aee0e7ea",
+  //     "slug": "viettiep"
+  // }
+  //   */
+  //     demoData.forEach(async (item: any) => {
+  //       const data = {
+  //         name: item.name,
+  //         email: "viettiep@gmail.com",
+  //         product: "Lock 502",
+  //         category: "",
+  //         price: Math.floor(Math.random() * 100000),
+  //         contactNumber: "0379849760",
+  //         active: "2",
+  //         type: "",
+  //         isTaking: 1,
+  //         slug: replaceName(item.title),
+  //       };
+  //       const api = `/supplier/add-new-supplier`;
+  //       try {
+  //         await handleAPI(api, data, "post");
+  //         console.log("Add Data Demo Done!");
+  //       } catch (error: any) {
+  //         console.log(error);
+  //       }
+  //     });
+  //   };
 
   return (
     <div>
@@ -208,8 +226,21 @@ const SupplierScreen = () => {
       <Table
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ x: "max-content" }}
-        scroll={{ x: 'max-content', y: 600}}
-        // pagination={false}
+        scroll={{ x: "max-content", y: 600 }}
+        pagination={{
+          showSizeChanger: true,
+          onShowSizeChange: (current, size) => {
+            // console.log(current, size);
+            setPageSize(size);
+            // setPage(current);
+          },
+          total: total,
+          onChange: (page, pageSize)=>{
+            console.log(page, pageSize);
+            setPage(page)
+            setPageSize(pageSize)
+          }
+        }}
         loading={isLoading}
         dataSource={suppliers}
         columns={columns}

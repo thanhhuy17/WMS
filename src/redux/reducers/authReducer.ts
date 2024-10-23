@@ -7,7 +7,7 @@ export interface AuthState {
     rule: number
 }
 
-const initialState = {
+export const initialState = {
     token: '',
     _id: '',
     name: '',

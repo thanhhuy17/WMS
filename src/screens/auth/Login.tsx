@@ -32,6 +32,7 @@ const Login = () => {
     try {
       const res: any = await handleAPI("/auth/login", values, "post");
       message.success(res.message);
+      console.log("Check login To Server Response: ", res);
 
       res.data && dispatch(addAuth(res.data));
 

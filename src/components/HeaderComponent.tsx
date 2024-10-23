@@ -18,7 +18,7 @@ const HeaderComponent = () => {
     dispatch(removeAuth({}));
   };
   
-  console.log("Check Img: ", user);
+  // console.log("Check Img: ", user);
 
   const items: MenuProps["items"] = [
     {
