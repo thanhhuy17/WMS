@@ -11,24 +11,22 @@ import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
 const HeaderComponent = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const user = useSelector(authSelector);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(removeAuth({}));
   };
-  
-  // console.log("Check Img: ", user);
 
   const items: MenuProps["items"] = [
     {
       key: "logout",
       label: "Logout",
       onClick: async () => {
-        signOut(auth)
+        signOut(auth);
         handleLogout();
-        localStorage.clear()
-        navigate(`/`)
+        localStorage.clear();
+        navigate(`/`);
       },
     },
   ];
@@ -44,6 +42,7 @@ const HeaderComponent = () => {
           style={{ width: "50%" }}
         />
       </div>
+
       <div className="col text-end">
         <Space>
           <Button
@@ -52,6 +51,7 @@ const HeaderComponent = () => {
               <IoMdNotificationsOutline size={22} color={colors.gray_600} />
             }
           />
+          <div style={{color: colors.mainColor, fontWeight:'bold'}}>{user?.name}</div>
           {/* <Avatar src={appInfo.myLogo} className="rounded-circle" size={40} /> */}
           <Dropdown menu={{ items }}>
             <Avatar src={user.photoUrl} className="rounded-circle" size={40} />

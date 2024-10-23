@@ -43,8 +43,24 @@ const SupplierScreen = () => {
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
+
+  // ------------- ADD STT ----------------
+  const renderIndex = (id: string) => {
+    const index = suppliers.findIndex((element) => element._id === id) + 1;
+    return `${index === 10 ? "" : page === (page + 1) ? "" : page-1}${
+      index === 10 ? `${page > 1 ? page + 0 : page}0` : index
+    }`;
+  };
   //-------------- ADD TABLE SUPPLIER ------------------
   const columns: ColumnProps<SupplierModel>[] = [
+    {
+      key: "stt",
+      title: "#",
+      dataIndex: `_id`,
+      render: (_id: string) => renderIndex(_id),
+      fixed: "left",
+      align: `center`
+    },
     {
       key: "avatar",
       title: "Logo",
@@ -248,7 +264,7 @@ const SupplierScreen = () => {
           },
           total: total,
           onChange: (page, pageSize) => {
-            console.log(page, pageSize);
+            // console.log(page, pageSize);
             setPage(page);
             setPageSize(pageSize);
           },
