@@ -1,4 +1,5 @@
 export interface SupplierModel {
+  index: number
   name: string
   slug: string
   product: string

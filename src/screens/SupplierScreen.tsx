@@ -37,29 +37,19 @@ const SupplierScreen = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState<number>(10);
-  const userAuth = useSelector((state: any) => state.authReducer);
-  const user = userAuth.data?.name;
-  // console.log(user);
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
 
-  // ------------- ADD STT ----------------
-  const renderIndex = (id: string) => {
-    const index = suppliers.findIndex((element) => element._id === id) + 1;
-    return `${index === 10 ? "" : page === (page + 1) ? "" : page-1}${
-      index === 10 ? `${page > 1 ? page + 0 : page}0` : index
-    }`;
-  };
   //-------------- ADD TABLE SUPPLIER ------------------
   const columns: ColumnProps<SupplierModel>[] = [
     {
-      key: "stt",
+      key: "index",
       title: "#",
-      dataIndex: `_id`,
-      render: (_id: string) => renderIndex(_id),
+      dataIndex: "index",
       fixed: "left",
-      align: `center`
+      align: `center`,
+      render: (text, record, index) => (page - 1) * pageSize + (index + 1),
     },
     {
       key: "avatar",
@@ -179,6 +169,15 @@ const SupplierScreen = () => {
     try {
       const res = await handleAPI(api);
       res.data && setSuppliers(res.data.items);
+      const items: SupplierModel[] = [];
+      console.log("Check Index: ", items);
+
+      res.data.items.forEach((item: any, index: number) =>
+        items.push({
+          index: (page - 1) * pageSize + (index + 1),
+          ...item,
+        })
+      );
       setTotal(res.data.total);
       // console.log("Check Total Row: ",res);
     } catch (error: any) {
