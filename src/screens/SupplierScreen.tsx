@@ -21,8 +21,8 @@ import ToggleSupplier from "../modals";
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 import { Edit2, UserRemove } from "iconsax-react";
-import { User, UserProfile } from "firebase/auth";
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 // import { demoData } from "../data/demoData";
 // import { replace } from "react-router-dom";
 // import { replaceName } from "../utils/replaceName";
@@ -36,10 +36,10 @@ const SupplierScreen = () => {
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState<number>(10)
-  const userAuth = useSelector((state: any)=> state.authReducer)
-  const user = userAuth.data?.name
-  console.log(user);
+  const [total, setTotal] = useState<number>(10);
+  const userAuth = useSelector((state: any) => state.authReducer);
+  const user = userAuth.data?.name;
+  // console.log(user);
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
@@ -98,14 +98,26 @@ const SupplierScreen = () => {
       title: "On the way",
       dataIndex: "active",
       render: (num) => (num ? num : `-`),
+      align: `center`,
+      width: `6rem`,
     },
     {
       key: "userCreated",
       title: "User Created",
-      dataIndex: ``,
-      render:()=> user,
+      dataIndex: `userCreated`,
+      render: (userCreated) => (userCreated ? userCreated : "-"),
+      align: `center`,
+      width: `6rem`,
     },
-    
+    {
+      key: "dateCreated",
+      title: "Date Created",
+      dataIndex: `createdAt`,
+      render: (createdAt) => {
+        const date = dayjs(createdAt).format("HH:mm:ss DD-MM-YYYY");
+        return date;
+      },
+    },
     {
       key: "buttonContainer",
       title: "Actions",
@@ -151,8 +163,8 @@ const SupplierScreen = () => {
     try {
       const res = await handleAPI(api);
       res.data && setSuppliers(res.data.items);
-      setTotal(res.data.total)
-      console.log("Check Total Row: ",res);
+      setTotal(res.data.total);
+      // console.log("Check Total Row: ",res);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -235,11 +247,11 @@ const SupplierScreen = () => {
             // setPage(current);
           },
           total: total,
-          onChange: (page, pageSize)=>{
+          onChange: (page, pageSize) => {
             console.log(page, pageSize);
-            setPage(page)
-            setPageSize(pageSize)
-          }
+            setPage(page);
+            setPageSize(pageSize);
+          },
         }}
         loading={isLoading}
         dataSource={suppliers}

@@ -7,6 +7,7 @@ import Paragraph from "antd/es/typography/Paragraph";
 import { uploadFile } from "../utils/uploadFile";
 import { replaceName } from "../utils/replaceName";
 import { SupplierModel } from "../models/SupplierModel";
+import { useSelector } from "react-redux";
 
 interface Props {
   visible: boolean;
@@ -22,6 +23,10 @@ const ToggleSupplier = (props: Props) => {
   const [file, setFile] = useState();
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
+
+  //Add User Created
+  const userCreated = useSelector((state: any)=> state.authReducer?.data?.name)
+  
 
   useEffect(() => {
     if (supplier) {
@@ -47,6 +52,7 @@ const ToggleSupplier = (props: Props) => {
     }
 
     data.slug = replaceName(values.name);
+    data.userCreated = userCreated
     const api = `/supplier/${
       supplier ? `update-supplier?id=${supplier._id}` : `add-new-supplier`
     }`;

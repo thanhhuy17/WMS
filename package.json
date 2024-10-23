@@ -13,6 +13,7 @@
     "@types/react-dom": "^18.3.0",
     "antd": "^5.20.6",
     "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
     "firebase": "^10.14.0",
     "iconsax-react": "^0.0.8",
     "query-string": "^9.1.0",

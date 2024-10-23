@@ -10,6 +10,7 @@ export interface SupplierModel {
   isTaking: boolean
   photoUrl: string
   status: string
+  userCreated: string
   createdAt: string
   updatedAt: string
   _id: string
