@@ -21,14 +21,12 @@ import ToggleSupplier from "../modals";
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 import { Edit2, UserRemove } from "iconsax-react";
-import { useSelector } from "react-redux";
 import dayjs from "dayjs";
 // import { demoData } from "../data/demoData";
 // import { replace } from "react-router-dom";
 // import { replaceName } from "../utils/replaceName";
 // import { current } from "@reduxjs/toolkit";
 
-<Pagination defaultCurrent={6} total={500} />;
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
@@ -170,7 +168,7 @@ const SupplierScreen = () => {
       const res = await handleAPI(api);
       res.data && setSuppliers(res.data.items);
       const items: SupplierModel[] = [];
-      console.log("Check Index: ", items);
+      // console.log("Check Index: ", items);
 
       res.data.items.forEach((item: any, index: number) =>
         items.push({
@@ -200,7 +198,7 @@ const SupplierScreen = () => {
         "delete"
       );
       message.success(res.message);
-      getSuppliers();
+      await getSuppliers();
     } catch (error) {
       console.log(error);
     }
