@@ -23,7 +23,7 @@ const ToggleSupplier = (props: Props) => {
   const [isGetting, setIsGetting] = useState(false);
   const [isTaking, setIsTaking] = useState<boolean>();
   const [file, setFile] = useState();
-  const [formDynamic, setFormDynamic] = useState<FormModel>()
+  const [formDynamic, setFormDynamic] = useState<FormModel>();
 
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
@@ -91,7 +91,7 @@ const ToggleSupplier = (props: Props) => {
     setIsGetting(true);
     try {
       const res: any = await handleAPI(api);
-      res.data && setFormDynamic(res.data)
+      res.data && setFormDynamic(res.data);
       console.log("Check Get Form Dynamic: ", res);
     } catch (error: any) {
       message.error(error.message);
@@ -146,123 +146,62 @@ const ToggleSupplier = (props: Props) => {
             </Button>
           </div>
         </label>
-        {
-          formDynamic && 
+        {formDynamic && (
           <Form
-          disabled={isLoading}
-          onFinish={addNewSupplier}
-          layout={formDynamic.layout}
-          labelCol={{ span: formDynamic.labelCol }}
-          wrapperCol={{ span: formDynamic.wrapperCol }}
-          size="middle"
-          form={form}
-          style={{ color: `${colors.mainColor}` }}
-        >
-          {formDynamic.formItems.map((item)=> (
-            <Form.Item
-            key={item.key}
-            name={item.value}
-            rules={[
-              {
-                required: item.require,
-                message: item.message,
-              },
-            ]}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>
-                {item.label}
-              </span>
-            }
-            colon={false}
+            disabled={isLoading}
+            onFinish={addNewSupplier}
+            layout={formDynamic.layout}
+            labelCol={{ span: formDynamic.labelCol }}
+            wrapperCol={{ span: formDynamic.wrapperCol }}
+            size={formDynamic.size}
+            form={form}
+            style={{ color: `${colors.mainColor}` }}
           >
-            <Input placeholder={item.placeholder} allowClear />
-          </Form.Item>
-          ))}
-          
-          {/* <Form.Item
-            name={"email"}
-            rules={[
-              {
-                required: true,
-                message: "Please Enter Email!",
-              },
-            ]}
-            label={<span style={{ color: `${colors.mainColor}` }}>Email</span>}
-            colon={false}
-          >
-            <Input placeholder="Enter Supplier Email" allowClear type="email" />
-          </Form.Item>
-          <Form.Item
-            name={"product"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Product</span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter Product" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"category"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Category</span>
-            }
-            colon={false}
-          >
-            <Select options={[]} placeholder="Select product category" />
-          </Form.Item>
-          <Form.Item
-            name={"price"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Buying Price</span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter buying price" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"contactNumber"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>
-                Contact Number
-              </span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter supplier contact number" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"active"}
-            label={<span style={{ color: `${colors.mainColor}` }}>Active</span>}
-            colon={false}
-          >
-            <Input placeholder="Enter Active number" allowClear type="number" />
-          </Form.Item>
-          <Form.Item
-            name={"type"}
-            label={<span style={{ color: `${colors.mainColor}` }}>Type</span>}
-            colon={false}
-          >
-            <div>
-              <div className="mb-2">
-                <Button
-                  size="small"
-                  onClick={() => setIsTaking(false)}
-                  type={isTaking === false ? "primary" : "default"}
-                >
-                  Not taking return
-                </Button>
-              </div>
-              <Button
-                size="small"
-                onClick={() => setIsTaking(true)}
-                type={isTaking ? "primary" : "default"}
+            {formDynamic.formItems.map((item) => (
+              <Form.Item
+                key={item.key}
+                name={item.value}
+                rules={[
+                  {
+                    required: item.require,
+                    message: item.message,
+                  },
+                ]}
+                label={
+                  <span style={{ color: `${colors.mainColor}` }}>
+                    {item.label}
+                  </span>
+                }
+                colon={false}
               >
-                Taking return
-              </Button>
-            </div>
-          </Form.Item> */}
-        </Form>
-        }
+                {item.type === `default` ? (
+                  <Input placeholder={item.placeholder} allowClear />
+                ) : item.type === `select` ? (
+                  <Select options={[]} placeholder={item.placeholder} />
+                ) : (
+                  <div>
+                    <div className="mb-2">
+                      <Button
+                        size="small"
+                        onClick={() => setIsTaking(false)}
+                        type={isTaking === false ? "primary" : "default"}
+                      >
+                        Not taking return
+                      </Button>
+                    </div>
+                    <Button
+                      size="small"
+                      onClick={() => setIsTaking(true)}
+                      type={isTaking ? "primary" : "default"}
+                    >
+                      Taking return
+                    </Button>
+                  </div>
+                )}
+              </Form.Item>
+            ))}
+          </Form>
+        )}
         {/* <Form
           disabled={isLoading}
           onFinish={addNewSupplier}

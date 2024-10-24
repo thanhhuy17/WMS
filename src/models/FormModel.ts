@@ -1,3 +1,4 @@
+import { SizeType } from "antd/es/config-provider/SizeContext"
 import { FormLayout } from "antd/es/form/Form"
 
 export interface FormModel {
@@ -6,6 +7,7 @@ export interface FormModel {
     labelCol: number
     wrapperCol: number
     formItems: FormItem[]
+    size?: SizeType
 }
 
 export interface FormItem {
