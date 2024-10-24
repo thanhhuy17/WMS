@@ -1,3 +1,4 @@
+import { LiteralUnion } from "antd/es/_util/type"
 import { SizeType } from "antd/es/config-provider/SizeContext"
 import { FormLayout } from "antd/es/form/Form"
 
@@ -18,4 +19,6 @@ export interface FormItem {
     type: string
     require: boolean
     message: string
+    typeInput?: LiteralUnion<string>
+
 }

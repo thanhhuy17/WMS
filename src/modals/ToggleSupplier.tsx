@@ -174,8 +174,12 @@ const ToggleSupplier = (props: Props) => {
                 }
                 colon={false}
               >
-                {item.type === `default` ? (
-                  <Input placeholder={item.placeholder} allowClear />
+                {item.type === `input` ? (
+                  <Input
+                    placeholder={item.placeholder}
+                    allowClear
+                    type={item.typeInput}
+                  />
                 ) : item.type === `select` ? (
                   <Select options={[]} placeholder={item.placeholder} />
                 ) : (
