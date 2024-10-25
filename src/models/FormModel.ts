@@ -7,8 +7,9 @@ export interface FormModel {
     layout?: FormLayout
     labelCol: number
     wrapperCol: number
-    formItems: FormItem[]
     size?: SizeType
+    formItems: FormItem[]
+
 }
 
 export interface FormItem {
@@ -16,9 +17,14 @@ export interface FormItem {
     value: string
     label: string
     placeholder: string
-    type: string
+    type: 'default' | 'input' | 'select' | 'number' | 'tel' | 'file'
     require: boolean
     message: string
     typeInput?: LiteralUnion<string>
+    default_value: string
+}
 
+export interface SelectModel {
+    label: string;
+    value: string;
 }

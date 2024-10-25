@@ -1,4 +1,4 @@
-import { Avatar, Button, Form, Input, message, Modal, Select } from "antd";
+import { Avatar, Button, Form, message, Modal} from "antd";
 import { useEffect, useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
@@ -9,6 +9,7 @@ import { replaceName } from "../utils/replaceName";
 import { SupplierModel } from "../models/SupplierModel";
 import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
+import FormItem from "../components/FormItem";
 
 interface Props {
   visible: boolean;
@@ -99,6 +100,7 @@ const ToggleSupplier = (props: Props) => {
       setIsGetting(false);
     }
   };
+
   //--------------- MAIN LOGIC -----------------
   return (
     <div>
@@ -158,51 +160,7 @@ const ToggleSupplier = (props: Props) => {
             style={{ color: `${colors.mainColor}` }}
           >
             {formDynamic.formItems.map((item) => (
-              <Form.Item
-                key={item.key}
-                name={item.value}
-                rules={[
-                  {
-                    required: item.require,
-                    message: item.message,
-                  },
-                ]}
-                label={
-                  <span style={{ color: `${colors.mainColor}` }}>
-                    {item.label}
-                  </span>
-                }
-                colon={false}
-              >
-                {item.type === `input` ? (
-                  <Input
-                    placeholder={item.placeholder}
-                    allowClear
-                    type={item.typeInput}
-                  />
-                ) : item.type === `select` ? (
-                  <Select options={[]} placeholder={item.placeholder} />
-                ) : (
-                  <div>
-                    <div className="mb-2">
-                      <Button
-                        size="small"
-                        onClick={() => setIsTaking(false)}
-                        type={isTaking === false ? "primary" : "default"}
-                      >
-                        Not taking return
-                      </Button>
-                    </div>
-                    <Button
-                      size="small"
-                      onClick={() => setIsTaking(true)}
-                      type={isTaking ? "primary" : "default"}
-                    >
-                      Taking return
-                    </Button>
-                  </div>
-                )}
-              </Form.Item>
+              <FormItem item={item}></FormItem>
             ))}
           </Form>
         )}
