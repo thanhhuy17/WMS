@@ -1,4 +1,4 @@
-import { Avatar, Button, Form, message, Modal} from "antd";
+import { Avatar, Button, Form, message, Modal } from "antd";
 import { useEffect, useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
@@ -54,8 +54,8 @@ const ToggleSupplier = (props: Props) => {
     }
 
     data.price = values.price ? parseInt(values.price) : 0;
-
     data.isTaking = isTaking ? 1 : 0;
+    console.log("Check isTaking in ToggleSupplier: ", data.isTaking);
 
     if (file) {
       data.photoUrl = await uploadFile(file);
@@ -93,12 +93,16 @@ const ToggleSupplier = (props: Props) => {
     try {
       const res: any = await handleAPI(api);
       res.data && setFormDynamic(res.data);
-      console.log("Check Get Form Dynamic: ", res);
+      // console.log("Check Get Form Dynamic: ", res);
     } catch (error: any) {
       message.error(error.message);
     } finally {
       setIsGetting(false);
     }
+  };
+  //---------------Handle Is Taking -----------------
+  const handleIsTakingChange = (value: boolean) => {
+    setIsTaking(value); // Update isTaking state based on FormItem checkbox
   };
 
   //--------------- MAIN LOGIC -----------------
@@ -140,7 +144,7 @@ const ToggleSupplier = (props: Props) => {
             </Avatar>
           )}
 
-          <div className="">
+          <div>
             <Paragraph className="mb-0">Drag Image here</Paragraph>
             <Paragraph className="mb-0">Or</Paragraph>
             <Button onClick={() => inpRef.current.click()} type="link">
@@ -160,7 +164,12 @@ const ToggleSupplier = (props: Props) => {
             style={{ color: `${colors.mainColor}` }}
           >
             {formDynamic.formItems.map((item) => (
-              <FormItem item={item}></FormItem>
+              <FormItem
+                key={item.key}
+                item={item}
+                onIsTakingChange={handleIsTakingChange}
+                supplier = {supplier}
+              ></FormItem>
             ))}
           </Form>
         )}

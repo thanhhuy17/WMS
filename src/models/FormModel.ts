@@ -8,17 +8,18 @@ export interface FormModel {
     labelCol: number
     wrapperCol: number
     size?: SizeType
-    formItems: FormItem[]
+    formItems: FormItemModel[]
 
 }
 
-export interface FormItem {
+export interface FormItemModel {
     key: string
     value: string
     label: string
     placeholder: string
-    type: 'default' | 'input' | 'select' | 'number' | 'tel' | 'file'
+    type: 'default' | 'input' | 'select' | 'number' | 'tel' | 'file' | 'button' | 'checkbox';
     require: boolean
+    lockup_item: SelectModel[];
     message: string
     typeInput?: LiteralUnion<string>
     default_value: string

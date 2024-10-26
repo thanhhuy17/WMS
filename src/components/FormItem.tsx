@@ -1,16 +1,70 @@
 import { Checkbox, Form, Input, Select } from "antd";
-import React, { useState } from "react";
 import { colors } from "../constants/colors";
+import { FormItemModel } from "../models/FormModel";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { SupplierModel } from "../models/SupplierModel";
+import { useEffect, useState } from "react";
 
 interface Props {
-  item: any;
+  item: FormItemModel;
+  onIsTakingChange: (value: boolean) => void;
+  supplier?: SupplierModel;
 }
 
 const FormItem = (props: Props) => {
-  const [isTaking, setIsTaking] = useState<boolean>();
+  const { item, onIsTakingChange, supplier } = props;
+  const [isTakingSOS, setIsTakingSOS] = useState<boolean>(
+    supplier?.isTaking ?? false
+  );
 
-  const { item } = props;
-  console.log("Get Form Item: ", item);
+  useEffect(() => {
+    // Cập nhật trạng thái ban đầu của checkbox khi supplier (Mỗi khi Nhấn Edit mới) thay đổi
+    if (supplier) {
+      setIsTakingSOS(supplier.isTaking);
+    }
+  }, [supplier]);
+
+  const handleCheckboxChange = (e: CheckboxChangeEvent) => {
+    const isChecked = e.target.checked;
+    setIsTakingSOS(isChecked);
+    onIsTakingChange(isChecked); // Gọi callback để thông báo cho ToggleSupplier
+  };
+
+  const renderInput = (item: FormItemModel) => {
+    let content = <></>;
+
+    switch (item.type) {
+      case "select":
+        content = (
+          <Select
+            options={item.lockup_item ?? []}
+            placeholder={item.placeholder}
+          />
+        );
+        break;
+      case "checkbox":
+        content = (
+          <div>
+            <Checkbox
+              checked={isTakingSOS}
+              onChange={
+                handleCheckboxChange // Cập nhật lại trạng thái khi checkbox thay đổi
+              }
+            >
+              {item.label}
+            </Checkbox>
+          </div>
+        );
+        break;
+      default:
+        content = (
+          <Input placeholder={item.placeholder} allowClear type={item.type} />
+        );
+        break;
+    }
+    return content;
+  };
+
   return (
     <Form.Item
       key={item.key}
@@ -24,26 +78,7 @@ const FormItem = (props: Props) => {
       label={<span style={{ color: `${colors.mainColor}` }}>{item.label}</span>}
       colon={false}
     >
-      {item.type === `input` ? (
-        <Input
-          placeholder={item.placeholder}
-          allowClear
-          type={item.typeInput}
-        />
-      ) : item.type === `select` ? (
-        <Select options={[]} placeholder={item.placeholder} />
-      ) : (
-        <div>
-          <div className="mb-2">
-            <Checkbox onChange={() => setIsTaking(false)} checked={!isTaking}>
-              Not taking return
-            </Checkbox>
-          </div>
-          <Checkbox onChange={() => setIsTaking(true)} checked={isTaking}>
-            Taking return
-          </Checkbox>
-        </div>
-      )}
+      {renderInput(item)}
     </Form.Item>
   );
 };

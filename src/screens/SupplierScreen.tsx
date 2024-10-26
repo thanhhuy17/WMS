@@ -7,7 +7,6 @@ import {
   Table,
   Tooltip,
   Typography,
-  Pagination,
   Tag,
 } from "antd";
 import { ColumnProps } from "antd/es/table";
