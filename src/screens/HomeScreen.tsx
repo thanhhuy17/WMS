@@ -13,7 +13,7 @@ const HomeScreen = () => {
     const api = `/storage/products`;
     try {
       const res: any = await handleAPI(api);
-      console.log("Check Get Data from Storage: ", res);
+      // console.log("Check Get Data from Storage: ", res);
       message.success(res?.message);
     } catch (error: any) {
       console.log(error.error);

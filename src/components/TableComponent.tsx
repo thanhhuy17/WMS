@@ -47,7 +47,7 @@ const TableComponent = (props: Props) => {
 
   //-------------- ADD TABLE SUPPLIER ------------------
   useEffect(() => {
-    console.log("Check Records: ", records);
+    // console.log("Check Records: ", records);
     if (forms && forms.formItems && forms.formItems.length > 0) {
       const items: any[] = [];
       forms.formItems.forEach((item) =>
@@ -56,6 +56,7 @@ const TableComponent = (props: Props) => {
           title: item.label,
           dataIndex: item.value,
           ellipsis: true,
+
           //   width: 'auto'
           render: (text: any, record: SupplierModel) => {
             if (item.key === "type") {
@@ -114,7 +115,7 @@ const TableComponent = (props: Props) => {
           dataIndex: `dateCreated`,
           render: (dateCreated: string) => {
             const date = dayjs(dateCreated).format("HH:mm:ss DD-MM-YYYY");
-            return date.replace('00:02:17 28-10-2024', "-");
+            return date.replace("00:02:17 28-10-2024", "-");
           },
         },
         {
@@ -132,7 +133,9 @@ const TableComponent = (props: Props) => {
           render: (dateEdited: string) => {
             const date = dayjs(dateEdited).format("HH:mm:ss DD-MM-YYYY");
             // return  (date === '23:24:20 27-10-2024')? '-': date;
-            return date === "Invalid Date" ? "-" : date.replace('00:02:17 28-10-2024', '-');
+            return date === "Invalid Date"
+              ? "-"
+              : date.replace("00:02:17 28-10-2024", "-");
           },
           align: `center`,
         }
@@ -153,6 +156,8 @@ const TableComponent = (props: Props) => {
   return (
     <div>
       <Table
+    //   headerRowHeight={35}
+        tableLayout="fixed"
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ y: scrollHeight ? scrollHeight:  `calc(100vh - 300px)` }}
         scroll={{ y: scrollHeight, x: "max-content" }}

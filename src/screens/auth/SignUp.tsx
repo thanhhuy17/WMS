@@ -30,17 +30,17 @@ const SignUp = () => {
     // confirmPassword: string;
   }) => {
     const api = `/auth/register`;
-    console.log("Gia tri dua qua server: ", values);
+    // console.log("Gia tri dua qua server: ", values);
     setIsLoading(true);
     try {
       const res: any = await handleAPI(api, values, "post");
-      console.log("Kiểm lỗi: ", res);
+      // console.log("Kiểm lỗi: ", res);
       if (res.data) {
         // localStorage.setItem(localDataNames.authData, JSON.stringify(res.data.data));
         message.success(res.message);
         dispatch(addAuth(res.data));
       }
-      console.log("Phan hoi tu API Register: ", res.data);
+      // console.log("Phan hoi tu API Register: ", res.data);
     } catch (error: any) {
       console.log(error);
       message.error(error.message);
