@@ -1,4 +1,4 @@
-import { Avatar, Button, Space, Table, Typography } from "antd";
+import { Avatar, Button, Space, Table, Tag, Typography } from "antd";
 import { FormModel } from "../models/FormModel";
 
 import { MdOutlineAddToPhotos } from "react-icons/md";
@@ -47,27 +47,26 @@ const TableComponent = (props: Props) => {
 
   //-------------- ADD TABLE SUPPLIER ------------------
   useEffect(() => {
+    console.log("Check Records: ", records);
     if (forms && forms.formItems && forms.formItems.length > 0) {
       const items: any[] = [];
       forms.formItems.forEach((item) =>
         items.push({
-          title: item.label,
           key: item.key,
+          title: item.label,
           dataIndex: item.value,
           ellipsis: true,
           //   width: 'auto'
-
-        //   render: (value: any) => {
-        //     // console.log("Check isTaking value:", value);
-        //     if (item.label === 'Taking Return') {
-        //         return (
-        //           <Text type={value ? "success" : "danger"}>
-        //             {value ? "Taking Return" : "Not Taking Return"}
-        //           </Text>
-        //         );
-        //       }
-        //       return value
-        //   },
+          render: (text: any, record: SupplierModel) => {
+            if (item.key === "type") {
+              return (
+                <Text type={record.isTaking ? "success" : "danger"}>
+                  {record.isTaking ? "Taking Return" : "Not Taking Return"}
+                </Text>
+              );
+            }
+            return text;
+          },
         })
       );
       items.unshift(
@@ -87,6 +86,17 @@ const TableComponent = (props: Props) => {
           fixed: "left",
           align: `center`,
           render: (url: string) => <Avatar src={url} />,
+        },
+        {
+          key: "status",
+          title: "Status",
+          dataIndex: `status`,
+          render: (status: string) => (
+            <Tag color="green" key={status}>
+              {status ?? ""}
+            </Tag>
+          ),
+          fixed: "left",
         }
       );
       items.push(
@@ -101,11 +111,30 @@ const TableComponent = (props: Props) => {
         {
           key: "dateCreated",
           title: "Date Created",
-          dataIndex: `createdAt`,
-          render: (createdAt: string) => {
-            const date = dayjs(createdAt).format("HH:mm:ss DD-MM-YYYY");
-            return date;
+          dataIndex: `dateCreated`,
+          render: (dateCreated: string) => {
+            const date = dayjs(dateCreated).format("HH:mm:ss DD-MM-YYYY");
+            return date.replace('00:02:17 28-10-2024', "-");
           },
+        },
+        {
+          key: "userEdited",
+          title: "User Edited",
+          dataIndex: `userEdited`,
+          render: (userEdited: string) => (userEdited ? userEdited : "-"),
+          align: `center`,
+          width: `6rem`,
+        },
+        {
+          key: "dateEdited",
+          title: "Date Edited",
+          dataIndex: `dateEdited`,
+          render: (dateEdited: string) => {
+            const date = dayjs(dateEdited).format("HH:mm:ss DD-MM-YYYY");
+            // return  (date === '23:24:20 27-10-2024')? '-': date;
+            return date === "Invalid Date" ? "-" : date.replace('00:02:17 28-10-2024', '-');
+          },
+          align: `center`,
         }
       );
       if (extraColumn)
@@ -128,6 +157,7 @@ const TableComponent = (props: Props) => {
         // scroll={{ y: scrollHeight ? scrollHeight:  `calc(100vh - 300px)` }}
         scroll={{ y: scrollHeight, x: "max-content" }}
         pagination={{
+          showQuickJumper: true,
           showSizeChanger: true,
           onShowSizeChange: (current, size) => {
             // console.log(current, size);

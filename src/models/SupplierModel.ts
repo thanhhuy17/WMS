@@ -12,7 +12,9 @@ export interface SupplierModel {
   photoUrl: string
   status: string
   userCreated: string
-  createdAt: string
+  dateCreated: string
   updatedAt: string
+  userEdited: string
+  dateEdited: string
   _id: string
 }

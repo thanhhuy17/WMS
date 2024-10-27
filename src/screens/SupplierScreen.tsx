@@ -1,11 +1,4 @@
-import {
-  Button,
-  message,
-  Modal,
-  Space,
-  Tooltip,
-
-} from "antd";
+import { Button, message, Modal, Space, Tooltip } from "antd";
 
 import { useEffect, useState } from "react";
 import ToggleSupplier from "../modals";
@@ -15,10 +8,6 @@ import handleAPI from "../apis/handleAPI";
 import { FormModel } from "../models/FormModel";
 import { TableComponent } from "../components";
 import { Edit2, UserRemove } from "iconsax-react";
-// import { demoData } from "../data/demoData";
-// import { replace } from "react-router-dom";
-// import { replaceName } from "../utils/replaceName";
-// import { current } from "@reduxjs/toolkit";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
@@ -28,128 +17,11 @@ const SupplierScreen = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState<number>(10);
-  
+
   const [forms, setForms] = useState<FormModel>();
 
   const { confirm } = Modal;
 
-  //-------------- ADD TABLE SUPPLIER ------------------
-  // const columns: ColumnProps<SupplierModel>[] = [
-  //   {
-  //     key: "index",
-  //     title: "#",
-  //     dataIndex: "index",
-  //     fixed: "left",
-  //     align: `center`,
-  //     render: (text, record, index) => (page - 1) * pageSize + (index + 1),
-  //   },
-  //   {
-  //     key: "avatar",
-  //     title: "Logo",
-  //     dataIndex: "photoUrl",
-  //     render: (url) => <Avatar src={url} />,
-  //     fixed: "left",
-  //   },
-  //   {
-  //     key: "status",
-  //     title: "Status",
-  //     dataIndex: `status`,
-  //     render: (status: string) => (
-  //       <Tag color="green" key={status}>
-  //         {status ?? ""}
-  //       </Tag>
-  //     ),
-  //     fixed: "left",
-  //   },
-  //   {
-  //     key: "nameSupplier",
-  //     title: "Supplier Name",
-  //     dataIndex: "name",
-  //   },
-  //   {
-  //     key: "product",
-  //     title: "Product",
-  //     dataIndex: "product",
-  //   },
-  //   {
-  //     key: "contact",
-  //     title: "Contact Number",
-  //     dataIndex: "contactNumber",
-  //   },
-  //   {
-  //     key: "email",
-  //     title: "Email",
-  //     dataIndex: "email",
-  //   },
-  //   {
-  //     key: "isTaking",
-  //     title: "Type",
-  //     dataIndex: `isTaking`,
-  //     render: (isTaking: boolean) => (
-  //       <Text type={isTaking ? "success" : "danger"}>
-  //         {isTaking ? "Taking Return" : "Not Taking Return"}
-  //       </Text>
-  //     ),
-  //   },
-  //   {
-  //     key: "active",
-  //     title: "On the way",
-  //     dataIndex: "active",
-  //     render: (num) => (num ? num : `-`),
-  //     align: `center`,
-  //     width: `6rem`,
-  //   },
-  //   {
-  //     key: "userCreated",
-  //     title: "User Created",
-  //     dataIndex: `userCreated`,
-  //     render: (userCreated) => (userCreated ? userCreated : "-"),
-  //     align: `center`,
-  //     width: `6rem`,
-  //   },
-  //   {
-  //     key: "dateCreated",
-  //     title: "Date Created",
-  //     dataIndex: `createdAt`,
-  //     render: (createdAt) => {
-  //       const date = dayjs(createdAt).format("HH:mm:ss DD-MM-YYYY");
-  //       return date;
-  //     },
-  //   },
-  //   {
-  //     key: "buttonContainer",
-  //     title: "Actions",
-  //     dataIndex: "",
-  //     fixed: "right",
-  //     align: "center",
-  //     render: (item: SupplierModel) => (
-  //       <Space>
-  //         <Tooltip title="Edit">
-  //           <Button
-  //             icon={<Edit2 size={20} className="text-info" />}
-  //             onClick={() => {
-  //               setSupplierSelected(item);
-  //               setIsVisibleAddNew(true);
-  //             }}
-  //           />
-  //         </Tooltip>
-
-  //         <Tooltip title="Delete">
-  //           <Button
-  //             icon={<UserRemove size={20} className="text-danger" />}
-  //             onClick={(val) =>
-  //               confirm({
-  //                 title: "Confirm",
-  //                 content: `Are you sure want to Delete this Supplier?`,
-  //                 onOk: () => handleDeleteSupplier(item._id),
-  //               })
-  //             }
-  //           />
-  //         </Tooltip>
-  //       </Space>
-  //     ),
-  //   },
-  // ];
   useEffect(() => {
     getData();
   }, []);
@@ -196,7 +68,7 @@ const SupplierScreen = () => {
   const getForm = async () => {
     const api = `/supplier/get-form-supplier`;
     const res = await handleAPI(api);
-    console.log("Check get Cols :", res.data);
+    // console.log("Check get Cols :", res.data);
     res.data && setForms(res.data);
   };
 
@@ -239,6 +111,7 @@ const SupplierScreen = () => {
         "delete"
       );
       message.success(res.message);
+      //Callback getSuppliers
       await getSuppliers();
     } catch (error) {
       console.log(error);
@@ -286,51 +159,6 @@ const SupplierScreen = () => {
 
   return (
     <div>
-      {/* <Table
-        summary={() => <Table.Summary fixed={"top"} />}
-        // scroll={{ x: "max-content" }}
-        scroll={{ x: "max-content", y: 600 }}
-        pagination={{
-          showSizeChanger: true,
-          onShowSizeChange: (current, size) => {
-            // console.log(current, size);
-            setPageSize(size);
-            // setPage(current);
-          },
-          total: total,
-          onChange: (page, pageSize) => {
-            // console.log(page, pageSize);
-            setPage(page);
-            setPageSize(pageSize);
-          },
-        }}
-        loading={isLoading}
-        dataSource={suppliers}
-        columns={columns}
-        title={() => (
-          <div className="row">
-            <div className="col">
-              <Title style={{ fontSize: "20px", color: `${colors.mainColor}` }}>
-                Suppliers
-              </Title>
-            </div>
-            <div className="col text-end">
-              <Space>
-                <Button
-                  icon={<MdOutlineAddToPhotos size={20} />}
-                  type="primary"
-                  // Show Modal Supplier when to onclick
-                  onClick={() => setIsVisibleAddNew(true)}
-                >
-                  Add Supplier
-                </Button>
-                <Button icon={<LuFilter size={20} />}>Filters</Button>
-                <Button icon={<PiExportLight size={20} />}>Export</Button>
-              </Space>
-            </div>
-          </div>
-        )}
-      /> */}
       {forms && (
         <TableComponent
           forms={forms}
@@ -343,32 +171,33 @@ const SupplierScreen = () => {
           onAddNew={() => setIsVisibleAddNew(true)}
           scrollHeight={600}
           total={total}
-          extraColumn = {(item) => (
-                  <Space>
-                    <Tooltip title="Edit">
-                      <Button
-                        icon={<Edit2 size={20} className="text-info" />}
-                        onClick={() => {
-                          setSupplierSelected(item);
-                          setIsVisibleAddNew(true);
-                        }}
-                      />
-                    </Tooltip>
-          
-                    <Tooltip title="Delete">
-                      <Button
-                        icon={<UserRemove size={20} className="text-danger" />}
-                        onClick={(val) =>
-                          confirm({
-                            title: "Confirm",
-                            content: `Are you sure want to Delete this Supplier?`,
-                            onOk: () => handleDeleteSupplier(item._id),
-                          })
-                        }
-                      />
-                    </Tooltip>
-                  </Space>
-                )}
+          // isTaking={isTaking}
+          extraColumn={(item) => (
+            <Space>
+              <Tooltip title="Edit">
+                <Button
+                  icon={<Edit2 size={20} className="text-info" />}
+                  onClick={() => {
+                    setSupplierSelected(item);
+                    setIsVisibleAddNew(true);
+                  }}
+                />
+              </Tooltip>
+
+              <Tooltip title="Delete">
+                <Button
+                  icon={<UserRemove size={20} className="text-danger" />}
+                  onClick={(val) =>
+                    confirm({
+                      title: "Confirm",
+                      content: `Are you sure want to Delete this Supplier?`,
+                      onOk: () => handleDeleteSupplier(item._id),
+                    })
+                  }
+                />
+              </Tooltip>
+            </Space>
+          )}
         />
       )}
 

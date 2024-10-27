@@ -55,7 +55,16 @@ const ToggleSupplier = (props: Props) => {
 
     data.price = values.price ? parseInt(values.price) : 0;
     data.isTaking = isTaking ? 1 : 0;
-    console.log("Check isTaking in ToggleSupplier: ", data.isTaking);
+    // console.log("Check isTaking in ToggleSupplier: ", data.isTaking);
+    // Add UserEdit and TimeEdit
+    if (!supplier) {
+      data.userEdited = undefined;
+      data.dateEdited = '';
+      data.dateCreated = new Date().toISOString();
+    } else {
+      data.userEdited = userCreated;
+      data.dateEdited = new Date().toISOString();
+    }
 
     if (file) {
       data.photoUrl = await uploadFile(file);
@@ -168,7 +177,7 @@ const ToggleSupplier = (props: Props) => {
                 key={item.key}
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
-                supplier = {supplier}
+                supplier={supplier}
               ></FormItem>
             ))}
           </Form>
