@@ -9,7 +9,6 @@ export interface FormModel {
     wrapperCol: number
     size?: SizeType
     formItems: FormItemModel[]
-
 }
 
 export interface FormItemModel {

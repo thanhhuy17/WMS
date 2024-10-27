@@ -21,10 +21,12 @@ import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 import { Edit2, UserRemove } from "iconsax-react";
 import dayjs from "dayjs";
-// import { demoData } from "../data/demoData";
-// import { replace } from "react-router-dom";
-// import { replaceName } from "../utils/replaceName";
-// import { current } from "@reduxjs/toolkit";
+import { FormModel } from "../models/FormModel";
+import { TableComponent } from "../components";
+import { demoData } from "../data/demoData";
+import { replace } from "react-router-dom";
+import { replaceName } from "../utils/replaceName";
+import { current } from "@reduxjs/toolkit";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
@@ -34,131 +36,179 @@ const SupplierScreen = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState<number>(10);
+  const [columns, setColumns] = useState<any[]>([]);
+  const [forms, setForms] = useState<FormModel>();
 
   const { Title, Text } = Typography;
   const { confirm } = Modal;
 
   //-------------- ADD TABLE SUPPLIER ------------------
-  const columns: ColumnProps<SupplierModel>[] = [
-    {
-      key: "index",
-      title: "#",
-      dataIndex: "index",
-      fixed: "left",
-      align: `center`,
-      render: (text, record, index) => (page - 1) * pageSize + (index + 1),
-    },
-    {
-      key: "avatar",
-      title: "Logo",
-      dataIndex: "photoUrl",
-      render: (url) => <Avatar src={url} />,
-      fixed: "left",
-    },
-    {
-      key: "status",
-      title: "Status",
-      dataIndex: `status`,
-      render: (status: string) => (
-        <Tag color="green" key={status}>
-          {status ?? ""}
-        </Tag>
-      ),
-      fixed: "left",
-    },
-    {
-      key: "nameSupplier",
-      title: "Supplier Name",
-      dataIndex: "name",
-    },
-    {
-      key: "product",
-      title: "Product",
-      dataIndex: "product",
-    },
-    {
-      key: "contact",
-      title: "Contact Number",
-      dataIndex: "contactNumber",
-    },
-    {
-      key: "email",
-      title: "Email",
-      dataIndex: "email",
-    },
-    {
-      key: "isTaking",
-      title: "Type",
-      dataIndex: `isTaking`,
-      render: (isTaking: boolean) => (
-        <Text type={isTaking ? "success" : "danger"}>
-          {isTaking ? "Taking Return" : "Not Taking Return"}
-        </Text>
-      ),
-    },
-    {
-      key: "active",
-      title: "On the way",
-      dataIndex: "active",
-      render: (num) => (num ? num : `-`),
-      align: `center`,
-      width: `6rem`,
-    },
-    {
-      key: "userCreated",
-      title: "User Created",
-      dataIndex: `userCreated`,
-      render: (userCreated) => (userCreated ? userCreated : "-"),
-      align: `center`,
-      width: `6rem`,
-    },
-    {
-      key: "dateCreated",
-      title: "Date Created",
-      dataIndex: `createdAt`,
-      render: (createdAt) => {
-        const date = dayjs(createdAt).format("HH:mm:ss DD-MM-YYYY");
-        return date;
-      },
-    },
-    {
-      key: "buttonContainer",
-      title: "Actions",
-      dataIndex: "",
-      fixed: "right",
-      align: "center",
-      render: (item: SupplierModel) => (
-        <Space>
-          <Tooltip title="Edit">
-            <Button
-              icon={<Edit2 size={20} className="text-info" />}
-              onClick={() => {
-                setSupplierSelected(item);
-                setIsVisibleAddNew(true);
-              }}
-            />
-          </Tooltip>
+  // const columns: ColumnProps<SupplierModel>[] = [
+  //   {
+  //     key: "index",
+  //     title: "#",
+  //     dataIndex: "index",
+  //     fixed: "left",
+  //     align: `center`,
+  //     render: (text, record, index) => (page - 1) * pageSize + (index + 1),
+  //   },
+  //   {
+  //     key: "avatar",
+  //     title: "Logo",
+  //     dataIndex: "photoUrl",
+  //     render: (url) => <Avatar src={url} />,
+  //     fixed: "left",
+  //   },
+  //   {
+  //     key: "status",
+  //     title: "Status",
+  //     dataIndex: `status`,
+  //     render: (status: string) => (
+  //       <Tag color="green" key={status}>
+  //         {status ?? ""}
+  //       </Tag>
+  //     ),
+  //     fixed: "left",
+  //   },
+  //   {
+  //     key: "nameSupplier",
+  //     title: "Supplier Name",
+  //     dataIndex: "name",
+  //   },
+  //   {
+  //     key: "product",
+  //     title: "Product",
+  //     dataIndex: "product",
+  //   },
+  //   {
+  //     key: "contact",
+  //     title: "Contact Number",
+  //     dataIndex: "contactNumber",
+  //   },
+  //   {
+  //     key: "email",
+  //     title: "Email",
+  //     dataIndex: "email",
+  //   },
+  //   {
+  //     key: "isTaking",
+  //     title: "Type",
+  //     dataIndex: `isTaking`,
+  //     render: (isTaking: boolean) => (
+  //       <Text type={isTaking ? "success" : "danger"}>
+  //         {isTaking ? "Taking Return" : "Not Taking Return"}
+  //       </Text>
+  //     ),
+  //   },
+  //   {
+  //     key: "active",
+  //     title: "On the way",
+  //     dataIndex: "active",
+  //     render: (num) => (num ? num : `-`),
+  //     align: `center`,
+  //     width: `6rem`,
+  //   },
+  //   {
+  //     key: "userCreated",
+  //     title: "User Created",
+  //     dataIndex: `userCreated`,
+  //     render: (userCreated) => (userCreated ? userCreated : "-"),
+  //     align: `center`,
+  //     width: `6rem`,
+  //   },
+  //   {
+  //     key: "dateCreated",
+  //     title: "Date Created",
+  //     dataIndex: `createdAt`,
+  //     render: (createdAt) => {
+  //       const date = dayjs(createdAt).format("HH:mm:ss DD-MM-YYYY");
+  //       return date;
+  //     },
+  //   },
+  //   {
+  //     key: "buttonContainer",
+  //     title: "Actions",
+  //     dataIndex: "",
+  //     fixed: "right",
+  //     align: "center",
+  //     render: (item: SupplierModel) => (
+  //       <Space>
+  //         <Tooltip title="Edit">
+  //           <Button
+  //             icon={<Edit2 size={20} className="text-info" />}
+  //             onClick={() => {
+  //               setSupplierSelected(item);
+  //               setIsVisibleAddNew(true);
+  //             }}
+  //           />
+  //         </Tooltip>
 
-          <Tooltip title="Delete">
-            <Button
-              icon={<UserRemove size={20} className="text-danger" />}
-              onClick={(val) =>
-                confirm({
-                  title: "Confirm",
-                  content: `Are you sure want to Delete this Supplier?`,
-                  onOk: () => handleDeleteSupplier(item._id),
-                })
-              }
-            />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
+  //         <Tooltip title="Delete">
+  //           <Button
+  //             icon={<UserRemove size={20} className="text-danger" />}
+  //             onClick={(val) =>
+  //               confirm({
+  //                 title: "Confirm",
+  //                 content: `Are you sure want to Delete this Supplier?`,
+  //                 onOk: () => handleDeleteSupplier(item._id),
+  //               })
+  //             }
+  //           />
+  //         </Tooltip>
+  //       </Space>
+  //     ),
+  //   },
+  // ];
+  useEffect(() => {
+    getData();
+  }, []);
 
   useEffect(() => {
     getSuppliers();
   }, [page, pageSize]);
+
+  // useEffect(() => {
+  //   if (forms && forms.formItems && forms.formItems.length > 0) {
+  //     const items: any[] = [];
+  //     forms.formItems.forEach((item) =>
+  //       items.push({
+  //         title: item.label,
+  //         key: item.key,
+  //         dataIndex: item.value,
+  //       })
+  //     );
+  //     items.unshift({
+  //       key: "index",
+  //       title: "#",
+  //       dataIndex: ("index"),
+  //       fixed: "left",
+  //       align: `center`,
+  //       render: (text: any, record: SupplierModel, index: any) =>
+  //         (page - 1) * pageSize + (index + 1)
+  //     });
+  //     setColumns(items);
+  //   }
+  // }, [forms]);
+  //-------------- GET FORM FOR COLS OF TABLE ------------------
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+      // await getSuppliers();
+      await getForm();
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getForm = async () => {
+    const api = `/supplier/get-form-supplier`;
+    const res = await handleAPI(api);
+    console.log("Check get Cols :", res.data);
+    res.data && setForms(res.data);
+  };
+
   // ------------- GET SUPPLIERS FROM BACKEND-----------------
   const getSuppliers = async () => {
     const api = `/supplier?page=${page}&pageSize=${pageSize}`;
@@ -177,6 +227,7 @@ const SupplierScreen = () => {
       );
       setTotal(res.data.total);
       // console.log("Check Total Row: ",res);
+      console.log(page, pageSize);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -244,10 +295,7 @@ const SupplierScreen = () => {
 
   return (
     <div>
-      {/* <Button type="default" onClick={handleAddDemoData}>
-        Add Demo Data
-      </Button> */}
-      <Table
+      {/* <Table
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ x: "max-content" }}
         scroll={{ x: "max-content", y: 600 }}
@@ -291,7 +339,22 @@ const SupplierScreen = () => {
             </div>
           </div>
         )}
-      />
+      /> */}
+      {forms && (
+        <TableComponent
+          forms={forms}
+          loading={isLoading}
+          records={suppliers}
+          onPageChange={(val) => {
+            setPage(val.page);
+            setPageSize(val.pageSize);
+          }}
+          onAddNew={() => setIsVisibleAddNew(true)}
+          scrollHeight={600}
+          total={total}
+        />
+      )}
+
       <ToggleSupplier
         visible={isVisibleAddNew}
         onClose={() => {
