@@ -1,45 +1,36 @@
 import {
-  Avatar,
   Button,
   message,
   Modal,
   Space,
-  Table,
   Tooltip,
-  Typography,
-  Tag,
-} from "antd";
-import { ColumnProps } from "antd/es/table";
 
-import { colors } from "../constants/colors";
-import { LuFilter } from "react-icons/lu";
-import { PiExportLight } from "react-icons/pi";
-import { MdOutlineAddToPhotos } from "react-icons/md";
+} from "antd";
+
 import { useEffect, useState } from "react";
 import ToggleSupplier from "../modals";
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
-import { Edit2, UserRemove } from "iconsax-react";
-import dayjs from "dayjs";
+
 import { FormModel } from "../models/FormModel";
 import { TableComponent } from "../components";
-import { demoData } from "../data/demoData";
-import { replace } from "react-router-dom";
-import { replaceName } from "../utils/replaceName";
-import { current } from "@reduxjs/toolkit";
+import { Edit2, UserRemove } from "iconsax-react";
+// import { demoData } from "../data/demoData";
+// import { replace } from "react-router-dom";
+// import { replaceName } from "../utils/replaceName";
+// import { current } from "@reduxjs/toolkit";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState<number>(10);
-  const [columns, setColumns] = useState<any[]>([]);
+  
   const [forms, setForms] = useState<FormModel>();
 
-  const { Title, Text } = Typography;
   const { confirm } = Modal;
 
   //-------------- ADD TABLE SUPPLIER ------------------
@@ -201,7 +192,7 @@ const SupplierScreen = () => {
       setIsLoading(false);
     }
   };
-
+  // --------------Gọi dữ liệu từ server và đẩy vào mảng setForms để sử dụng ------------------
   const getForm = async () => {
     const api = `/supplier/get-form-supplier`;
     const res = await handleAPI(api);
@@ -227,7 +218,7 @@ const SupplierScreen = () => {
       );
       setTotal(res.data.total);
       // console.log("Check Total Row: ",res);
-      console.log(page, pageSize);
+      // console.log(page, pageSize);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -237,7 +228,7 @@ const SupplierScreen = () => {
 
   //  ---------------- SORT DELETE ---------------
   const handleDeleteSupplier = async (id: string) => {
-    console.log(id);
+    // console.log(id);
     try {
       // Sort Delete (Xoá mềm)
       // await handleAPI(`/supplier/update-supplier?id=${id}`, {isDeleted: true}, 'put')
@@ -352,6 +343,32 @@ const SupplierScreen = () => {
           onAddNew={() => setIsVisibleAddNew(true)}
           scrollHeight={600}
           total={total}
+          extraColumn = {(item) => (
+                  <Space>
+                    <Tooltip title="Edit">
+                      <Button
+                        icon={<Edit2 size={20} className="text-info" />}
+                        onClick={() => {
+                          setSupplierSelected(item);
+                          setIsVisibleAddNew(true);
+                        }}
+                      />
+                    </Tooltip>
+          
+                    <Tooltip title="Delete">
+                      <Button
+                        icon={<UserRemove size={20} className="text-danger" />}
+                        onClick={(val) =>
+                          confirm({
+                            title: "Confirm",
+                            content: `Are you sure want to Delete this Supplier?`,
+                            onOk: () => handleDeleteSupplier(item._id),
+                          })
+                        }
+                      />
+                    </Tooltip>
+                  </Space>
+                )}
         />
       )}
 
