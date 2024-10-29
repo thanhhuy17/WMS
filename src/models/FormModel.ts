@@ -24,6 +24,7 @@ export interface FormItemModel {
     message: string
     typeInput?: LiteralUnion<string>
     default_value: string
+    displayLength: number
 
 }
 
