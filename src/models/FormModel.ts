@@ -1,12 +1,14 @@
 import { LiteralUnion } from "antd/es/_util/type"
 import { SizeType } from "antd/es/config-provider/SizeContext"
 import { FormLayout } from "antd/es/form/Form"
+import { FormLabelAlign } from "antd/es/form/interface"
 
 export interface FormModel {
     title: string
     layout?: FormLayout
     labelCol: number
     wrapperCol: number
+    labelAlign: FormLabelAlign
     size?: SizeType
     formItems: FormItemModel[]
 }
@@ -22,7 +24,7 @@ export interface FormItemModel {
     message: string
     typeInput?: LiteralUnion<string>
     default_value: string
-    
+
 }
 
 export interface SelectModel {

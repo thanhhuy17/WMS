@@ -59,7 +59,7 @@ const ToggleSupplier = (props: Props) => {
     // Add UserEdit and TimeEdit
     if (!supplier) {
       data.userEdited = undefined;
-      data.dateEdited = '';
+      data.dateEdited = "";
       data.dateCreated = new Date().toISOString();
     } else {
       data.userEdited = userCreated;
@@ -165,8 +165,10 @@ const ToggleSupplier = (props: Props) => {
           <Form
             disabled={isLoading}
             onFinish={addNewSupplier}
+            // layout='vertical'
             layout={formDynamic.layout}
             labelCol={{ span: formDynamic.labelCol }}
+            labelAlign={formDynamic.labelAlign}
             wrapperCol={{ span: formDynamic.wrapperCol }}
             size={formDynamic.size}
             form={form}
