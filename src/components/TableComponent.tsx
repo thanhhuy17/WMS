@@ -56,6 +56,7 @@ const TableComponent = (props: Props) => {
           title: item.label,
           dataIndex: item.value,
           ellipsis: true,
+          width: item.displayLength,
 
           //   width: 'auto'
           render: (text: any, record: SupplierModel) => {
@@ -156,11 +157,12 @@ const TableComponent = (props: Props) => {
   return (
     <div>
       <Table
-    //   headerRowHeight={35}
+        //   headerRowHeight={35}
         tableLayout="fixed"
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ y: scrollHeight ? scrollHeight:  `calc(100vh - 300px)` }}
         scroll={{ y: scrollHeight, x: "max-content" }}
+        // scroll={{ y: scrollHeight, x: "auto" }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
