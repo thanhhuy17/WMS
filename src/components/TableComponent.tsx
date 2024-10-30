@@ -11,6 +11,8 @@ import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
 import { render } from "@testing-library/react";
 import { Resizable } from "re-resizable";
+import { utils, writeFileXLSX } from "xlsx";
+import { handleExportExcel } from "../utils/exportExcel";
 
 interface Props {
   forms: FormModel;
@@ -191,12 +193,20 @@ const TableComponent = (props: Props) => {
             }
           }}
         >
-          <div >{children}</div>
+          <div>{children}</div>
         </Resizable>
       </th>
     );
   };
 
+  //---------- HANDLE EXPORT EXCEL --------------
+  // const handleExportExcel = async () => {
+  //   console.log("Check data excel: ", records);
+  //   const ws = utils.json_to_sheet(records);
+  //   const wb = utils.book_new();
+  //   utils.book_append_sheet(wb, ws, `data`);
+  //   writeFileXLSX(wb, `suppliers_list.xlsx`);
+  // };
   return (
     <div>
       <Table
@@ -246,7 +256,12 @@ const TableComponent = (props: Props) => {
                   Add Supplier
                 </Button>
                 <Button icon={<LuFilter size={20} />}>Filters</Button>
-                <Button icon={<PiExportLight size={20} />}>Export</Button>
+                <Button
+                  icon={<PiExportLight size={20} />}
+                  onClick={()=>handleExportExcel(records)}
+                >
+                  Export
+                </Button>
               </Space>
             </div>
           </div>

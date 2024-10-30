@@ -9,6 +9,8 @@ import { FormModel } from "../models/FormModel";
 import { TableComponent } from "../components";
 import { Edit2, UserRemove } from "iconsax-react";
 
+import { MdOutlinePlaylistRemove } from "react-icons/md";
+
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
@@ -117,6 +119,9 @@ const SupplierScreen = () => {
       console.log(error);
     }
   };
+  //  ---------------- BLACK LIST ---------------
+
+  const handleBlackListSupplier = () => {};
   //  ---------------- ADD DEMO DATA ---------------
   //   const handleAddDemoData = () => {
   //     /*
@@ -192,6 +197,25 @@ const SupplierScreen = () => {
                       title: "Confirm",
                       content: `Are you sure want to Delete this Supplier?`,
                       onOk: () => handleDeleteSupplier(item._id),
+                    })
+                  }
+                />
+              </Tooltip>
+
+              {/* Black List */}
+              <Tooltip title="Black List">
+                <Button
+                  icon={
+                    <MdOutlinePlaylistRemove
+                      size={20}
+                      className="text-alert-dark"
+                    />
+                  }
+                  onClick={(val) =>
+                    confirm({
+                      title: "Confirm",
+                      content: `Are you sure want to Black List this Supplier?`,
+                      onOk: () => handleBlackListSupplier(),
                     })
                   }
                 />
