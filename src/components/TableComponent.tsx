@@ -258,7 +258,7 @@ const TableComponent = (props: Props) => {
                 <Button icon={<LuFilter size={20} />}>Filters</Button>
                 <Button
                   icon={<PiExportLight size={20} />}
-                  onClick={()=>handleExportExcel(records)}
+                  onClick={()=>handleExportExcel(records, 'suppliers_list')}
                 >
                   Export
                 </Button>
