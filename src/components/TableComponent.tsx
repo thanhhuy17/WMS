@@ -172,6 +172,7 @@ const TableComponent = (props: Props) => {
             // setPage(current);
           },
           total: total,
+          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
           onChange: (page, pageSize) => {
             setPageInfo({
               ...pageInfo,
