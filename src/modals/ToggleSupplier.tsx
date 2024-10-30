@@ -16,10 +16,11 @@ interface Props {
   onClose: () => void;
   onAddNew: (val: SupplierModel) => void;
   supplier?: SupplierModel;
+  getSuppliers: ()=> void
 }
 
 const ToggleSupplier = (props: Props) => {
-  const { visible, onClose, onAddNew, supplier } = props;
+  const { visible, onClose, onAddNew, supplier, getSuppliers } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [isGetting, setIsGetting] = useState(false);
   const [isTaking, setIsTaking] = useState<boolean>();
@@ -82,6 +83,8 @@ const ToggleSupplier = (props: Props) => {
       console.log("Check response from Server: ", res);
       !supplier && onAddNew(res.data);
       handleClose();
+      getSuppliers()
+      // getFormSupplier()
       // dispatch to redux
     } catch (error: any) {
       console.log(error.message);

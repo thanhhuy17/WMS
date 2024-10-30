@@ -236,6 +236,7 @@ const SupplierScreen = () => {
         // Sau khi thêm nhà cung cấp, gọi lại hàm getSuppliers để tải dữ liệu mới
         onAddNew={(val) => setSuppliers([...suppliers, val])}
         supplier={supplierSelected}
+        getSuppliers={getSuppliers}
       />
     </div>
   );

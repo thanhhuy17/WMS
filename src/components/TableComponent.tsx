@@ -124,6 +124,7 @@ const TableComponent = (props: Props) => {
             const date = dayjs(dateCreated).format("HH:mm:ss DD-MM-YYYY");
             return date.replace("00:02:17 28-10-2024", "-");
           },
+          width: `10rem`,
         },
         {
           key: "userEdited",
@@ -145,6 +146,7 @@ const TableComponent = (props: Props) => {
               : date.replace("00:02:17 28-10-2024", "-");
           },
           align: `center`,
+          width: `10rem`,
         }
       );
       if (extraColumn)
@@ -258,7 +260,7 @@ const TableComponent = (props: Props) => {
                 <Button icon={<LuFilter size={20} />}>Filters</Button>
                 <Button
                   icon={<PiExportLight size={20} />}
-                  onClick={()=>handleExportExcel(records, 'suppliers_list')}
+                  onClick={() => handleExportExcel(records, "suppliers_list")}
                 >
                   Export
                 </Button>
