@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { ColumnProps } from "antd/es/table";
 import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
+import { render } from "@testing-library/react";
+import { Resizable } from "re-resizable";
 
 interface Props {
   forms: FormModel;
@@ -99,6 +101,8 @@ const TableComponent = (props: Props) => {
             </Tag>
           ),
           fixed: "left",
+          // width: "8rem",
+          align: "center",
         }
       );
       items.push(
@@ -108,7 +112,7 @@ const TableComponent = (props: Props) => {
           dataIndex: `userCreated`,
           render: (userCreated: string) => (userCreated ? userCreated : "-"),
           align: `center`,
-          width: `6rem`,
+          width: `10rem`,
         },
         {
           key: "dateCreated",
@@ -125,7 +129,7 @@ const TableComponent = (props: Props) => {
           dataIndex: `userEdited`,
           render: (userEdited: string) => (userEdited ? userEdited : "-"),
           align: `center`,
-          width: `6rem`,
+          width: `10rem`,
         },
         {
           key: "dateEdited",
@@ -148,21 +152,59 @@ const TableComponent = (props: Props) => {
           dataIndex: "",
           fixed: "right",
           align: "center",
+          width: "8rem",
           render: (item: any) => extraColumn(item),
         });
       setColumns(items);
     }
   }, [forms, pageInfo]);
 
+  //--------- RESIZE TABLE ---------------
+  const RenderTitle = (props: any) => {
+    const { children, ...restProps } = props;
+    // console.log("check RenderTitle: ", props);
+    return (
+      <th style={{ padding: "0 8px", cursor: "col-resize" }} {...restProps}>
+        <Resizable
+          enable={{
+            top: false,
+            right: true, // Allow only right-side resizing
+            bottom: false,
+            left: false,
+          }}
+          onResizeStop={(_e, _direction, _ref, d) => {
+            const item = columns.find(
+              (element) => element.title === children[1]
+            );
+            if (item) {
+              const items = [...columns];
+              const index = columns.findIndex(
+                (element) => element.key === item.key
+              );
+              if (index !== -1) {
+                items[index] = {
+                  ...item,
+                  width: (item.width as number) + d.width,
+                };
+              }
+              setColumns(items);
+            }
+          }}
+        >
+          <div >{children}</div>
+        </Resizable>
+      </th>
+    );
+  };
+
   return (
     <div>
       <Table
-        //   headerRowHeight={35}
         tableLayout="fixed"
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ y: scrollHeight ? scrollHeight:  `calc(100vh - 300px)` }}
         scroll={{ y: scrollHeight, x: "max-content" }}
-        // scroll={{ y: scrollHeight, x: "auto" }}
+        // scroll={{ y: "fixed", x: "max-content" }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
@@ -172,7 +214,8 @@ const TableComponent = (props: Props) => {
             // setPage(current);
           },
           total: total,
-          showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} rows`,
           onChange: (page, pageSize) => {
             setPageInfo({
               ...pageInfo,
@@ -208,6 +251,11 @@ const TableComponent = (props: Props) => {
             </div>
           </div>
         )}
+        components={{
+          header: {
+            cell: RenderTitle,
+          },
+        }}
       />
     </div>
   );
