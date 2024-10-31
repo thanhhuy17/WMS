@@ -1,7 +1,7 @@
 import { Button, message, Modal, Space, Tooltip } from "antd";
 
 import { useEffect, useState } from "react";
-import ToggleSupplier from "../modals";
+
 import { SupplierModel } from "../models/SupplierModel";
 import handleAPI from "../apis/handleAPI";
 
@@ -10,6 +10,7 @@ import { TableComponent } from "../components";
 import { Edit2, UserRemove } from "iconsax-react";
 
 import { MdOutlinePlaylistRemove } from "react-icons/md";
+import { ToggleSupplier } from "../modals";
 
 const SupplierScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
@@ -161,11 +162,12 @@ const SupplierScreen = () => {
   //       }
   //     });
   //   };
-
+  const api = "supplier";
   return (
     <div>
       {forms && (
         <TableComponent
+          api={api}
           forms={forms}
           loading={isLoading}
           records={suppliers}

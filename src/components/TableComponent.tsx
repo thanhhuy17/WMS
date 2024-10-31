@@ -9,10 +9,9 @@ import { useEffect, useState } from "react";
 import { ColumnProps } from "antd/es/table";
 import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
-import { render } from "@testing-library/react";
 import { Resizable } from "re-resizable";
-import { utils, writeFileXLSX } from "xlsx";
 import { handleExportExcel } from "../utils/exportExcel";
+import { ModalExportData } from "../modals";
 
 interface Props {
   forms: FormModel;
@@ -23,6 +22,7 @@ interface Props {
   scrollHeight: number;
   total: number;
   extraColumn?: (item: any) => void;
+  api: string;
 }
 
 const { Title, Text } = Typography;
@@ -37,6 +37,7 @@ const TableComponent = (props: Props) => {
     scrollHeight,
     total,
     extraColumn,
+    api,
   } = props;
   const [columns, setColumns] = useState<ColumnProps<any>[]>([]);
 
@@ -44,6 +45,8 @@ const TableComponent = (props: Props) => {
     page: 1,
     pageSize: 10,
   });
+
+  const [isVisibleModalExport, setIsVisibleModalExport] = useState(false);
 
   useEffect(() => {
     onPageChange(pageInfo);
@@ -260,7 +263,8 @@ const TableComponent = (props: Props) => {
                 <Button icon={<LuFilter size={20} />}>Filters</Button>
                 <Button
                   icon={<PiExportLight size={20} />}
-                  onClick={() => handleExportExcel(records, "suppliers_list")}
+                  onClick={()=>setIsVisibleModalExport(true)}
+                  // onClick={() => handleExportExcel(records, "suppliers_list")}
                 >
                   Export
                 </Button>
@@ -274,6 +278,12 @@ const TableComponent = (props: Props) => {
           },
         }}
       />
+      <ModalExportData
+        api={api}
+        onClose={() => setIsVisibleModalExport(false)}
+        visible = {isVisibleModalExport}
+        name={api}
+      ></ModalExportData>
     </div>
   );
 };
