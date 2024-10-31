@@ -102,7 +102,7 @@ const InventoryScreen = () => {
   };
   const api = "supplier";
   return (
-    <div className="container mt-4">
+    <div className="container-figure mt-4">
       {/* Overall Inventory Section */}
       <div className="row">
         <div className="col-12 mb-3">
