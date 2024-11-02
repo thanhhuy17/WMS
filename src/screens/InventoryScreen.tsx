@@ -11,8 +11,8 @@ import handleAPI from "../apis/handleAPI";
 import { FormModel } from "../models/FormModel";
 import { Edit2, UserRemove } from "iconsax-react";
 
-import { MdOutlinePlaylistRemove } from "react-icons/md";
-import { ToggleSupplier } from "../modals";
+// import { MdOutlinePlaylistRemove } from "react-icons/md";
+// import { ToggleSupplier } from "../modals";
 
 const InventoryScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
@@ -51,7 +51,7 @@ const InventoryScreen = () => {
   const getForm = async () => {
     const api = `/supplier/get-form-supplier`;
     const res = await handleAPI(api);
-    // console.log("Check get Cols :", res.data);
+    console.log("Check get Cols :", res.data);
     res.data && setForms(res.data);
   };
 
