@@ -67,14 +67,14 @@ const ModalExportData = (props: Props) => {
       title="Export To Excel"
       width={760}
     >
-      <div>
+      {/* <div>
         <Space>
           <RangePicker
             // onChange={(val) => (val)}
           />
           <Button type="link">Export All</Button>
         </Space>
-      </div>
+      </div> */}
       <div className="mt-2">
         <List dataSource={forms?.formItems} renderItem={(item)=> <List.Item key={item.key}>
             <Checkbox checked={checkedValues.includes(item.value)} onChange={()=>handleChangeCheckedValue(item.value)}>{item.label}</Checkbox>
