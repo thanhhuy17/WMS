@@ -36,7 +36,6 @@ const ToggleProduct = (props: Props) => {
   useEffect(() => {
     if (product) {
       form.setFieldsValue(product);
-      //   setIsTaking(supplier.isTaking);
     }
   }, [form, product]);
   // ------ GET FORM WHEN TO START WEB -------
@@ -54,7 +53,6 @@ const ToggleProduct = (props: Props) => {
 
     data.price = values.price ? parseInt(values.price) : 0;
     data.isTaking = isTaking ? 1 : 0;
-    // console.log("Check isTaking in ToggleSupplier: ", data.isTaking);
     // Add UserEdit and TimeEdit
     if (!product) {
       data.userEdited = undefined;
@@ -82,8 +80,6 @@ const ToggleProduct = (props: Props) => {
       !product && onAddNew(res.data);
       handleClose();
       getProducts();
-      // getFormSupplier()
-      // dispatch to redux
     } catch (error: any) {
       console.log(error.message);
     } finally {
@@ -96,7 +92,7 @@ const ToggleProduct = (props: Props) => {
     setFile(undefined);
     onClose();
   };
-  //-------------- GET FORM SUPPLIER ---------------
+  //-------------- GET FORM PRODUCT ---------------
   const getFormProduct = async () => {
     const api = `/storage/get-form-product`;
     setIsGetting(true);
@@ -157,22 +153,6 @@ const ToggleProduct = (props: Props) => {
             ))}
           </Form>
         )}
-
-        <div className="d-none">
-          <input
-            accept="image/*"
-            ref={inpRef}
-            type="file"
-            name=""
-            id="inpFile"
-            onChange={(val: any) => {
-              const selectedFile = val.target.files[0];
-              if (selectedFile) {
-                setFile(selectedFile);
-              }
-            }}
-          />
-        </div>
       </Modal>
     </div>
   );
