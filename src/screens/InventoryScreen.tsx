@@ -1,4 +1,4 @@
-import React from "react";
+
 import { InventoryComponent, TableComponent } from "../components";
 import { Button, Card } from "antd";
 import { message, Modal, Space, Tooltip } from "antd";
@@ -10,15 +10,17 @@ import handleAPI from "../apis/handleAPI";
 
 import { FormModel } from "../models/FormModel";
 import { Edit2, UserRemove } from "iconsax-react";
+import { ProductModel } from "../models/ProductModel";
+import { ToggleProduct } from "../modals";
 
 // import { MdOutlinePlaylistRemove } from "react-icons/md";
 // import { ToggleSupplier } from "../modals";
 
 const InventoryScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
-  const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
+  const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [supplierSelected, setSupplierSelected] = useState<SupplierModel>();
+  const [productSelected, setProductSelected] = useState<ProductModel>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState<number>(10);
@@ -32,7 +34,7 @@ const InventoryScreen = () => {
   }, []);
 
   useEffect(() => {
-    getSuppliers();
+    getProducts();
   }, [page, pageSize]);
 
   //-------------- GET FORM FOR COLS OF TABLE ------------------
@@ -47,21 +49,21 @@ const InventoryScreen = () => {
       setIsLoading(false);
     }
   };
-  // --------------Gọi dữ liệu từ server và đẩy vào mảng setForms để sử dụng ------------------
+  // --------------Gọi dữ liệu Form Modal từ server và đẩy vào mảng setForms để sử dụng ------------------
   const getForm = async () => {
-    const api = `/supplier/get-form-supplier`;
+    const api = `/storage/get-form-product`;
     const res = await handleAPI(api);
     console.log("Check get Cols :", res.data);
     res.data && setForms(res.data);
   };
 
   // ------------- GET SUPPLIERS FROM BACKEND-----------------
-  const getSuppliers = async () => {
-    const api = `/supplier?page=${page}&pageSize=${pageSize}`;
+  const getProducts = async () => {
+    const api = `/storage?page=${page}&pageSize=${pageSize}`;
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      res.data && setSuppliers(res.data.items);
+      res.data && setProducts(res.data.items);
       const items: SupplierModel[] = [];
       // console.log("Check Index: ", items);
 
@@ -95,12 +97,12 @@ const InventoryScreen = () => {
       );
       message.success(res.message);
       //Callback getSuppliers
-      await getSuppliers();
+      await getProducts();
     } catch (error) {
       console.log(error);
     }
   };
-  const api = "supplier";
+  const api = "product";
   return (
     <div className="container-figure mt-4">
       {/* Overall Inventory Section */}
@@ -133,7 +135,7 @@ const InventoryScreen = () => {
               api={api}
               forms={forms}
               loading={isLoading}
-              records={suppliers}
+              records={products}
               onPageChange={(val) => {
                 setPage(val.page);
                 setPageSize(val.pageSize);
@@ -148,7 +150,7 @@ const InventoryScreen = () => {
                     <Button
                       icon={<Edit2 size={20} className="text-info" />}
                       onClick={() => {
-                        setSupplierSelected(item);
+                        setProductSelected(item);
                         setIsVisibleAddNew(true);
                       }}
                     />
@@ -166,11 +168,24 @@ const InventoryScreen = () => {
                       }
                     />
                   </Tooltip>
-                  
                 </Space>
               )}
             />
           )}
+          <ToggleProduct
+        visible={isVisibleAddNew}
+        onClose={() => {
+          productSelected && getProducts();
+          setIsVisibleAddNew(false);
+          setProductSelected(undefined);
+        }}
+        // Add Supplier
+        // Sau khi thêm nhà cung cấp, gọi lại hàm getProduct để tải dữ liệu mới
+        onAddNew={(val) => setProducts([...products, val])}
+        // product={productSelected}
+        product={productSelected}
+        getProducts={getProducts}
+      />
         </div>
       </div>
     </div>

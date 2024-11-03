@@ -10,7 +10,7 @@ import { ColumnProps } from "antd/es/table";
 import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
 import { Resizable } from "re-resizable";
-import { handleExportExcel } from "../utils/exportExcel";
+// import { handleExportExcel } from "../utils/exportExcel";
 import { ModalExportData } from "../modals";
 
 interface Props {
@@ -258,12 +258,14 @@ const TableComponent = (props: Props) => {
                   // Show Modal Supplier when to onclick
                   onClick={onAddNew}
                 >
-                  Add Supplier
+                  {forms.nameButton}
                 </Button>
-                <Button icon={<LuFilter size={20} />}>Filters</Button>
+                <Button icon={<LuFilter size={20} />}>
+                  Filters
+                </Button>
                 <Button
                   icon={<PiExportLight size={20} />}
-                  onClick={()=>setIsVisibleModalExport(true)}
+                  onClick={() => setIsVisibleModalExport(true)}
                   // onClick={() => handleExportExcel(records, "suppliers_list")}
                 >
                   Export
@@ -281,7 +283,7 @@ const TableComponent = (props: Props) => {
       <ModalExportData
         api={api}
         onClose={() => setIsVisibleModalExport(false)}
-        visible = {isVisibleModalExport}
+        visible={isVisibleModalExport}
         name={api}
       ></ModalExportData>
     </div>

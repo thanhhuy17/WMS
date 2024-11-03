@@ -1,4 +1,4 @@
 import ToggleSupplier from "./ToggleSupplier";
 import ModalExportData from "./ModalExportData";
-
-export  {ToggleSupplier, ModalExportData}
+import ToggleProduct from "./ToggleProduct";
+export  {ToggleSupplier, ModalExportData, ToggleProduct}

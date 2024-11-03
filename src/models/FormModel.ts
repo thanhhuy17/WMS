@@ -10,6 +10,7 @@ export interface FormModel {
     wrapperCol: number
     labelAlign: FormLabelAlign
     size?: SizeType
+    nameButton?: string
     formItems: FormItemModel[]
 }
 
@@ -25,7 +26,6 @@ export interface FormItemModel {
     typeInput?: LiteralUnion<string>
     default_value: string
     displayLength: number
-
 }
 
 export interface SelectModel {

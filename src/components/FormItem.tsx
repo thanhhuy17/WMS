@@ -4,11 +4,13 @@ import { FormItemModel } from "../models/FormModel";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { SupplierModel } from "../models/SupplierModel";
 import { useEffect, useState } from "react";
+import { ProductModel } from "../models/ProductModel";
 
 interface Props {
   item: FormItemModel;
   onIsTakingChange: (value: boolean) => void;
   supplier?: SupplierModel;
+  product?: ProductModel
 }
 
 const FormItem = (props: Props) => {
