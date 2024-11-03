@@ -43,7 +43,7 @@ const FormItem = (props: Props) => {
             placeholder={item.placeholder}
           />
         );
-        break;
+        break; 
       case "checkbox":
         content = (
           <div>
