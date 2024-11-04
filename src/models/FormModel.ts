@@ -19,7 +19,7 @@ export interface FormItemModel {
     value: string
     label: string
     placeholder: string
-    type: 'default' | 'input' | 'select' | 'number' | 'tel' | 'file' | 'button' | 'checkbox';
+    type: 'default' | 'input' | 'select' | 'number' | 'tel' | 'file' | 'button' | 'checkbox' | 'dateTime';
     require: boolean
     lockup_item: SelectModel[];
     message: string

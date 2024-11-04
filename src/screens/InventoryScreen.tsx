@@ -45,7 +45,7 @@ const InventoryScreen = () => {
   const getForm = async () => {
     const api = `/storage/get-form-product`;
     const res = await handleAPI(api);
-    console.log("Check get Cols :", res.data);
+    // console.log("Check get Cols :", res.data);
     res.data && setForms(res.data);
   };
 

@@ -2,12 +2,13 @@ import { Form, message, Modal } from "antd";
 import { useEffect, useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
-import { uploadFile } from "../utils/uploadFile";
+// import { uploadFile } from "../utils/uploadFile";
 import { replaceName } from "../utils/replaceName";
 import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
 import { ProductModel } from "../models/ProductModel";
+import { Dayjs } from "dayjs";
 
 interface Props {
   visible: boolean;
@@ -24,7 +25,7 @@ const ToggleProduct = (props: Props) => {
   const [isTaking, setIsTaking] = useState<boolean>();
   const [file, setFile] = useState();
   const [formDynamic, setFormDynamic] = useState<FormModel>();
-
+  const [dateExpiry, setDateExpiry] = useState<string | string[]>();
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
 
@@ -51,8 +52,14 @@ const ToggleProduct = (props: Props) => {
       data[i] = values[i] ?? "";
     }
 
-    data.price = values.price ? parseInt(values.price) : 0;
-    data.isTaking = isTaking ? 1 : 0;
+    data.buyingPrice = values.buyingPrice ? parseInt(values.buyingPrice) : 0;
+    data.quantity = values.quantity ? parseInt(values.quantity) : 0;
+    data.thresholdValue = values.thresholdValue
+      ? parseInt(values.thresholdValue)
+      : 0;
+    
+    data.expiryDate = dateExpiry
+    // data.isTaking = isTaking ? 1 : 0;
     // Add UserEdit and TimeEdit
     if (!product) {
       data.userEdited = undefined;
@@ -63,11 +70,11 @@ const ToggleProduct = (props: Props) => {
       data.dateEdited = new Date().toISOString();
     }
 
-    if (file) {
-      data.photoUrl = await uploadFile(file);
-    }
+    // if (file) {
+    //   data.photoUrl = await uploadFile(file);
+    // }
 
-    data.slug = replaceName(values.name);
+    data.slug = replaceName(values.productName);
     data.userCreated = userCreated;
     const api = `/storage/${
       product ? `update-product?id=${product._id}` : `add-new-product`
@@ -111,6 +118,14 @@ const ToggleProduct = (props: Props) => {
     setIsTaking(value); // Update isTaking state based on FormItem checkbox
   };
 
+  //---------------HANDLE EXPIRY DATE  -----------------
+  const handleExpiryDateChange = (
+    _date: Dayjs | Dayjs[],
+    dateString: string | string[]
+  ) => {
+    setDateExpiry(dateString);
+  };
+  console.log("tOGGLE: ", dateExpiry); // vẫn ra ngày
   //--------------- MAIN LOGIC -----------------
   return (
     <div>
@@ -148,6 +163,7 @@ const ToggleProduct = (props: Props) => {
                 key={item.key}
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
+                onExpiryDateChange={handleExpiryDateChange}
                 product={product}
               ></FormItem>
             ))}
