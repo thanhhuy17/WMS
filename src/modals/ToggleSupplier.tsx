@@ -10,6 +10,7 @@ import { SupplierModel } from "../models/SupplierModel";
 import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
+import { ProductModel } from "../models/ProductModel";
 
 interface Props {
   visible: boolean;

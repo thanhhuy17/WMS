@@ -164,7 +164,7 @@ const ToggleProduct = (props: Props) => {
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
                 onExpiryDateChange={handleExpiryDateChange}
-                product={product}
+                product={product}                
               ></FormItem>
             ))}
           </Form>

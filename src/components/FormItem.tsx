@@ -10,13 +10,13 @@ import { Dayjs } from "dayjs";
 interface Props {
   item: FormItemModel;
   onIsTakingChange: (value: boolean) => void;
-  onExpiryDateChange: (_date: Dayjs | Dayjs[], dateString: string | string[]) => void;
+  onExpiryDateChange?: (_date: Dayjs | Dayjs[], dateString: string | string[]) => void;
   supplier?: SupplierModel;
   product?: ProductModel;
 }
 
 const FormItem = (props: Props) => {
-  const { item, onIsTakingChange, onExpiryDateChange, supplier } = props;
+  const { item, onIsTakingChange, onExpiryDateChange, supplier, product } = props;
   const [isTakingSOS, setIsTakingSOS] = useState<boolean>(
     supplier?.isTaking ?? false
   );
