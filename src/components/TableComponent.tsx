@@ -1,6 +1,5 @@
 import { Avatar, Button, Space, Table, Tag, Typography } from "antd";
 import { FormModel } from "../models/FormModel";
-
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
@@ -10,7 +9,6 @@ import { ColumnProps } from "antd/es/table";
 import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
 import { Resizable } from "re-resizable";
-// import { handleExportExcel } from "../utils/exportExcel";
 import { ModalExportData } from "../modals";
 
 interface Props {
@@ -57,7 +55,7 @@ const TableComponent = (props: Props) => {
     // console.log("Check Records: ", records);
     if (forms && forms.formItems && forms.formItems.length > 0) {
       const items: any[] = [];
-      forms.formItems.forEach((item) =>
+      forms.formItems.map((item) =>
         items.push({
           key: item.key,
           title: item.label,
@@ -78,6 +76,31 @@ const TableComponent = (props: Props) => {
           },
         })
       );
+
+      if (forms.title === `Supplier`) {
+        items.unshift({
+          key: "avatar",
+          title: "Logo",
+          dataIndex: "photoUrl",
+          fixed: "left",
+          align: `center`,
+          render: (url: string) => <Avatar src={url} />,
+        });
+      }
+      items.unshift({
+        key: "status",
+        title: "Status",
+        dataIndex: `status`,
+        render: (status: string) => (
+          <Tag color="green" key={status}>
+            {status ?? ""}
+          </Tag>
+        ),
+        fixed: "left",
+        // width: "8rem",
+        align: "center",
+      });
+
       items.unshift(
         {
           key: "index",
@@ -87,28 +110,8 @@ const TableComponent = (props: Props) => {
           align: `center`,
           render: (text: any, record: SupplierModel, index: number) =>
             (pageInfo.page - 1) * pageInfo.pageSize + (index + 1),
-        },
-        {
-          key: "avatar",
-          title: "Logo",
-          dataIndex: "photoUrl",
-          fixed: "left",
-          align: `center`,
-          render: (url: string) => <Avatar src={url} />,
-        },
-        {
-          key: "status",
-          title: "Status",
-          dataIndex: `status`,
-          render: (status: string) => (
-            <Tag color="green" key={status}>
-              {status ?? ""}
-            </Tag>
-          ),
-          fixed: "left",
-          // width: "8rem",
-          align: "center",
         }
+
       );
       items.push(
         {
@@ -260,9 +263,7 @@ const TableComponent = (props: Props) => {
                 >
                   {forms.nameButton}
                 </Button>
-                <Button icon={<LuFilter size={20} />}>
-                  Filters
-                </Button>
+                <Button icon={<LuFilter size={20} />}>Filters</Button>
                 <Button
                   icon={<PiExportLight size={20} />}
                   onClick={() => setIsVisibleModalExport(true)}

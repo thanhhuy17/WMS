@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
 import { ProductModel } from "../models/ProductModel";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface Props {
   visible: boolean;
@@ -57,8 +57,9 @@ const ToggleProduct = (props: Props) => {
     data.thresholdValue = values.thresholdValue
       ? parseInt(values.thresholdValue)
       : 0;
-    
-    data.expiryDate = dateExpiry
+
+    data.expiryDate = dateExpiry;
+    // data.category= categories
     // data.isTaking = isTaking ? 1 : 0;
     // Add UserEdit and TimeEdit
     if (!product) {
@@ -84,6 +85,7 @@ const ToggleProduct = (props: Props) => {
       message.success(res.message);
       console.log("Check data Product to Server: ", data);
       console.log("Check response Product from Server: ", res);
+
       !product && onAddNew(res.data);
       handleClose();
       getProducts();
@@ -125,7 +127,7 @@ const ToggleProduct = (props: Props) => {
   ) => {
     setDateExpiry(dateString);
   };
-  console.log("tOGGLE: ", dateExpiry); // vẫn ra ngày
+  // console.log("tOGGLE: ", dateExpiry); // vẫn ra ngày
   //--------------- MAIN LOGIC -----------------
   return (
     <div>
@@ -164,7 +166,7 @@ const ToggleProduct = (props: Props) => {
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
                 onExpiryDateChange={handleExpiryDateChange}
-                product={product}                
+                product={product}
               ></FormItem>
             ))}
           </Form>

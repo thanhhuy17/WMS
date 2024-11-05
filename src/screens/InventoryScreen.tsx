@@ -172,7 +172,7 @@ const InventoryScreen = () => {
               setProductSelected(undefined);
             }}
             // Add Product
-            // Sau khi thêm nhà cung cấp, gọi lại hàm getProduct để tải dữ liệu mới
+            // Sau khi thêm product, gọi lại hàm getProduct để tải dữ liệu mới
             onAddNew={(val) => setProducts([...products, val])}
             product={productSelected}
             getProducts={getProducts}
