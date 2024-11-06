@@ -11,12 +11,13 @@ interface Props {
   item: FormItemModel;
   onIsTakingChange: (value: boolean) => void;
   onExpiryDateChange?: (_date: Dayjs | Dayjs[], dateString: string | string[]) => void;
+  onCategories?:(category:string[])=> void;
   supplier?: SupplierModel;
   product?: ProductModel;
 }
 
 const FormItem = (props: Props) => {
-  const { item, onIsTakingChange, onExpiryDateChange, supplier, product } = props;
+  const { item, onIsTakingChange, supplier, onExpiryDateChange,onCategories } = props;
   const [isTakingSOS, setIsTakingSOS] = useState<boolean>(
     supplier?.isTaking ?? false
   );
@@ -34,22 +35,13 @@ const FormItem = (props: Props) => {
     onIsTakingChange(isChecked); // Gọi callback để thông báo cho ToggleSupplier
   };
 
-  // ----------- Handle Expiry Date --------------
-  // const handleExpiryDateChange = (
-  //   _date: Dayjs | Dayjs[],
-  //   dateString: string | string[]
-  // ) => {
-  //   onExpiryDateChange(dateString);
-  //   console.log("Check dateExpiry FormItem: ", dateString);
-  // };
-
   const renderInput = (item: FormItemModel) => {
     let content = <></>;
 
     switch (item.type) {
       case "select":
         content = (
-          <Select
+          <Select onChange={onCategories}
             // options={item.lockup_item ?? []}
             options={[
               { label: <span>Consumables</span>, value: "Consumables" },

@@ -10,6 +10,7 @@ import { SupplierModel } from "../models/SupplierModel";
 import dayjs from "dayjs";
 import { Resizable } from "re-resizable";
 import { ModalExportData } from "../modals";
+import { ProductModel } from "../models/ProductModel";
 
 interface Props {
   forms: FormModel;
@@ -52,7 +53,7 @@ const TableComponent = (props: Props) => {
 
   //-------------- ADD TABLE SUPPLIER ------------------
   useEffect(() => {
-    // console.log("Check Records: ", records);
+    // console.log("Check Records: ", forms.formItems);
     if (forms && forms.formItems && forms.formItems.length > 0) {
       const items: any[] = [];
       forms.formItems.map((item) =>
@@ -64,13 +65,16 @@ const TableComponent = (props: Props) => {
           width: item.displayLength,
 
           //   width: 'auto'
-          render: (text: any, record: SupplierModel) => {
+          render: (text: any, record: SupplierModel & ProductModel) => {
             if (item.key === "type") {
               return (
                 <Text type={record.isTaking ? "success" : "danger"}>
                   {record.isTaking ? "Taking Return" : "Not Taking Return"}
                 </Text>
               );
+            }
+            if (item.key === "category"){
+                return( <Text>{record.categories}</Text>)
             }
             return text;
           },

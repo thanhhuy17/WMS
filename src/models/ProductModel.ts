@@ -3,14 +3,16 @@ export interface ProductModel {
     slug: string
     productName: string
     productId: string
-    category: string
-    buyPrice: number
+    categories: string[]
+    buyingPrice: number
     quantity: number
-    unit: string
+    unit: string[]
+    thresholdValue: number
     expiryDate: string
     status: string
     userCreated: string
     dateCreated: string
+    isDeleted: boolean
     userEdited: string
     dateEdited: string
     _id: string

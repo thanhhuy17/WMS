@@ -26,10 +26,11 @@ const ToggleProduct = (props: Props) => {
   const [file, setFile] = useState();
   const [formDynamic, setFormDynamic] = useState<FormModel>();
   const [dateExpiry, setDateExpiry] = useState<string | string[]>();
+  const [categories, setCategories] = useState<string[]>([]);
   const [form] = Form.useForm<any>();
-  const inpRef = useRef<any>();
+  // const inpRef = useRef<any>();
 
-  //Add User Created
+  //--------------- ADD USER CREATED --------------
   const userCreated = useSelector(
     (state: any) => state.authReducer?.data?.name
   );
@@ -39,6 +40,7 @@ const ToggleProduct = (props: Props) => {
       form.setFieldsValue(product);
     }
   }, [form, product]);
+
   // ------ GET FORM WHEN TO START WEB -------
   useEffect(() => {
     getFormProduct();
@@ -59,8 +61,11 @@ const ToggleProduct = (props: Props) => {
       : 0;
 
     data.expiryDate = dateExpiry;
-    // data.category= categories
+    data.categories = categories;
+
+
     // data.isTaking = isTaking ? 1 : 0;
+
     // Add UserEdit and TimeEdit
     if (!product) {
       data.userEdited = undefined;
@@ -95,12 +100,14 @@ const ToggleProduct = (props: Props) => {
       setIsLoading(false);
     }
   };
+
   //-------------- CLOSE TOGGLE ---------------
   const handleClose = () => {
     form.resetFields();
     setFile(undefined);
     onClose();
   };
+
   //-------------- GET FORM PRODUCT ---------------
   const getFormProduct = async () => {
     const api = `/storage/get-form-product`;
@@ -115,19 +122,23 @@ const ToggleProduct = (props: Props) => {
       setIsGetting(false);
     }
   };
-  //---------------Handle Is Taking -----------------
+
+  //--------------- HANDLE IS TAKING -----------------
   const handleIsTakingChange = (value: boolean) => {
     setIsTaking(value); // Update isTaking state based on FormItem checkbox
   };
 
-  //---------------HANDLE EXPIRY DATE  -----------------
+  //--------------- HANDLE EXPIRY DATE  -----------------
   const handleExpiryDateChange = (
     _date: Dayjs | Dayjs[],
     dateString: string | string[]
   ) => {
     setDateExpiry(dateString);
   };
-  // console.log("tOGGLE: ", dateExpiry); // vẫn ra ngày
+  //--------------- HANDLE CATEGORY  -----------------
+const handleCategories = (category:string[])=>{
+  setCategories(category)
+}
   //--------------- MAIN LOGIC -----------------
   return (
     <div>
@@ -166,6 +177,7 @@ const ToggleProduct = (props: Props) => {
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
                 onExpiryDateChange={handleExpiryDateChange}
+                onCategories = {handleCategories}
                 product={product}
               ></FormItem>
             ))}
