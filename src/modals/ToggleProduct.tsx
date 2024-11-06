@@ -60,7 +60,8 @@ const ToggleProduct = (props: Props) => {
       ? parseInt(values.thresholdValue)
       : 0;
 
-    data.expiryDate = dateExpiry;
+    // data.expiryDate = dateExpiry ? dayjs(dateExpiry).format("DD-MM-YYY") : '';
+    data.expiryDate = dateExpiry ;
     data.categories = categories;
 
 
@@ -162,7 +163,6 @@ const handleCategories = (category:string[])=>{
           <Form
             disabled={isLoading}
             onFinish={addNewProduct}
-            // layout='vertical'
             layout={formDynamic.layout}
             labelCol={{ span: formDynamic.labelCol }}
             labelAlign={formDynamic.labelAlign}

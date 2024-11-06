@@ -3,7 +3,6 @@ import { Button, Card } from "antd";
 import { message, Modal, Space, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
-
 import { FormModel } from "../models/FormModel";
 import { Edit2, UserRemove } from "iconsax-react";
 import { ProductModel } from "../models/ProductModel";
@@ -83,7 +82,7 @@ const InventoryScreen = () => {
       // await handleAPI(`/storage/update-product?id=${id}`, {isDeleted: true}, 'put')
       // Delete (Xoá cứng)
       const res: any = await handleAPI(
-        `/product/delete-product?id=${id}`,
+        `/storage/delete-product?id=${id}`,
         undefined,
         "delete"
       );
@@ -109,19 +108,6 @@ const InventoryScreen = () => {
       {/* Products Table Section */}
       <div className="row">
         <div className="col-12">
-          {/* <Card
-            title="Products"
-            extra={
-              <div>
-                <Button type="primary" className="me-2">Add Product</Button>
-                <Button>Filters</Button>
-                <Button className="ms-2">Download all</Button>
-              </div>
-            }
-            className="table-card"
-          >
-            <InventoryComponent />
-          </Card> */}
           {forms && (
             <TableComponent
               api={api}

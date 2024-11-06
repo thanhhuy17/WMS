@@ -63,8 +63,8 @@ const TableComponent = (props: Props) => {
           dataIndex: item.value,
           ellipsis: true,
           width: item.displayLength,
+          align: `${item.key !== "productName" ? "center" : "left"}`,
 
-          //   width: 'auto'
           render: (text: any, record: SupplierModel & ProductModel) => {
             if (item.key === "type") {
               return (
@@ -73,8 +73,12 @@ const TableComponent = (props: Props) => {
                 </Text>
               );
             }
-            if (item.key === "category"){
-                return( <Text>{record.categories}</Text>)
+            if (item.key === "category") {
+              return <Text>{record.categories}</Text>;
+            }
+            if (item.key === "expiryDate") {
+              const date = dayjs(record.expiryDate).format("DD-MM-YYYY");
+              return <Text >{date}</Text>;
             }
             return text;
           },
@@ -105,18 +109,15 @@ const TableComponent = (props: Props) => {
         align: "center",
       });
 
-      items.unshift(
-        {
-          key: "index",
-          title: "#",
-          dataIndex: "index",
-          fixed: "left",
-          align: `center`,
-          render: (text: any, record: SupplierModel, index: number) =>
-            (pageInfo.page - 1) * pageInfo.pageSize + (index + 1),
-        }
-
-      );
+      items.unshift({
+        key: "index",
+        title: "#",
+        dataIndex: "index",
+        fixed: "left",
+        align: `center`,
+        render: (text: any, record: SupplierModel, index: number) =>
+          (pageInfo.page - 1) * pageInfo.pageSize + (index + 1),
+      });
       items.push(
         {
           key: "userCreated",
@@ -176,7 +177,6 @@ const TableComponent = (props: Props) => {
   //--------- RESIZE TABLE ---------------
   const RenderTitle = (props: any) => {
     const { children, ...restProps } = props;
-    // console.log("check RenderTitle: ", props);
     return (
       <th style={{ padding: "0 8px", cursor: "col-resize" }} {...restProps}>
         <Resizable
@@ -226,14 +226,11 @@ const TableComponent = (props: Props) => {
         summary={() => <Table.Summary fixed={"top"} />}
         // scroll={{ y: scrollHeight ? scrollHeight:  `calc(100vh - 300px)` }}
         scroll={{ y: scrollHeight, x: "max-content" }}
-        // scroll={{ y: "fixed", x: "max-content" }}
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
           onShowSizeChange: (current, size) => {
-            // console.log(current, size);
             setPageInfo({ ...pageInfo, pageSize: size });
-            // setPage(current);
           },
           total: total,
           showTotal: (total, range) =>
@@ -271,7 +268,6 @@ const TableComponent = (props: Props) => {
                 <Button
                   icon={<PiExportLight size={20} />}
                   onClick={() => setIsVisibleModalExport(true)}
-                  // onClick={() => handleExportExcel(records, "suppliers_list")}
                 >
                   Export
                 </Button>
