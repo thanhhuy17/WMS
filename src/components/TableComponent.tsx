@@ -132,7 +132,7 @@ const TableComponent = (props: Props) => {
           title: "Date Created",
           dataIndex: `dateCreated`,
           render: (dateCreated: string) => {
-            const date = dayjs(dateCreated).format("HH:mm:ss DD-MM-YYYY");
+            const date = dayjs(dateCreated).format("DD-MM-YYYY HH:mm:ss");
             return date.replace("00:02:17 28-10-2024", "-");
           },
           width: `10rem`,
@@ -150,7 +150,7 @@ const TableComponent = (props: Props) => {
           title: "Date Edited",
           dataIndex: `dateEdited`,
           render: (dateEdited: string) => {
-            const date = dayjs(dateEdited).format("HH:mm:ss DD-MM-YYYY");
+            const date = dayjs(dateEdited).format("DD-MM-YYYY HH:mm:ss");
             // return  (date === '23:24:20 27-10-2024')? '-': date;
             return date === "Invalid Date"
               ? "-"

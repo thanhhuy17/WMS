@@ -1,0 +1,1 @@
+export const addZeroToNumber = (num: number)=> `${num > 9 ? num : `0${num}`}`
