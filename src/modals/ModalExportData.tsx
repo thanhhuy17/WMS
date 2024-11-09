@@ -57,7 +57,7 @@ const ModalExportData = (props: Props) => {
       setIsLoading(true);
       try {
         const res = await handleAPI(url, data, "post");
-        console.log("Check Export data: ", res.data);
+        // console.log("Check Export data: ", res.data);
         console.log(api);
         res.data && (await handleExportExcel(res.data, name)); //"Huy-Test-Export-Excel"
         onClose();
@@ -97,7 +97,7 @@ const ModalExportData = (props: Props) => {
   const handleChangeCheckedValue = (val: string) => {
     const items = [...checkedValues];
     const index = items.findIndex((element) => element === val);
-    console.log("Check items: ", items);
+    // console.log("Check items: ", items);
     if (index !== -1) {
       items.splice(index, 1);
     } else {
