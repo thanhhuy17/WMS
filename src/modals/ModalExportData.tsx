@@ -11,8 +11,9 @@ import {
 import React, { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { FormModel } from "../models/FormModel";
-import { start } from "repl";
-import { DateTime } from "../utils/dateTime";
+import { handleExportExcel } from "../utils/exportExcel";
+// import { start } from "repl";
+// import { DateTime } from "../utils/dateTime";
 interface Props {
   visible: boolean;
   onClose: () => void;
@@ -52,8 +53,11 @@ const ModalExportData = (props: Props) => {
     if (Object.keys(data).length > 0) {
       setIsLoading(true);
       try {
-        const res = await handleAPI(url, data, 'post');
+        const res = await handleAPI(url, data, "post");
         console.log("Check Export data: ", res.data);
+        console.log(api);
+        res.data && (await handleExportExcel(res.data, api)); //"Huy-Test-Export-Excel"
+        onClose();
       } catch (error: any) {
         message.error(error.message);
       } finally {
@@ -77,7 +81,7 @@ const ModalExportData = (props: Props) => {
     try {
       const res = await handleAPI(apiForm);
       res.data && getForms(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -95,7 +99,7 @@ const ModalExportData = (props: Props) => {
     }
     setCheckedValues(items);
   };
-  console.log("Check date: ", dates);
+  // console.log("Check date: ", dates);
   return (
     <Modal
       loading={isGetting}
