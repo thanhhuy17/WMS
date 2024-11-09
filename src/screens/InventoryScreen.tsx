@@ -42,7 +42,7 @@ const InventoryScreen = () => {
   };
   // --------------Gọi dữ liệu Form Modal từ server và đẩy vào mảng setForms để sử dụng ------------------
   const getForm = async () => {
-    const api = `/storage/get-form-product`;
+    const api = `/product/get-form-product`;
     const res = await handleAPI(api);
     // console.log("Check get Cols :", res.data);
     res.data && setForms(res.data);
@@ -50,7 +50,7 @@ const InventoryScreen = () => {
 
   // ------------- GET PRODUCTS FROM BACKEND-----------------
   const getProducts = async () => {
-    const api = `/storage?page=${page}&pageSize=${pageSize}`;
+    const api = `/product?page=${page}&pageSize=${pageSize}`;
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
@@ -79,10 +79,10 @@ const InventoryScreen = () => {
     // console.log(id);
     try {
       // Sort Delete (Xoá mềm)
-      // await handleAPI(`/storage/update-product?id=${id}`, {isDeleted: true}, 'put')
+      // await handleAPI(`/product/update-product?id=${id}`, {isDeleted: true}, 'put')
       // Delete (Xoá cứng)
       const res: any = await handleAPI(
-        `/storage/delete-product?id=${id}`,
+        `/product/delete-product?id=${id}`,
         undefined,
         "delete"
       );

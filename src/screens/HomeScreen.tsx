@@ -10,7 +10,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const getProducts = async () => {
-    const api = `/storage/products`;
+    const api = `/product/products`;
     try {
       const res: any = await handleAPI(api);
       // console.log("Check Get Data from Storage: ", res);

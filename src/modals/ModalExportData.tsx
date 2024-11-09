@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   DatePicker,
   Divider,
@@ -12,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { FormModel } from "../models/FormModel";
 import { handleExportExcel } from "../utils/exportExcel";
+import { colors } from "../constants/colors";
 // import { start } from "repl";
 // import { DateTime } from "../utils/dateTime";
 interface Props {
@@ -42,12 +42,15 @@ const ModalExportData = (props: Props) => {
       if (new Date(dates.start).getTime() > new Date(dates.end).getTime()) {
         message.error("Invalid Time");
       } else {
-        url = `/${api}/get-export-data/?start=${dates.start}&end=${dates.end}`;
+        url = `${
+          api &&
+          `/${api}/get-export-data-${api}/?start=${dates.start}&end=${dates.end}`
+        }`;
       }
     }
     // Export All
     else {
-      url = `/${api}/get-export-data`;
+      url = `${api && `/${api}/get-export-data-${api}`}`;
     }
     const data = checkedValues;
     if (Object.keys(data).length > 0) {
@@ -56,7 +59,7 @@ const ModalExportData = (props: Props) => {
         const res = await handleAPI(url, data, "post");
         console.log("Check Export data: ", res.data);
         console.log(api);
-        res.data && (await handleExportExcel(res.data, api)); //"Huy-Test-Export-Excel"
+        res.data && (await handleExportExcel(res.data, name)); //"Huy-Test-Export-Excel"
         onClose();
       } catch (error: any) {
         message.error(error.message);
@@ -76,30 +79,33 @@ const ModalExportData = (props: Props) => {
   }, [visible, api]);
 
   const getForm = async () => {
-    const apiForm = `/${api}/get-form-supplier`;
+    // const apiForm = `/${api}/get-form-supplier`;
+    const apiForm = `${api && `/${api}/get-form-${api}`}`;
     setIsGetting(true);
     try {
       const res = await handleAPI(apiForm);
       res.data && getForms(res.data);
-      // console.log(res.data);
+      console.log("Check get Form: ", res.data);
     } catch (error) {
       console.log(error);
     } finally {
       setIsGetting(false);
+      setCheckedValues([]);
     }
   };
   // ------------- Get value of List Table Supplier -------------
   const handleChangeCheckedValue = (val: string) => {
     const items = [...checkedValues];
     const index = items.findIndex((element) => element === val);
+    console.log("Check items: ", items);
     if (index !== -1) {
-      items.slice(index, 1);
+      items.splice(index, 1);
     } else {
       items.push(val);
     }
     setCheckedValues(items);
   };
-  // console.log("Check date: ", dates);
+
   return (
     <Modal
       loading={isGetting}
@@ -108,7 +114,7 @@ const ModalExportData = (props: Props) => {
       onClose={onClose}
       onOk={handleExport}
       okButtonProps={{
-        loading: isGetting,
+        loading: isLoading,
       }}
       title="Export To Excel"
       width={760}
@@ -119,6 +125,7 @@ const ModalExportData = (props: Props) => {
           onChange={(val) =>
             setTimeSelected(timeSelected === "all" ? "ranger" : "all")
           }
+          style={{ color: colors.mainColor, fontWeight: "bold" }}
         >
           Get All
         </Checkbox>
@@ -129,11 +136,16 @@ const ModalExportData = (props: Props) => {
           onChange={(val) =>
             setTimeSelected(timeSelected === "all" ? "ranger" : "all")
           }
+          style={{
+            color: colors.mainColor,
+            fontWeight: "bold",
+            marginRight: "2rem",
+          }}
         >
-          Date Ranger
+          Date Ranger:
         </Checkbox>
         {timeSelected === "ranger" && (
-          <Space>
+          <Space className="">
             <RangePicker
               onChange={
                 (_date, dateString) =>

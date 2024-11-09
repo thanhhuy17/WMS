@@ -1,5 +1,5 @@
 import { Form, message, Modal } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
 // import { uploadFile } from "../utils/uploadFile";
@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
 import { ProductModel } from "../models/ProductModel";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 interface Props {
   visible: boolean;
@@ -61,9 +61,8 @@ const ToggleProduct = (props: Props) => {
       : 0;
 
     // data.expiryDate = dateExpiry ? dayjs(dateExpiry).format("DD-MM-YYY") : '';
-    data.expiryDate = dateExpiry ;
+    data.expiryDate = dateExpiry;
     data.categories = categories;
-
 
     // data.isTaking = isTaking ? 1 : 0;
 
@@ -83,7 +82,7 @@ const ToggleProduct = (props: Props) => {
 
     data.slug = replaceName(values.productName);
     data.userCreated = userCreated;
-    const api = `/storage/${
+    const api = `/product/${
       product ? `update-product?id=${product._id}` : `add-new-product`
     }`;
     try {
@@ -111,7 +110,7 @@ const ToggleProduct = (props: Props) => {
 
   //-------------- GET FORM PRODUCT ---------------
   const getFormProduct = async () => {
-    const api = `/storage/get-form-product`;
+    const api = `/product/get-form-product`;
     setIsGetting(true);
     try {
       const res: any = await handleAPI(api);
@@ -137,9 +136,9 @@ const ToggleProduct = (props: Props) => {
     setDateExpiry(dateString);
   };
   //--------------- HANDLE CATEGORY  -----------------
-const handleCategories = (category:string[])=>{
-  setCategories(category)
-}
+  const handleCategories = (category: string[]) => {
+    setCategories(category);
+  };
   //--------------- MAIN LOGIC -----------------
   return (
     <div>
@@ -177,7 +176,7 @@ const handleCategories = (category:string[])=>{
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
                 onExpiryDateChange={handleExpiryDateChange}
-                onCategories = {handleCategories}
+                onCategories={handleCategories}
                 product={product}
               ></FormItem>
             ))}
