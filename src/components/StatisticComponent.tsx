@@ -24,7 +24,7 @@ const StatisticComponent = (props: Props) => {
             key={item.key}
             style={{
               borderRight: `${index < data.length - 1 ? 1 : 0}px solid ${
-                colors.mainColor
+                colors.gray_50
               }`,
             }}
           >

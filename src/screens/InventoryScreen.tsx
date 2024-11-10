@@ -1,5 +1,5 @@
 import { InventoryComponent, TableComponent } from "../components";
-import { Button, Card } from "antd";
+import { Button } from "antd";
 import { message, Modal, Space, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
@@ -7,6 +7,7 @@ import { FormModel } from "../models/FormModel";
 import { Edit2, UserRemove } from "iconsax-react";
 import { ProductModel } from "../models/ProductModel";
 import { ToggleProduct } from "../modals";
+import { InventoryModel } from "../models/InventoryModel";
 
 const InventoryScreen = () => {
   const [isVisibleAddNew, setIsVisibleAddNew] = useState(false);
@@ -94,14 +95,65 @@ const InventoryScreen = () => {
     }
   };
   const api = "product";
+
+  // ------------ SET DATA FOR OVERALL INVENTORY --------------
+  const overallData: InventoryModel[] = [
+    {
+      key: "categories",
+      description: "Categories",
+      value: Math.floor(Math.random() * 100),
+      valueType: "number",
+      cost: Math.floor(Math.random() * 100),
+      costName: "",
+      type: "vertical",
+      color: "#629FF4",
+      status: `Last ${7} days`,
+      typeShow: "categories",
+    },
+    {
+      key: "totalProducts",
+      description: "Total Products",
+      value: Math.floor(Math.random() * 100),
+      valueType: "currency",
+      cost: Math.floor(Math.random() * 100),
+      costName: "Revenue",
+      type: "vertical",
+      color: "#817AF3",
+      status: `Last ${7} days`,
+      typeShow: "other",
+    },
+    {
+      key: "topSelling",
+      description: "Top Selling",
+      value: Math.floor(Math.random() * 10),
+      valueType: "currency",
+      cost: Math.floor(Math.random() * 10000),
+      costName: "Cost",
+      type: "vertical",
+      color: "#DBA362",
+      status: `Last ${7} days`,
+      typeShow: "other",
+    },
+    {
+      key: "lowStocks",
+      description: "Low Stocks",
+      value: Math.floor(Math.random() * 20),
+      valueType: "number",
+      cost: Math.floor(Math.random() * 10),
+      costName: "Not in stock",
+      type: "vertical",
+      color: "#58D365",
+      status: `Last ${7} days`,
+      typeShow: "other",
+    },
+  ];
+
   return (
-    <div className="container-figure mt-4">
+    <div className="container-figure">
       {/* Overall Inventory Section */}
       <div className="row">
-        <div className="col-12 mb-3">
-          <Card>
-            <InventoryComponent />
-          </Card>
+        <div className="col-12 mb-2">
+          <InventoryComponent title="Overall Inventory" data={overallData} />
         </div>
       </div>
 
