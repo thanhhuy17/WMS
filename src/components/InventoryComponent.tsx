@@ -51,7 +51,7 @@ const InventoryComponent = (props: Props) => {
                       className="mt-2 "
                       style={{ color: colors.gray_600, fontWeight: 500 }}
                     >
-                      {item.valueType === "currency" && <MdCurrencyRupee style={{paddingBottom: '4px', fontSize: '16px'}}/>}
+                      {item.valueType === "currency" && <MdCurrencyRupee style={{paddingBottom: '4px', fontSize: 20}}/>}
                       {item.cost}
                     </div>
                     <div className="mt-2" style={{ color: colors.gray_400 }}>
