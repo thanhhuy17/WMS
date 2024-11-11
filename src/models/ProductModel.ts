@@ -7,6 +7,7 @@ export interface ProductModel {
     buyingPrice: number
     quantity: number
     unit: string[]
+    photoUrl: [string]
     thresholdValue: number
     expiryDate: string
     status: string

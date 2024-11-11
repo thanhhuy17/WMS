@@ -1,4 +1,4 @@
-import { Form, message, Modal } from "antd";
+import { Avatar, Form, message, Modal } from "antd";
 import { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
@@ -9,6 +9,7 @@ import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
 import { ProductModel } from "../models/ProductModel";
 import { Dayjs } from "dayjs";
+import { UserAdd } from "iconsax-react";
 
 interface Props {
   visible: boolean;
@@ -158,6 +159,21 @@ const ToggleProduct = (props: Props) => {
         okText={product ? "Update" : "Add Product"}
         cancelText="Discard"
       >
+        {file ? (
+            <Avatar size={80} src={URL.createObjectURL(file)} />
+          ) : product ? (
+            <Avatar size={80} src={product.photoUrl} />
+          ) : (
+            <Avatar
+              size={80}
+              style={{
+                backgroundColor: "white",
+                border: `2px dashed ${colors.gray_100}`,
+              }}
+            >
+              <UserAdd size={60} color={colors.gray_300} />
+            </Avatar>
+          )}
         {formDynamic && (
           <Form
             disabled={isLoading}
