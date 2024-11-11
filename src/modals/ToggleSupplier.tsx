@@ -10,7 +10,7 @@ import { SupplierModel } from "../models/SupplierModel";
 import { useSelector } from "react-redux";
 import { FormModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
-import { ProductModel } from "../models/ProductModel";
+// import { ProductModel } from "../models/ProductModel";
 
 interface Props {
   visible: boolean;
@@ -19,6 +19,7 @@ interface Props {
   supplier?: SupplierModel;
   getSuppliers: ()=> void
 }
+
 
 const ToggleSupplier = (props: Props) => {
   const { visible, onClose, onAddNew, supplier, getSuppliers } = props;
@@ -31,10 +32,13 @@ const ToggleSupplier = (props: Props) => {
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
 
+
   //Add User Created
   const userCreated = useSelector(
     (state: any) => state.authReducer?.data?.name
   );
+
+  // console.log("Check User: ", userCreated);
 
   useEffect(() => {
     if (supplier) {

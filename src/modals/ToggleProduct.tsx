@@ -1,5 +1,5 @@
-import { Avatar, Form, message, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { Avatar, Button, Form, message, Modal } from "antd";
+import { useEffect, useRef, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { colors } from "../constants/colors";
 // import { uploadFile } from "../utils/uploadFile";
@@ -10,6 +10,9 @@ import FormItem from "../components/FormItem";
 import { ProductModel } from "../models/ProductModel";
 import { Dayjs } from "dayjs";
 import { UserAdd } from "iconsax-react";
+import Paragraph from "antd/es/typography/Paragraph";
+import { uploadFile } from "../utils/uploadFile";
+import { FcAddImage } from "react-icons/fc";
 
 interface Props {
   visible: boolean;
@@ -29,7 +32,7 @@ const ToggleProduct = (props: Props) => {
   const [dateExpiry, setDateExpiry] = useState<string | string[]>();
   const [categories, setCategories] = useState<string[]>([]);
   const [form] = Form.useForm<any>();
-  // const inpRef = useRef<any>();
+  const inpRef = useRef<any>();
 
   //--------------- ADD USER CREATED --------------
   const userCreated = useSelector(
@@ -39,6 +42,7 @@ const ToggleProduct = (props: Props) => {
   useEffect(() => {
     if (product) {
       form.setFieldsValue(product);
+      console.log("object, ", product);
     }
   }, [form, product]);
 
@@ -65,7 +69,7 @@ const ToggleProduct = (props: Props) => {
     data.expiryDate = dateExpiry;
     data.categories = categories;
 
-    // data.isTaking = isTaking ? 1 : 0;
+    data.isTaking = isTaking ? 1 : 0;
 
     // Add UserEdit and TimeEdit
     if (!product) {
@@ -77,9 +81,9 @@ const ToggleProduct = (props: Props) => {
       data.dateEdited = new Date().toISOString();
     }
 
-    // if (file) {
-    //   data.photoUrl = await uploadFile(file);
-    // }
+    if (file) {
+      data.photoUrl = await uploadFile(file);
+    }
 
     data.slug = replaceName(values.productName);
     data.userCreated = userCreated;
@@ -159,7 +163,11 @@ const ToggleProduct = (props: Props) => {
         okText={product ? "Update" : "Add Product"}
         cancelText="Discard"
       >
-        {file ? (
+        <label
+          htmlFor="inpFile"
+          className="p-2 mb-3 text-center d-flex justify-content-center gap-3"
+        >
+          {file ? (
             <Avatar size={80} src={URL.createObjectURL(file)} />
           ) : product ? (
             <Avatar size={80} src={product.photoUrl} />
@@ -171,9 +179,18 @@ const ToggleProduct = (props: Props) => {
                 border: `2px dashed ${colors.gray_100}`,
               }}
             >
-              <UserAdd size={60} color={colors.gray_300} />
+              <FcAddImage size={60} color={colors.gray_300} />
             </Avatar>
           )}
+
+          <div>
+            <Paragraph className="mb-0">Drag Image here</Paragraph>
+            <Paragraph className="mb-0">Or</Paragraph>
+            <Button onClick={() => inpRef.current.click()} type="link">
+              Browse Image
+            </Button>
+          </div>
+        </label>
         {formDynamic && (
           <Form
             disabled={isLoading}
@@ -198,6 +215,21 @@ const ToggleProduct = (props: Props) => {
             ))}
           </Form>
         )}
+        <div className="d-none">
+          <input
+            accept="image/*"
+            ref={inpRef}
+            type="file"
+            name=""
+            id="inpFile"
+            onChange={(val: any) => {
+              const selectedFile = val.target.files[0];
+              if (selectedFile) {
+                setFile(selectedFile);
+              }
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );

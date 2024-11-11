@@ -22,3 +22,4 @@ export const uploadFile = async (file: any) => {
         return 'Error Upload File!'
     }
 }
+
