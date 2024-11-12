@@ -243,6 +243,35 @@ const HomeScreen = () => {
           <StatisticComponent data={productData} title="Product Summary" />
         </div>
       </div>
+
+      {/* ADD DEMO */}
+      <div className="row align-items-stretch mt-2">
+        <div className="col-md-8">
+          <StatisticComponent data={salesData} title="Sales Overview" />
+        </div>
+        <div className="col-md-4">
+          <StatisticComponent data={inventoryData} title="Inventory Summary" />
+        </div>
+      </div>
+
+      <div className="row align-items-stretch mt-2">
+        <div className="col-md-8">
+          <StatisticComponent data={purchaseData} title="Purchase Overview" />
+        </div>
+        <div className="col-md-4">
+          <StatisticComponent data={productData} title="Product Summary" />
+        </div>
+      </div>
+
+      <div className="row align-items-stretch mt-2">
+        <div className="col-md-8">
+          <StatisticComponent data={purchaseData} title="Purchase Overview" />
+        </div>
+        <div className="col-md-4">
+          <StatisticComponent data={productData} title="Product Summary" />
+        </div>
+      </div>
+      {/* ADD DEMO */}
     </div>
   );
 };
