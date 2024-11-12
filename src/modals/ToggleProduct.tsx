@@ -163,7 +163,7 @@ const ToggleProduct = (props: Props) => {
         okText={product ? "Update" : "Add Product"}
         cancelText="Discard"
       >
-        <label
+        {/* <label
           htmlFor="inpFile"
           className="p-2 mb-3 text-center d-flex justify-content-center gap-3"
         >
@@ -190,7 +190,7 @@ const ToggleProduct = (props: Props) => {
               Browse Image
             </Button>
           </div>
-        </label>
+        </label> */}
         {formDynamic && (
           <Form
             disabled={isLoading}
