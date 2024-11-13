@@ -78,8 +78,8 @@ const AddProduct = () => {
           <div className="row">
             <div className="col-8">
               <Form.Item
-                name={"title"}
-                label={"Title"}
+                name={"productName"}
+                label={"Product Name"}
                 rules={[
                   {
                     required: true,
