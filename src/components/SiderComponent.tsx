@@ -36,11 +36,21 @@ const SiderComponent = () => {
     {
       key: "inventory",
       label: (
-        <Link to={"/inventory"} style={{ textDecoration: "none" }}>
+        <Link to={""} style={{ textDecoration: "none"}}>
           Inventory
         </Link>
       ),
       icon: <TfiShoppingCartFull size={20} />,
+      children: [
+        {
+          key: 'listProduct',
+          label: <Link to={'/inventory'} style={{textDecoration: 'none'}} >List Products</Link>
+        },
+        // {
+        //   key: 'addNew',
+        //   label: <Link to={'/inventory/add-product'} style={{textDecoration: 'none'}} >Add Product</Link>
+        // }
+      ]
     },
     {
       key: "reports",
@@ -104,7 +114,7 @@ const SiderComponent = () => {
     },
   ];
   return (
-    <Sider
+    <Sider 
       width={250}
       theme="light"
       style={{ height: "100vh" }}
@@ -131,7 +141,7 @@ const SiderComponent = () => {
       </div>
 
       <div>
-        <Menu items={items} theme="light" />
+        <Menu mode="inline" items={items}  theme="light" />
       </div>
       {/*  fix */}
       <div className="mt-5">
