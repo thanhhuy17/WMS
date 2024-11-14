@@ -12,6 +12,7 @@ export interface FormModel {
     size?: SizeType
     nameButton?: string
     formItems: FormItemModel[]
+    fontSize: number
 }
 
 export interface FormItemModel {
