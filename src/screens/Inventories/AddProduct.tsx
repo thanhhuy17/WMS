@@ -16,8 +16,9 @@ import handleAPI from "../../apis/handleAPI";
 import { FormModel, SelectModel } from "../../models/FormModel";
 import { replaceName } from "../../utils/replaceName";
 import { uploadFile } from "../../utils/uploadFile";
-import { ModalCategory } from "../../modals";
+import { ModalCategory, ToggleSupplier } from "../../modals";
 import { Add } from "iconsax-react";
+import { SupplierModel } from "../../models/SupplierModel";
 
 const initContent = {
   title: "",
@@ -32,7 +33,10 @@ const AddProduct = () => {
   const [supplierOptions, setSupplierOptions] = useState<SelectModel[]>([]);
   const [fileUrl, setFileUrl] = useState("");
   const [isVisibleCategory, setIsVisibleCategory] = useState(false);
+  const [isVisibleSupplier, setIsVisibleSupplier] = useState(false);
   const [formDynamic, setFormDynamic] = useState<FormModel>();
+
+  const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
 
   const editorRef = useRef<any>(null);
   const [form] = Form.useForm();
@@ -109,7 +113,17 @@ const AddProduct = () => {
                   {formDynamic?.formItems?.map((item) => (
                     <Form.Item
                       name={item.value}
-                      label={item.label}
+                      label={
+                        <span
+                          style={{
+                            color: colors.mainColor,
+                            fontWeight: 500,
+                            fontSize: 16,
+                          }}
+                        >
+                          {item.label}
+                        </span>
+                      }
                       rules={[
                         {
                           required: item.require,
@@ -226,7 +240,14 @@ const AddProduct = () => {
                       </Button>
                     </Space>
                   </Card>
-                  <Card className="mt-3" title="Categories">
+                  <Card
+                    className="mt-3"
+                    title={
+                      <span style={{ color: colors.mainColor }}>
+                        Categories
+                      </span>
+                    }
+                  >
                     <Form.Item
                       name={"categories"}
                       rules={
@@ -256,7 +277,12 @@ const AddProduct = () => {
                       />
                     </Form.Item>
                   </Card>
-                  <Card className="mt-3" title="Suppliers">
+                  <Card
+                    className="mt-3"
+                    title={
+                      <span style={{ color: colors.mainColor }}>Suppliers</span>
+                    }
+                  >
                     <Form.Item
                       name={"suppliers"}
                       rules={[
@@ -271,6 +297,23 @@ const AddProduct = () => {
                             option?.label ? option.label : ""
                           ).includes(replaceName(input))
                         }
+                        mode="multiple"
+                        dropdownRender={(menu) => (
+                          <>
+                            {menu}
+                            <Divider />
+                            {/* Show Modal Add Category */}
+                            <Button
+                              size="small"
+                              type="link"
+                              icon={<Add size={20} />}
+                              style={{ padding: "-16px 0 16px 0" }}
+                              onClick={() => setIsVisibleSupplier(true)}
+                            >
+                              Add New
+                            </Button>
+                          </>
+                        )}
                       />
                     </Form.Item>
                   </Card>
@@ -303,6 +346,12 @@ const AddProduct = () => {
       <ModalCategory
         visible={isVisibleCategory}
         onClose={() => setIsVisibleCategory(false)}
+      />
+
+      <ToggleSupplier
+        visible={isVisibleSupplier}
+        onClose={() => setIsVisibleSupplier(false)}
+        onAddNew={(val) => setSuppliers([...suppliers, val])}
       />
     </div>
   );

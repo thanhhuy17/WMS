@@ -17,7 +17,7 @@ interface Props {
   onClose: () => void;
   onAddNew: (val: SupplierModel) => void;
   supplier?: SupplierModel;
-  getSuppliers: ()=> void
+  getSuppliers?: ()=> void
 }
 
 
@@ -88,7 +88,7 @@ const ToggleSupplier = (props: Props) => {
       console.log("Check response from Server: ", res);
       !supplier && onAddNew(res.data);
       handleClose();
-      getSuppliers()
+      getSuppliers?.()
       // getFormSupplier()
       // dispatch to redux
     } catch (error: any) {
