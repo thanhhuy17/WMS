@@ -9,16 +9,18 @@ import {
   message,
   Select,
   Space,
+  Spin,
   Typography,
 } from "antd";
 import { colors } from "../../constants/colors";
 import handleAPI from "../../apis/handleAPI";
-import { FormModel, SelectModel } from "../../models/FormModel";
+import { FormModel, SelectModel, TreeModel } from "../../models/FormModel";
 import { replaceName } from "../../utils/replaceName";
 import { uploadFile } from "../../utils/uploadFile";
 import { ModalCategory, ToggleSupplier } from "../../modals";
 import { Add } from "iconsax-react";
 import { SupplierModel } from "../../models/SupplierModel";
+import { getTreeValues } from "../../utils/getTreeValues";
 
 const initContent = {
   title: "",
@@ -35,6 +37,7 @@ const AddProduct = () => {
   const [isVisibleCategory, setIsVisibleCategory] = useState(false);
   const [isVisibleSupplier, setIsVisibleSupplier] = useState(false);
   const [formDynamic, setFormDynamic] = useState<FormModel>();
+  const [categories, setCategories] = useState<TreeModel[]>([]);
 
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
 
@@ -82,6 +85,16 @@ const AddProduct = () => {
     setSupplierOptions(options);
   };
 
+  //---------------------
+  const getCategories = async () => {
+		const res = await handleAPI(`/products/get-categories`);
+		const datas = res.data;
+
+		const data = datas.length > 0 ? getTreeValues(datas, true) : [];
+
+		setCategories(data);
+	};
+
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
     console.log("Values From Add Product :", values);
@@ -89,7 +102,7 @@ const AddProduct = () => {
     console.log(content);
   };
 
-  return (
+  return isLoading ? <Spin/> : (
     <div>
       <div className="container">
         {formDynamic && (
@@ -346,6 +359,10 @@ const AddProduct = () => {
       <ModalCategory
         visible={isVisibleCategory}
         onClose={() => setIsVisibleCategory(false)}
+        onAddNew={async (val) => {
+					await getCategories();
+				}}
+				values={categories}
       />
 
       <ToggleSupplier
