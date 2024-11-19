@@ -20,7 +20,6 @@ import { uploadFile } from "../../utils/uploadFile";
 import { ModalCategory, ToggleSupplier } from "../../modals";
 import { Add } from "iconsax-react";
 import { SupplierModel } from "../../models/SupplierModel";
-import { getTreeValues } from "../../utils/getTreeValues";
 
 const initContent = {
   title: "",
@@ -39,11 +38,12 @@ const AddProduct = () => {
   const [formDynamic, setFormDynamic] = useState<FormModel>();
   const [categories, setCategories] = useState<TreeModel[]>([]);
 
+  //------------- Supplier Modal ---------------
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
 
   const editorRef = useRef<any>(null);
   const [form] = Form.useForm();
-  const { Text, Title, Paragraph } = Typography;
+  const { Title } = Typography;
 
   useEffect(() => {
     getData();
@@ -69,6 +69,7 @@ const AddProduct = () => {
   const getData = async () => {
     try {
       await getSuppliers();
+      await getCategories();
     } catch (error: any) {
       message.error(error.message);
     }
@@ -85,24 +86,68 @@ const AddProduct = () => {
     setSupplierOptions(options);
   };
 
-  //---------------------
-  const getCategories = async () => {
-		const res = await handleAPI(`/products/get-categories`);
-		const datas = res.data;
-
-		const data = datas.length > 0 ? getTreeValues(datas, true) : [];
-
-		setCategories(data);
-	};
-
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
     console.log("Values From Add Product :", values);
     const content = editorRef.current.getContent();
-    console.log(content);
+    console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
   };
 
-  return isLoading ? <Spin/> : (
+  // -------------- Get Tree Values --------------------
+  const getTreeValues = (data: any[], key: string) => {
+    const items: any[] = [];
+    const keys: string[] = [];
+    data.forEach((item) => {
+      if (item[`${key}`] && !keys.includes(item[`${key}`])) {
+        keys.push(item[`${key}`]);
+      }
+    });
+
+    data.forEach((item) => {
+      if (item[`${key}`]) {
+        // Tìm vị trí Index của Items
+        const index = items.findIndex(
+          (element) => element.value === item[`${key}`]
+        );
+        // Lọc lấy ra children
+        const children = data.filter(
+          (element) => element[`${key}`] === item[`${key}`]
+        );
+        // Thêm {title, value} vào items vị trí index của giá trị children.
+        if (index !== -1) {
+          items[index].children = children.map((value) => ({
+            title: value.title,
+            value: value._id,
+          }));
+        }
+      } else {
+        items.push({ title: item.title, value: item._id });
+      }
+    });
+
+    // console.log("Check Keys: ", keys);
+    // console.log("Check Items: ", items);
+    return items;
+  };
+  //--------------- Get Categories ---------------------
+  const getCategories = async () => {
+    const api = `/product/get-categories`;
+    try {
+      const res = await handleAPI(api);
+      const datas = res.data;
+      const data: any =
+        datas.length > 0 ? getTreeValues(datas, "parentId") : [];
+
+      setCategories(data);
+      // console.log("Check data get Category: ", data);
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
+
+  return isLoading ? (
+    <Spin />
+  ) : (
     <div>
       <div className="container">
         {formDynamic && (
@@ -125,15 +170,10 @@ const AddProduct = () => {
                 <div className="col-8">
                   {formDynamic?.formItems?.map((item) => (
                     <Form.Item
+                      style={{ fontWeight: 500 }}
                       name={item.value}
                       label={
-                        <span
-                          style={{
-                            color: colors.mainColor,
-                            fontWeight: 500,
-                            fontSize: 16,
-                          }}
-                        >
+                        <span style={{ color: colors.mainColor, fontSize: 16 }}>
                           {item.label}
                         </span>
                       }
@@ -310,7 +350,6 @@ const AddProduct = () => {
                             option?.label ? option.label : ""
                           ).includes(replaceName(input))
                         }
-                        mode="multiple"
                         dropdownRender={(menu) => (
                           <>
                             {menu}
@@ -359,16 +398,20 @@ const AddProduct = () => {
       <ModalCategory
         visible={isVisibleCategory}
         onClose={() => setIsVisibleCategory(false)}
-        onAddNew={async (val) => {
-					await getCategories();
-				}}
-				values={categories}
+        onAddNew={async (val) => await getCategories()}
+        values={categories}
       />
-
       <ToggleSupplier
         visible={isVisibleSupplier}
         onClose={() => setIsVisibleSupplier(false)}
-        onAddNew={(val) => setSuppliers([...suppliers, val])}
+        onAddNew={(newSupplier) => {
+          // Thêm trực tiếp vào danh sách hiện tại
+          const newOption = { value: newSupplier._id, label: newSupplier.name };
+          setSupplierOptions((prevOptions) => [...prevOptions, newOption]);
+      
+          // Nếu cần, cập nhật cả danh sách đầy đủ
+          setSuppliers((prevSuppliers) => [...prevSuppliers, newSupplier]);
+        }}
       />
     </div>
   );
