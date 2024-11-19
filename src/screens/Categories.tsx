@@ -36,12 +36,22 @@ const Categories = () => {
   return isLoading ? (
     <Spin />
   ) : (
-    <div className="container">
-      <div className="row">
-        <div className="col-md-4">Form</div>
-        <div className="col-md-8">Table</div>
-      </div>
-    </div>
+    // <div className="container-fluid">
+    //   <div className="row  text-center">
+    //     <div className="col-md-4">Form</div>
+    //     <div className="col-md-8">Table</div>
+    //   </div>
+    // </div>
+    <div className="container-fluid">
+  {/* <!-- Hàng đầu tiên --> */}
+  <div className="row text-center">
+    <div className="col-md-12" style={{height: '30vh'}}>Form</div>
+  </div>
+  {/* <!-- Hàng thứ hai --> */}
+  <div className="row text-center">
+    <div className="col-md-12" style={{height: '70vh'}} >Table</div>
+  </div>
+</div>
   );
 };
 
