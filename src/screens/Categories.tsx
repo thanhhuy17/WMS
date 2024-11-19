@@ -33,14 +33,14 @@ const Categories = () => {
     }
   };
   const api = `product`;
-  return ( isLoading ? <Spin/> :
-    <div>
-     <div className="container">
-        <div className="row">
-            <div className="col-md-4">Form</div>
-            <div className="col-md-8">Table</div>
-        </div>
-     </div>
+  return isLoading ? (
+    <Spin />
+  ) : (
+    <div className="container">
+      <div className="row">
+        <div className="col-md-4">Form</div>
+        <div className="col-md-8">Table</div>
+      </div>
     </div>
   );
 };
