@@ -1,9 +1,12 @@
-import { message, Spin } from "antd";
+import { Button, Card, message, Space, Spin, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { CategoryModel } from "../models/CategoryModel";
 import { TableComponent } from "../components";
 import { FormModel } from "../models/FormModel";
+import Table, { ColumnProps } from "antd/es/table";
+import { Edit2, Trash } from "iconsax-react";
+import { BsTrash2 } from "react-icons/bs";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -33,6 +36,35 @@ const Categories = () => {
     }
   };
   const api = `product`;
+
+  //------------- COLUMN ---------------
+  const columns: ColumnProps<CategoryModel>[] = [
+    {
+      key: "title",
+      title: "Name",
+      dataIndex: "title",
+    },
+    {
+      key: "description",
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      key: "btnContainer",
+      title: "Actions",
+      dataIndex: "",
+      render: (item: any) => (
+        <Space>
+          <Tooltip title="Edit Categories">
+            <Button icon={<Edit2 size={20} />} className="text-info"></Button>
+          </Tooltip>
+          <Tooltip title="Delete Categories">
+            <Button icon={<Trash size={20} />} className="text-danger"></Button>
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
   return isLoading ? (
     <Spin />
   ) : (
@@ -43,15 +75,21 @@ const Categories = () => {
     //   </div>
     // </div>
     <div className="container-fluid">
-  {/* <!-- Hàng đầu tiên --> */}
-  <div className="row text-center">
-    <div className="col-md-12" style={{height: '30vh'}}>Form</div>
-  </div>
-  {/* <!-- Hàng thứ hai --> */}
-  <div className="row text-center">
-    <div className="col-md-12" style={{height: '70vh'}} >Table</div>
-  </div>
-</div>
+      {/* <!-- Hàng đầu tiên --> */}
+      <div className="row text-center">
+        <div className="col-md-12" style={{ height: "30vh" }}>
+          Form
+        </div>
+      </div>
+      {/* <!-- Hàng thứ hai --> */}
+      <div className="row text-center">
+        <div className="col-md-12" style={{ height: "70vh" }}>
+          <Card>
+            <Table size="small" dataSource={categories} columns={columns} />
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 };
 
