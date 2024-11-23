@@ -17,6 +17,7 @@ const Categories = () => {
   const [categoriesTreeModel, setCategoriesTreeModel] = useState<TreeModel[]>(
     []
   );
+  const [categorySelected, setCategorySelected] = useState<CategoryModel>();
 
   const [forms, setForms] = useState<any>();
   const [isVisibleAddNewCategory, setIsVisibleAddNewCategory] = useState(false);
@@ -99,14 +100,14 @@ const Categories = () => {
               className="text-info"
               onClick={() => {
                 setIsVisibleAddNewCategory(true);
-                // setCategorySelected(item)
+                setCategorySelected(item);
+                console.log("Check select: ", categorySelected);
               }}
             ></Button>
           </Tooltip>
           <Tooltip title="Delete Categories">
             <Button
               icon={<Trash size={20} className="text-danger" />}
-              // onChange={() => handleDeletedCategory()}
               onClick={(val) =>
                 confirm({
                   title: "Confirm",
@@ -152,8 +153,12 @@ const Categories = () => {
       <ModalCategory
         visible={isVisibleAddNewCategory}
         onAddNew={async (val) => await getCategories()}
-        onClose={() => setIsVisibleAddNewCategory(false)}
+        onClose={() => {
+          setIsVisibleAddNewCategory(false);
+          // setCategorySelected(undefined);
+        }}
         values={categoriesTreeModel}
+        category={categorySelected}
       />
     </div>
   );

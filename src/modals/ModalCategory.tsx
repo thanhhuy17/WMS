@@ -4,16 +4,18 @@ import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
 import { replaceName } from "../utils/replaceName";
 import { TreeModel } from "../models/FormModel";
+import { CategoryModel } from "../models/CategoryModel";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
   onAddNew: (val: any) => void;
   values: TreeModel[];
+  category?: CategoryModel;
 }
 
 const ModalCategory = (props: Props) => {
-  const { visible, onClose, onAddNew, values } = props;
+  const { visible, onClose, onAddNew, values, category } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
 
@@ -25,7 +27,11 @@ const ModalCategory = (props: Props) => {
   //-------------- HANDLE ADD NEW CATEGORY ---------------
   const handleCategory = async (values: any) => {
     setIsLoading(true);
-    const api = `/product/category-add-new`;
+    // Get Category and show on Screen
+
+    const api = `/product/${
+      category ? `/update-category` : `category-add-new`
+    }`;
     const data: any = {};
 
     for (const i in values) {
@@ -34,9 +40,9 @@ const ModalCategory = (props: Props) => {
     data.slug = replaceName(values.title);
 
     try {
-      const res: any = await handleAPI(api, data, `post`);
+      const res: any = await handleAPI(api, data, category ? `put` : `post`);
       message.success(res.message);
-      onAddNew(res.data);
+      !category && onAddNew(res.data); // Chú Ý
       handleClose();
       // console.log("Check data sent to Server: ", data);
       // console.log("Check data response : ", res.data);
@@ -57,8 +63,12 @@ const ModalCategory = (props: Props) => {
         closable={!isLoading}
         onOk={() => form.submit()}
         title={
-          <span style={{ color: `${colors.mainColor}` }}>Add Category</span>
+          <span style={{ color: `${colors.mainColor}` }}>
+            {category ? `Update Category` : `Add Category`}
+          </span>
         }
+        okText={category ? "Update" : "Add Category"}
+        cancelText="Cancel"
       >
         <Form
           layout="vertical"
@@ -79,7 +89,12 @@ const ModalCategory = (props: Props) => {
               </span>
             }
           >
-            <TreeSelect treeData={values} allowClear showSearch></TreeSelect>
+            <TreeSelect
+              treeData={values}
+              allowClear
+              showSearch
+              
+            ></TreeSelect>
           </Form.Item>
           <Form.Item
             name={"title"}
@@ -105,7 +120,10 @@ const ModalCategory = (props: Props) => {
               },
             ]}
           >
-            <Input.TextArea rows={4} allowClear />
+            <Input.TextArea
+              rows={4}
+              allowClear
+            />
           </Form.Item>
         </Form>
       </Modal>

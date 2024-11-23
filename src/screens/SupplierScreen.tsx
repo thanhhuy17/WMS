@@ -230,7 +230,7 @@ const SupplierScreen = () => {
       <ToggleSupplier
         visible={isVisibleAddNew}
         onClose={() => {
-          supplierSelected && getSuppliers();
+          // supplierSelected && getSuppliers();
           setIsVisibleAddNew(false);
           setSupplierSelected(undefined);
         }}
