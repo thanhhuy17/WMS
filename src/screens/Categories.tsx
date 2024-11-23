@@ -1,4 +1,4 @@
-import { Button, Card, message, Space, Spin, Tooltip } from "antd";
+import { Button, Card, message, Modal, Space, Spin, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import handleAPI from "../apis/handleAPI";
 import { CategoryModel } from "../models/CategoryModel";
@@ -8,7 +8,6 @@ import Table, { ColumnProps } from "antd/es/table";
 import { Edit2, Trash } from "iconsax-react";
 import { ModalCategory } from "../modals";
 import { getTreeValues } from "../utils/getTreeValues";
-import confirm from "antd/es/modal/confirm";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -22,6 +21,8 @@ const Categories = () => {
   const [forms, setForms] = useState<any>();
   const [isVisibleAddNewCategory, setIsVisibleAddNewCategory] = useState(false);
   const [total, setTotal] = useState<number>(10);
+
+  const { confirm } = Modal;
 
   useEffect(() => {
     getCategories();
@@ -62,7 +63,7 @@ const Categories = () => {
 
   // ------------- DELETE CATEGORY (Xóa cứng) ----------
   const handleDeletedCategory = async (id: string) => {
-    console.log("Lay ID: ", id);
+    // console.log("Lay ID: ", id);
     try {
       const api = `/product/delete-category?id=${id}`;
       const res: any = await handleAPI(api, undefined, "delete");
