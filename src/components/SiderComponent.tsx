@@ -37,9 +37,10 @@ const SiderComponent = () => {
     {
       key: "inventory",
       label: (
-        <Link to={""} style={{ textDecoration: "none" }}>
-          Inventory
-        </Link>
+        // <Link to={'/abc'} style={{ textDecoration: "none" }}>
+        //   Inventory
+        // </Link>
+        'Inventory'
       ),
       icon: <TfiShoppingCartFull size={20} />,
       children: [

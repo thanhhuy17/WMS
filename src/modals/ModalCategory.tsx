@@ -22,7 +22,7 @@ const ModalCategory = (props: Props) => {
     form.resetFields();
     onClose();
   };
-  //-------------- HANDLE CATEGORY ---------------
+  //-------------- HANDLE ADD NEW CATEGORY ---------------
   const handleCategory = async (values: any) => {
     setIsLoading(true);
     const api = `/product/category-add-new`;

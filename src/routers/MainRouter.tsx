@@ -36,10 +36,7 @@ const MainRouter = () => {
               <Route path="/" element={<HomeScreen />} />
               <Route>
                 <Route path="/inventory" element={<Inventories />} />
-                <Route
-                  path="/inventory/add-product"
-                  element={<AddProduct />}
-                />
+                <Route path="/inventory/add-product" element={<AddProduct />} />
               </Route>
 
               <Route path="/reports" element={<ReportScreen />} />

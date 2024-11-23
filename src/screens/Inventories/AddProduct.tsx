@@ -20,6 +20,7 @@ import { uploadFile } from "../../utils/uploadFile";
 import { ModalCategory, ToggleSupplier } from "../../modals";
 import { Add } from "iconsax-react";
 import { SupplierModel } from "../../models/SupplierModel";
+import { getTreeValues } from "../../utils/getTreeValues";
 
 const initContent = {
   title: "",
@@ -93,53 +94,18 @@ const AddProduct = () => {
     console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
   };
 
-  // -------------- Get Tree Values --------------------
-  const getTreeValues = (data: any[], key: string) => {
-    const items: any[] = [];
-    const keys: string[] = [];
-    data.forEach((item) => {
-      if (item[`${key}`] && !keys.includes(item[`${key}`])) {
-        keys.push(item[`${key}`]);
-      }
-    });
-
-    data.forEach((item) => {
-      if (item[`${key}`]) {
-        // Tìm vị trí Index của Items
-        const index = items.findIndex(
-          (element) => element.value === item[`${key}`]
-        );
-        // Lọc lấy ra children
-        const children = data.filter(
-          (element) => element[`${key}`] === item[`${key}`]
-        );
-        // Thêm {title, value} vào items vị trí index của giá trị children.
-        if (index !== -1) {
-          items[index].children = children.map((value) => ({
-            title: value.title,
-            value: value._id,
-          }));
-        }
-      } else {
-        items.push({ title: item.title, value: item._id });
-      }
-    });
-
-    // console.log("Check Keys: ", keys);
-    // console.log("Check Items: ", items);
-    return items;
-  };
+ 
   //--------------- Get Categories ---------------------
   const getCategories = async () => {
     const api = `/product/get-categories`;
     try {
       const res = await handleAPI(api);
-      const datas = res.data;
+      const datas = res.data.categories;
       const data: any =
         datas.length > 0 ? getTreeValues(datas, "parentId") : [];
 
       setCategories(data);
-      // console.log("Check data get Category: ", data);
+      // console.log("Check data get Category: ", datas);
     } catch (error: any) {
       message.error(error.message);
     }
