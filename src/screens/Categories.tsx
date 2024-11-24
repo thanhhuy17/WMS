@@ -64,20 +64,16 @@ const Categories = () => {
 
   // ------------- DELETE CATEGORY (Xóa cứng) ----------
   const handleDeletedCategory = async (id: string, isDeleted: boolean) => {
-    const api = `/product/delete-category?id=${id}&isDeleted=${isDeleted}`; // isDeleted === true (Xóa mềm)
-    const items = [...categories];
+    const api = `/product/delete-category?id=${id}&isDeleted=${isDeleted}`; // isDeleted === true (Xóa luôn)
+
     // console.log("Lay ID: ", id);
     try {
       const res: any = await handleAPI(api, undefined, "delete");
-      const index = items.findIndex(
-        (element: CategoryModel) => element._id === id
-      );
-      if (index !== -1) {
-        items.splice(index, 1);
-      }
 
       // Call back getCategories
-      setCategories(items);
+      setCategories((categories) =>
+        categories.filter((element) => element._id !== id)
+      );
       // await getCategories();
       message.success(res.message);
     } catch (error: any) {
@@ -121,7 +117,7 @@ const Categories = () => {
                 confirm({
                   title: "Confirm",
                   content: `Are you sure want to Delete this Category?`,
-                  onOk: () => handleDeletedCategory(item._id, true),
+                  onOk: () => handleDeletedCategory(item._id, false), // False (Xóa mềm)
                 })
               }
             />

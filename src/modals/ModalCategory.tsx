@@ -1,5 +1,5 @@
 import { Form, Input, message, Modal, TreeSelect } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
 import { replaceName } from "../utils/replaceName";
@@ -21,16 +21,30 @@ const ModalCategory = (props: Props) => {
 
   //-------------- CLOSE TOGGLE ---------------
   const handleClose = () => {
-    form.resetFields();
+    form.resetFields(); // Reset form về trạng thái ban đầu
     onClose();
   };
+
+  // -------------- SET FORM VALUES ---------------------
+  useEffect(() => {
+    if (category) {
+      form.setFieldsValue({
+        parentId: category.parentId || undefined,
+        title: category.title || "",
+        description: category.description || "",
+      });
+    } else {
+      form.resetFields(); // Reset khi mở modal thêm mới
+    }
+  }, [category, form]);
+
   //-------------- HANDLE ADD NEW CATEGORY ---------------
   const handleCategory = async (values: any) => {
     setIsLoading(true);
     // Get Category and show on Screen
 
-    const api = `/product/${
-      category ? `/update-category` : `category-add-new`
+    const api = `/product${
+      category ? `/update-category` : `/category-add-new`
     }`;
     const data: any = {};
 
@@ -44,8 +58,8 @@ const ModalCategory = (props: Props) => {
       message.success(res.message);
       !category && onAddNew(res.data); // Chú Ý
       handleClose();
-      // console.log("Check data sent to Server: ", data);
-      // console.log("Check data response : ", res.data);
+      console.log("Check data sent to Server: ", data);
+      console.log("Check data response : ", res.data);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -89,12 +103,7 @@ const ModalCategory = (props: Props) => {
               </span>
             }
           >
-            <TreeSelect
-              treeData={values}
-              allowClear
-              showSearch
-              
-            ></TreeSelect>
+            <TreeSelect treeData={values} allowClear showSearch></TreeSelect>
           </Form.Item>
           <Form.Item
             name={"title"}
@@ -120,10 +129,7 @@ const ModalCategory = (props: Props) => {
               },
             ]}
           >
-            <Input.TextArea
-              rows={4}
-              allowClear
-            />
+            <Input.TextArea rows={4} allowClear />
           </Form.Item>
         </Form>
       </Modal>
