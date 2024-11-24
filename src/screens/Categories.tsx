@@ -63,13 +63,22 @@ const Categories = () => {
   };
 
   // ------------- DELETE CATEGORY (Xóa cứng) ----------
-  const handleDeletedCategory = async (id: string) => {
+  const handleDeletedCategory = async (id: string, isDeleted: boolean) => {
+    const api = `/product/delete-category?id=${id}&isDeleted=${isDeleted}`; // isDeleted === true (Xóa mềm)
+    const items = [...categories];
     // console.log("Lay ID: ", id);
     try {
-      const api = `/product/delete-category?id=${id}`;
       const res: any = await handleAPI(api, undefined, "delete");
+      const index = items.findIndex(
+        (element: CategoryModel) => element._id === id
+      );
+      if (index !== -1) {
+        items.splice(index, 1);
+      }
+
       // Call back getCategories
-      await getCategories();
+      setCategories(items);
+      // await getCategories();
       message.success(res.message);
     } catch (error: any) {
       message.error(error);
@@ -94,25 +103,25 @@ const Categories = () => {
       dataIndex: "",
       render: (item: any) => (
         <Space>
-          <Tooltip title="Edit Categories">
+          <Tooltip title="Edit Categories" key={"btnEdit"}>
             <Button
               icon={<Edit2 size={20} />}
               className="text-info"
               onClick={() => {
                 setIsVisibleAddNewCategory(true);
                 setCategorySelected(item);
-                console.log("Check select: ", categorySelected);
+                console.log("Check select category: ", categorySelected);
               }}
             ></Button>
           </Tooltip>
-          <Tooltip title="Delete Categories">
+          <Tooltip title="Delete Categories" key={"btnDelete"}>
             <Button
               icon={<Trash size={20} className="text-danger" />}
               onClick={(val) =>
                 confirm({
                   title: "Confirm",
                   content: `Are you sure want to Delete this Category?`,
-                  onOk: () => handleDeletedCategory(item._id),
+                  onOk: () => handleDeletedCategory(item._id, false),
                 })
               }
             />

@@ -6,5 +6,6 @@ export interface CategoryModel {
     description: string
     createdAt: string
     updatedAt: string
+    isDeleted: boolean
     __v: number
 }
