@@ -121,7 +121,7 @@ const Categories = () => {
                 confirm({
                   title: "Confirm",
                   content: `Are you sure want to Delete this Category?`,
-                  onOk: () => handleDeletedCategory(item._id, false),
+                  onOk: () => handleDeletedCategory(item._id, true),
                 })
               }
             />
