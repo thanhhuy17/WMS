@@ -4,4 +4,5 @@ import FormItem from "./FormItem";
 import TableComponent from "./TableComponent";
 import InventoryComponent from "./InventoryComponent";
 import StatisticComponent from "./StatisticComponent";
-export { SiderComponent, HeaderComponent, FormItem, TableComponent, InventoryComponent, StatisticComponent }
+import AddCategory from './AddCategory'
+export { SiderComponent, HeaderComponent, FormItem, TableComponent, InventoryComponent, StatisticComponent, AddCategory }
