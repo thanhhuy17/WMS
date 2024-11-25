@@ -8,6 +8,11 @@ import { Edit2, Trash } from "iconsax-react";
 import { ModalCategory } from "../modals";
 import { getTreeValues } from "../utils/getTreeValues";
 import { AddCategory } from "../components";
+import Title from "antd/es/typography/Title";
+import { colors } from "../constants/colors";
+import { MdOutlineAddToPhotos } from "react-icons/md";
+import { LuFilter } from "react-icons/lu";
+import { PiExportLight } from "react-icons/pi";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -131,18 +136,9 @@ const Categories = () => {
   return isLoading ? (
     <Spin />
   ) : (
-    // <div className="container-fluid">
-    //   <div className="row text-center">
-    //     <div className="col-md-4">
-    //     </div>
-    //     <div className="col-md-8">
-    //     </div>
-    //   </div>
-    // </div>
 
     <div className="container-fluid">
-      {/* <!-- Hàng đầu tiên --> */}
-      <div className="row text-center mb-5">
+      {/* <div className="row text-center mb-5">
         <div className="col-md-12" style={{ height: "5vh" }}>
           <Card>
             <Button
@@ -154,24 +150,47 @@ const Categories = () => {
             >
               Add New Category
             </Button>
-            {/* <AddCategory
-              visible={isVisibleAddNewCategory}
-              onAddNew={async (val) => await getCategories()}
-              onClose={() => {
-                setIsVisibleAddNewCategory(false);
-                // setCategorySelected(undefined);
-              }}
-              values={categoriesTreeModel}
-              category={categorySelected}
-            /> */}
           </Card>
         </div>
-      </div>
+      </div> */}
       {/* <!-- Hàng thứ hai --> */}
-      <div className="row text-center mt-4">
-        <div className="col-md-12" style={{ height: "95vh" }}>
+      <div className="row  mt-4">
+        <div className="col-md-12">
           <Card>
             <Table
+              title={() => (
+                <div className="row">
+                  <div className="col">
+                    <Title
+                      style={{ fontSize: "20px", color: `${colors.mainColor}` }}
+                    >
+                      Categories
+                    </Title>
+                  </div>
+                  <div className="col text-end">
+                    <Space>
+                      <Button
+                        icon={<MdOutlineAddToPhotos size={20} />}
+                        type="primary"
+                        // Show Modal Supplier when to onclick
+                        onClick={() => {
+                          setCategorySelected(undefined);
+                          setIsVisibleAddNewCategory(true);
+                        }}
+                      >
+                        Add New
+                      </Button>
+                      <Button icon={<LuFilter size={20} />}>Filters</Button>
+                      <Button
+                        icon={<PiExportLight size={20} />}
+                        // onClick={() => setIsVisibleModalExport(true)}
+                      >
+                        Export
+                      </Button>
+                    </Space>
+                  </div>
+                </div>
+              )}
               size="small"
               dataSource={categories}
               columns={columns}
