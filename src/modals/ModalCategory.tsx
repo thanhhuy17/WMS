@@ -5,7 +5,6 @@ import handleAPI from "../apis/handleAPI";
 import { replaceName } from "../utils/replaceName";
 import { TreeModel } from "../models/FormModel";
 import { CategoryModel } from "../models/CategoryModel";
-import { AddCategory } from "../components";
 
 interface Props {
   visible: boolean;
@@ -27,47 +26,47 @@ const ModalCategory = (props: Props) => {
   };
 
   // -------------- SET FORM VALUES ---------------------
-  // useEffect(() => {
-  //   // console.log("Check Category:", category);
-  //   if (category) {
-  //     form.setFieldsValue({
-  //       parentId: category.parentId || undefined,
-  //       title: category.title || "",
-  //       description: category.description || "",
-  //     });
-  //   } else {
-  //     form.resetFields(); // Reset khi mở modal thêm mới
-  //   }
-  // }, [category, form]);
+  useEffect(() => {
+    // console.log("Check Category:", category);
+    if (category) {
+      form.setFieldsValue({
+        parentId: category.parentId || undefined,
+        title: category.title || "",
+        description: category.description || "",
+      });
+    } else {
+      form.resetFields(); // Reset khi mở modal thêm mới
+    }
+  }, [category, form]);
 
-  // //-------------- HANDLE ADD NEW CATEGORY ---------------
-  // const handleCategory = async (values: any) => {
-  //   setIsLoading(true);
-  //   // Get Category and show on Screen
+  //-------------- HANDLE ADD NEW CATEGORY ---------------
+  const handleCategory = async (values: any) => {
+    setIsLoading(true);
+    // Get Category and show on Screen
 
-  //   const api = `/product${
-  //     category ? `/update-category` : `/category-add-new`
-  //   }`;
-  //   const data: any = {};
+    const api = `/product${
+      category ? `/update-category` : `/category-add-new`
+    }`;
+    const data: any = {};
 
-  //   for (const i in values) {
-  //     data[i] = values[i] ?? "";
-  //   }
-  //   data.slug = replaceName(values.title);
+    for (const i in values) {
+      data[i] = values[i] ?? "";
+    }
+    data.slug = replaceName(values.title);
 
-  //   try {
-  //     const res: any = await handleAPI(api, data, category ? `put` : `post`);
-  //     message.success(res.message);
-  //     !category && onAddNew(res.data); // Chú Ý
-  //     handleClose();
-  //     console.log("Check data sent to Server: ", data);
-  //     console.log("Check data response : ", res.data);
-  //   } catch (error: any) {
-  //     message.error(error.message);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+    try {
+      const res: any = await handleAPI(api, data, category ? `put` : `post`);
+      message.success(res.message);
+      !category && onAddNew(res.data); // Chú Ý
+      handleClose();
+      console.log("Check data sent to Server: ", data);
+      console.log("Check data response : ", res.data);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div>
       <Modal
@@ -86,7 +85,7 @@ const ModalCategory = (props: Props) => {
         okText={category ? "Update" : "Add Category"}
         cancelText="Cancel"
       >
-        {/* <Form
+        <Form
           layout="vertical"
           labelAlign="left"
           form={form}
@@ -133,14 +132,7 @@ const ModalCategory = (props: Props) => {
           >
             <Input.TextArea rows={4} allowClear />
           </Form.Item>
-        </Form> */}
-        <AddCategory
-          onClose={handleClose}
-          visible={visible}
-          category={category}
-          values={values}
-          onAddNew={onAddNew}
-        />
+        </Form>
       </Modal>
     </div>
   );

@@ -8,7 +8,6 @@ import { Edit2, Trash } from "iconsax-react";
 import { ModalCategory } from "../modals";
 import { getTreeValues } from "../utils/getTreeValues";
 import { AddCategory } from "../components";
-import { replaceName } from "../utils/replaceName";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -29,34 +28,6 @@ const Categories = () => {
   useEffect(() => {
     getCategories();
   }, [page, pageSize]);
-
-  //-------------- HANDLE ADD NEW CATEGORY ---------------
-  const handleCategory = async (values: any) => {
-    setIsLoading(true);
-    // Get Category and show on Screen
-
-    const api = `/product/category-add-new`;
-
-    const data: any = {};
-
-    for (const i in values) {
-      data[i] = values[i] ?? "";
-    }
-    data.slug = replaceName(values.title);
-
-    try {
-      const res: any = await handleAPI(api, data, `post`);
-      message.success(res.message);
-      res.data && setCategories(res.data); // Chú Ý
-      setIsVisibleAddNewCategory(false);
-      console.log("Check data sent to Server: ", data);
-      console.log("Check data response : ", res.data);
-    } catch (error: any) {
-      message.error(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   //----------------- GET CATEGORIES ---------------------
   const getCategories = async () => {
@@ -160,28 +131,45 @@ const Categories = () => {
   return isLoading ? (
     <Spin />
   ) : (
+    // <div className="container-fluid">
+    //   <div className="row text-center">
+    //     <div className="col-md-4">
+    //     </div>
+    //     <div className="col-md-8">
+    //     </div>
+    //   </div>
+    // </div>
+
     <div className="container-fluid">
-      <div className="row text-center">
-        <div className="col-md-4">
-          <Card title={"Add New Category"}>
-            <AddCategory
+      {/* <!-- Hàng đầu tiên --> */}
+      <div className="row text-center mb-5">
+        <div className="col-md-12" style={{ height: "5vh" }}>
+          <Card>
+            <Button
+              type="primary"
+              onClick={() => {
+                setCategorySelected(undefined);
+                setIsVisibleAddNewCategory(true);
+              }}
+            >
+              Add New Category
+            </Button>
+            {/* <AddCategory
               visible={isVisibleAddNewCategory}
               onAddNew={async (val) => await getCategories()}
               onClose={() => {
                 setIsVisibleAddNewCategory(false);
+                // setCategorySelected(undefined);
               }}
               values={categoriesTreeModel}
-              // category={categorySelected}
-            />
-            <span>
-              <Button type="primary" >
-                {/* {categorySelected ? `Update Category` : `Add Category`} */}
-                Add Category
-              </Button>
-            </span>
+              category={categorySelected}
+            /> */}
           </Card>
         </div>
-        <div className="col-md-8">
+      </div>
+      {/* <!-- Hàng thứ hai --> */}
+      <div className="row text-center mt-4">
+        <div className="col-md-12" style={{ height: "95vh" }}>
           <Card>
             <Table
               size="small"
@@ -203,49 +191,6 @@ const Categories = () => {
         category={categorySelected}
       />
     </div>
-
-    // <div className="container-fluid">
-    //   {/* <!-- Hàng đầu tiên --> */}
-    //   <div className="row text-center">
-    //     <div className="col-md-12" style={{ height: "40vh" }}>
-    //       <Card title={"Add New Category"}>
-    //         <AddCategory
-    //           visible={isVisibleAddNewCategory}
-    //           onAddNew={async (val) => await getCategories()}
-    //           onClose={() => {
-    //             setIsVisibleAddNewCategory(false);
-    //             // setCategorySelected(undefined);
-    //           }}
-    //           values={categoriesTreeModel}
-    //           // category={categorySelected}
-    //         />
-    //       </Card>
-    //     </div>
-    //   </div>
-    //   {/* <!-- Hàng thứ hai --> */}
-    //   <div className="row text-center">
-    //     <div className="col-md-12" style={{ height: "60vh" }}>
-    //       <Card>
-    //         <Table
-    //           size="small"
-    //           dataSource={categories}
-    //           columns={columns}
-    //           onChange={(val: any) => console.log(val)}
-    //         />
-    //       </Card>
-    //     </div>
-    //   </div>
-    //   <ModalCategory
-    //     visible={isVisibleAddNewCategory}
-    //     onAddNew={async (val) => await getCategories()}
-    //     onClose={() => {
-    //       setIsVisibleAddNewCategory(false);
-    //       // setCategorySelected(undefined);
-    //     }}
-    //     values={categoriesTreeModel}
-    //     category={categorySelected}
-    //   />
-    // </div>
   );
 };
 
