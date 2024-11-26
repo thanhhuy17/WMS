@@ -136,7 +136,6 @@ const Categories = () => {
   return isLoading ? (
     <Spin />
   ) : (
-
     <div className="container-fluid">
       {/* <div className="row text-center mb-5">
         <div className="col-md-12" style={{ height: "5vh" }}>
@@ -178,7 +177,7 @@ const Categories = () => {
                           setIsVisibleAddNewCategory(true);
                         }}
                       >
-                        Add New
+                        Add New Category
                       </Button>
                       <Button icon={<LuFilter size={20} />}>Filters</Button>
                       <Button
