@@ -113,7 +113,7 @@ const Categories = () => {
               onClick={() => {
                 setIsVisibleAddNewCategory(true);
                 setCategorySelected(item);
-                // console.log("Check select category: ", categorySelected);
+                console.log("Check select category: ", item);
               }}
             ></Button>
           </Tooltip>
@@ -137,22 +137,6 @@ const Categories = () => {
     <Spin />
   ) : (
     <div className="container-fluid">
-      {/* <div className="row text-center mb-5">
-        <div className="col-md-12" style={{ height: "5vh" }}>
-          <Card>
-            <Button
-              type="primary"
-              onClick={() => {
-                setCategorySelected(undefined);
-                setIsVisibleAddNewCategory(true);
-              }}
-            >
-              Add New Category
-            </Button>
-          </Card>
-        </div>
-      </div> */}
-      {/* <!-- Hàng thứ hai --> */}
       <div className="row  mt-4">
         <div className="col-md-12">
           <Card>
@@ -203,7 +187,6 @@ const Categories = () => {
         onAddNew={async (val) => await getCategories()}
         onClose={() => {
           setIsVisibleAddNewCategory(false);
-          // setCategorySelected(undefined);
         }}
         values={categoriesTreeModel}
         category={categorySelected}

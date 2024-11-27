@@ -27,25 +27,20 @@ const ModalCategory = (props: Props) => {
 
   // -------------- SET FORM VALUES ---------------------
   useEffect(() => {
-    // console.log("Check Category:", category);
     if (category) {
-      form.setFieldsValue({
-        parentId: category.parentId || undefined,
-        title: category.title || "",
-        description: category.description || "",
-      });
+      form.setFieldsValue(category);
     } else {
       form.resetFields(); // Reset khi mở modal thêm mới
     }
   }, [category, form]);
 
-  //-------------- HANDLE ADD NEW CATEGORY ---------------
+  //-------------- HANDLE ADD NEW CATEGORY - UPDATE CATEGORY ---------------
   const handleCategory = async (values: any) => {
     setIsLoading(true);
     // Get Category and show on Screen
 
     const api = `/product${
-      category ? `/update-category` : `/category-add-new`
+      category ? `/update-category?id=${category._id}` : `/category-add-new`
     }`;
     const data: any = {};
 
@@ -59,8 +54,9 @@ const ModalCategory = (props: Props) => {
       message.success(res.message);
       !category && onAddNew(res.data); // Chú Ý
       handleClose();
-      console.log("Check data sent to Server: ", data);
-      console.log("Check data response : ", res.data);
+      onAddNew(res.data);
+      // console.log("Check data sent to Server: ", data);
+      // console.log("Check data response : ", res.data);
     } catch (error: any) {
       message.error(error.message);
     } finally {
