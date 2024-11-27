@@ -1,18 +1,18 @@
 import { Button, Card, message, Modal, Space, Spin, Tooltip } from "antd";
 import { useEffect, useState } from "react";
-import handleAPI from "../apis/handleAPI";
-import { CategoryModel } from "../models/CategoryModel";
-import { TreeModel } from "../models/FormModel";
+import handleAPI from "../../apis/handleAPI";
+import { CategoryModel } from "../../models/CategoryModel";
+import { TreeModel } from "../../models/FormModel";
 import Table, { ColumnProps } from "antd/es/table";
 import { Edit2, Trash } from "iconsax-react";
-import { ModalCategory } from "../modals";
-import { getTreeValues } from "../utils/getTreeValues";
-import { AddCategory } from "../components";
+import { ModalCategory } from "../../modals";
+import { getTreeValues } from "../../utils/getTreeValues";
 import Title from "antd/es/typography/Title";
-import { colors } from "../constants/colors";
+import { colors } from "../../constants/colors";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -27,12 +27,25 @@ const Categories = () => {
   // const [forms, setForms] = useState<any>();
   const [isVisibleAddNewCategory, setIsVisibleAddNewCategory] = useState(false);
   const [total, setTotal] = useState<number>(10);
+  const [pageInfo, setPageInfo] = useState<{ page: number; pageSize: number }>({
+    page: 1,
+    pageSize: 10,
+  });
 
   const { confirm } = Modal;
+
+  const onPageChange = (val: { page: number; pageSize: number }) => {
+    setPage(val.page);
+    setPageSize(val.pageSize);
+  };
 
   useEffect(() => {
     getCategories();
   }, [page, pageSize]);
+
+  useEffect(() => {
+    onPageChange(pageInfo);
+  }, [pageInfo]);
 
   //----------------- GET CATEGORIES ---------------------
   const getCategories = async () => {
@@ -40,7 +53,7 @@ const Categories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api); // default = get
-      // console.log("Check Get Categories: ", res?.data?.categories);
+      // console.log("Check Get Categories: ", res?.data?.total);
       res?.data?.categories && setCategories(res?.data?.categories);
 
       // ---- Page, PageSize ----
@@ -93,7 +106,16 @@ const Categories = () => {
     {
       key: "title",
       title: "Name",
-      dataIndex: "title",
+      // dataIndex: "title",
+      dataIndex: "",
+      render: (item: CategoryModel) => (
+        <Link
+          style={{ textDecoration: "none" }}
+          to={`/categories/detail/${item.slug}?id=${item._id}`}
+        >
+          {item.title}
+        </Link>
+      ),
     },
     {
       key: "description",
@@ -177,7 +199,32 @@ const Categories = () => {
               size="small"
               dataSource={categories}
               columns={columns}
-              onChange={(val: any) => console.log(val)}
+              // onChange={(val: any) => console.log(val)}
+              loading={isLoading}
+              bordered
+              pagination={{
+                size: "default",
+                current: page,
+                showQuickJumper: true,
+                showSizeChanger: true,
+                total: total,
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} of ${total} rows`,
+                onShowSizeChange: (current, size) => {
+                  setPageInfo({
+                    ...pageInfo,
+                    pageSize: size,
+                  });
+                },
+                onChange: (page, pageSize) => {
+                  console.log("Check page: ", page, pageSize);
+                  setPageInfo({
+                    ...pageInfo,
+                    page: page,
+                    pageSize: pageSize || pageInfo.pageSize,
+                  });
+                },
+              }}
             />
           </Card>
         </div>

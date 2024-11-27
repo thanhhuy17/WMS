@@ -52,11 +52,11 @@ const ModalCategory = (props: Props) => {
     try {
       const res: any = await handleAPI(api, data, category ? `put` : `post`);
       message.success(res.message);
-      !category && onAddNew(res.data); // Chú Ý
+      // !category && onAddNew(res.data); // Chú Ý
       handleClose();
       onAddNew(res.data);
-      // console.log("Check data sent to Server: ", data);
-      // console.log("Check data response : ", res.data);
+      console.log("Check data sent to Server: ", data);
+      console.log("Check data response : ", res.data);
     } catch (error: any) {
       message.error(error.message);
     } finally {

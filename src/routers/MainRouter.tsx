@@ -16,7 +16,8 @@ import {
 import { HeaderComponent, SiderComponent } from "../components";
 import Inventories from "../screens/Inventories/Inventories";
 import AddProduct from "../screens/Inventories/AddProduct";
-import Categories from "../screens/Categories";
+import Categories from "../screens/categories/Categories";
+import CategoryDetail from "../screens/categories/CategoryDetail";
 // Chia Layout
 const { Footer, Content } = Layout;
 const MainRouter = () => {
@@ -42,7 +43,14 @@ const MainRouter = () => {
               <Route path="/reports" element={<ReportScreen />} />
               <Route path="/suppliers" element={<SupplierScreen />} />
               <Route path="/orders" element={<OrderScreen />} />
-              <Route path="/categories" element={<Categories />} />
+              <Route>
+                <Route path="/categories" element={<Categories />} />
+                <Route
+                  path="/categories/detail/:slug"
+                  element={<CategoryDetail />}
+                />
+              </Route>
+
               <Route path="/manage-store" element={<ManageScreen />} />
               <Route path="/settings" element={<SettingScreen />} />
             </Routes>
