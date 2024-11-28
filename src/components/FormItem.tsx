@@ -1,11 +1,13 @@
-import { Checkbox, DatePicker, Form, Input, Select } from "antd";
+import { Checkbox, DatePicker, Form, Input, Select, TreeSelect } from "antd";
 import { colors } from "../constants/colors";
-import { FormItemModel } from "../models/FormModel";
+import { FormItemModel, TreeModel } from "../models/FormModel";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { SupplierModel } from "../models/SupplierModel";
 import { useEffect, useState } from "react";
 import { ProductModel } from "../models/ProductModel";
 import { Dayjs } from "dayjs";
+import unorm from "unorm";
+
 
 interface Props {
   item: FormItemModel;
@@ -14,10 +16,11 @@ interface Props {
   onCategories?:(category:string[])=> void;
   supplier?: SupplierModel;
   product?: ProductModel;
+  values?: TreeModel[];
 }
 
 const FormItem = (props: Props) => {
-  const { item, onIsTakingChange, supplier, onExpiryDateChange,onCategories } = props;
+  const { item, onIsTakingChange, supplier, onExpiryDateChange, onCategories,values } = props;
   const [isTakingSOS, setIsTakingSOS] = useState<boolean>(
     supplier?.isTaking ?? false
   );
@@ -41,16 +44,39 @@ const FormItem = (props: Props) => {
     switch (item.type) {
       case "select":
         content = (
-          <Select onChange={onCategories}
-            // options={item.lockup_item ?? []}
-            options={[
-              { label: <span>Consumables</span>, value: "Consumables" },
-              { label: <span>Electric</span>, value: "Electric" },
-              { label: <span>Asset</span>, value: "Asset" },
-            ]}
-            placeholder={item.placeholder}
-            // defaultValue={''}
-          />
+          // <Select onChange={onCategories}
+          //   // options={item.lockup_item ?? []}
+          //   options={[
+          //     { label: <span>Consumables</span>, value: "Consumables" },
+          //     { label: <span>Electric</span>, value: "Electric" },
+          //     { label: <span>Asset</span>, value: "Asset" },
+          //   ]}
+          //   placeholder={item.placeholder}
+          //   // defaultValue={''}
+          // />
+          <TreeSelect
+              treeData={values}
+              allowClear
+              showSearch // ------------ Lọc theo tiếng việt ------------
+              filterTreeNode={(input, option) => {
+                const title = String(option?.title);
+                // Chuẩn hóa chuỗi trước khi so sánh
+                const normalizedInput = unorm
+                  .nfkd(input)
+                  .replace(/[\u0300-\u036f]/g, "");
+                const normalizedTitle = unorm
+                  .nfkd(title)
+                  .replace(/[\u0300-\u036f]/g, "");
+
+                // console.log("normalizedInput: ", normalizedInput);
+                // console.log("normalizedTitle: ", normalizedTitle);
+
+                // So sánh chuỗi đã chuẩn hóa
+                return normalizedTitle
+                  .toLowerCase()
+                  .includes(normalizedInput.toLowerCase());
+              }}
+            />
         );
         break;
       case "checkbox":

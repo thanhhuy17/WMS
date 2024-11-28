@@ -8,8 +8,9 @@ import { uploadFile } from "../utils/uploadFile";
 import { replaceName } from "../utils/replaceName";
 import { SupplierModel } from "../models/SupplierModel";
 import { useSelector } from "react-redux";
-import { FormModel } from "../models/FormModel";
+import { FormModel, TreeModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
+import { getTreeValues } from "../utils/getTreeValues";
 // import { ProductModel } from "../models/ProductModel";
 
 interface Props {
@@ -17,9 +18,8 @@ interface Props {
   onClose: () => void;
   onAddNew: (val: SupplierModel) => void;
   supplier?: SupplierModel;
-  getSuppliers?: ()=> void
+  getSuppliers?: () => void;
 }
-
 
 const ToggleSupplier = (props: Props) => {
   const { visible, onClose, onAddNew, supplier, getSuppliers } = props;
@@ -28,10 +28,13 @@ const ToggleSupplier = (props: Props) => {
   const [isTaking, setIsTaking] = useState<boolean>();
   const [file, setFile] = useState();
   const [formDynamic, setFormDynamic] = useState<FormModel>();
+  const [categories, setCategories] = useState<FormModel>();
+  const [categoriesTreeModel, setCategoriesTreeModel] = useState<TreeModel[]>(
+    []
+  );
 
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
-
 
   //Add User Created
   const userCreated = useSelector(
@@ -45,10 +48,11 @@ const ToggleSupplier = (props: Props) => {
       form.setFieldsValue(supplier);
       setIsTaking(supplier.isTaking);
     }
-  }, [form, supplier]);
+  }, [form, supplier, categories]);
   // ------ GET FORM WHEN TO START WEB -------
   useEffect(() => {
     getFormSupplier();
+    getAllCategories();
   }, []);
 
   // ---------- SEND DATA TO BACKEND ------------
@@ -88,7 +92,7 @@ const ToggleSupplier = (props: Props) => {
       console.log("Check response from Server: ", res);
       !supplier && onAddNew(res.data);
       handleClose();
-      getSuppliers?.()
+      getSuppliers?.();
       // getFormSupplier()
       // dispatch to redux
     } catch (error: any) {
@@ -120,6 +124,27 @@ const ToggleSupplier = (props: Props) => {
   //---------------Handle Is Taking -----------------
   const handleIsTakingChange = (value: boolean) => {
     setIsTaking(value); // Update isTaking state based on FormItem checkbox
+  };
+
+  //----------------- GET ALL CATEGORIES USE TO SELECT PARENT CATEGORY---------------------
+  const getAllCategories = async () => {
+    const api = `/product/get-categories`;
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api); // default = get
+      // console.log("Check Get All Categories: ", res);
+      res?.data?.categories && setCategories(res?.data?.categories);
+
+      const data: any =
+        res.data.categories.length > 0
+          ? getTreeValues(res.data.categories, "parentId")
+          : [];
+      setCategoriesTreeModel(data);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   //--------------- MAIN LOGIC -----------------
@@ -188,120 +213,12 @@ const ToggleSupplier = (props: Props) => {
                 item={item}
                 onIsTakingChange={handleIsTakingChange}
                 supplier={supplier}
+                values={categoriesTreeModel}
               ></FormItem>
             ))}
           </Form>
         )}
-        {/* <Form
-          disabled={isLoading}
-          onFinish={addNewSupplier}
-          layout="horizontal"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 18 }}
-          size="middle"
-          form={form}
-          style={{ color: `${colors.mainColor}` }}
-        >
-          <Form.Item
-            name={"name"}
-            rules={[
-              {
-                required: true,
-                message: "Please Enter Supplier Name!",
-              },
-            ]}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>
-                Supplier Name
-              </span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter Supplier Name" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"email"}
-            rules={[
-              {
-                required: true,
-                message: "Please Enter Email!",
-              },
-            ]}
-            label={<span style={{ color: `${colors.mainColor}` }}>Email</span>}
-            colon={false}
-          >
-            <Input placeholder="Enter Supplier Email" allowClear type="email" />
-          </Form.Item>
-          <Form.Item
-            name={"product"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Product</span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter Product" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"category"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Category</span>
-            }
-            colon={false}
-          >
-            <Select options={[]} placeholder="Select product category" />
-          </Form.Item>
-          <Form.Item
-            name={"price"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>Buying Price</span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter buying price" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"contactNumber"}
-            label={
-              <span style={{ color: `${colors.mainColor}` }}>
-                Contact Number
-              </span>
-            }
-            colon={false}
-          >
-            <Input placeholder="Enter supplier contact number" allowClear />
-          </Form.Item>
-          <Form.Item
-            name={"active"}
-            label={<span style={{ color: `${colors.mainColor}` }}>Active</span>}
-            colon={false}
-          >
-            <Input placeholder="Enter Active number" allowClear type="number" />
-          </Form.Item>
-          <Form.Item
-            name={"type"}
-            label={<span style={{ color: `${colors.mainColor}` }}>Type</span>}
-            colon={false}
-          >
-            <div>
-              <div className="mb-2">
-                <Button
-                  size="small"
-                  onClick={() => setIsTaking(false)}
-                  type={isTaking === false ? "primary" : "default"}
-                >
-                  Not taking return
-                </Button>
-              </div>
-              <Button
-                size="small"
-                onClick={() => setIsTaking(true)}
-                type={isTaking ? "primary" : "default"}
-              >
-                Taking return
-              </Button>
-            </div>
-          </Form.Item>
-        </Form> */}
+
         <div className="d-none">
           <input
             accept="image/*"
