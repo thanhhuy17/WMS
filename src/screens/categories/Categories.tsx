@@ -40,7 +40,8 @@ const Categories = () => {
   };
 
   useEffect(() => {
-    getCategories();
+    getCategories(); // gọi hàm get ALL
+    getAllCategories();
   }, [page, pageSize]);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const Categories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api); // default = get
-      // console.log("Check Get Categories: ", res?.data?.total);
+      // console.log("Check Get Categories: ", res);
       res?.data?.categories && setCategories(res?.data?.categories);
 
       // ---- Page, PageSize ----
@@ -66,13 +67,36 @@ const Categories = () => {
       );
       setTotal(res.data.total);
 
+      // const data: any =
+      //   res.data.categories.length > 0
+      //     ? getTreeValues(res.data.categories, "parentId")
+      //     : [];
+      // setCategoriesTreeModel(data);
+
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //----------------- GET ALL CATEGORIES USE TO SELECT PARENT CATEGORY---------------------
+  const getAllCategories = async () => {
+    const api = `/product/get-categories`;
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api); // default = get
+      // console.log("Check Get All Categories: ", res);
+      res?.data?.categories && setCategories(res?.data?.categories);
+
+      
+
       const data: any =
         res.data.categories.length > 0
           ? getTreeValues(res.data.categories, "parentId")
           : [];
       setCategoriesTreeModel(data);
-      // console.log("Check Total Row: ", res.data.total);
-      // console.log(page, pageSize);
+
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -163,6 +187,7 @@ const Categories = () => {
         <div className="col-md-12">
           <Card>
             <Table
+              key={page}
               title={() => (
                 <div className="row">
                   <div className="col">
@@ -217,7 +242,7 @@ const Categories = () => {
                   });
                 },
                 onChange: (page, pageSize) => {
-                  console.log("Check page: ", page, pageSize);
+                  // console.log("Check page: ", page, pageSize);
                   setPageInfo({
                     ...pageInfo,
                     page: page,

@@ -19,6 +19,8 @@ const ModalCategory = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
 
+  // ------------- GET ALL TREE CATEGORY ------------
+
   //-------------- CLOSE TOGGLE ---------------
   const handleClose = () => {
     form.resetFields(); // Reset form về trạng thái ban đầu
@@ -55,8 +57,8 @@ const ModalCategory = (props: Props) => {
       // !category && onAddNew(res.data); // Chú Ý
       handleClose();
       onAddNew(res.data);
-      console.log("Check data sent to Server: ", data);
-      console.log("Check data response : ", res.data);
+      // console.log("Check data sent to Server: ", data);
+      // console.log("Check data response : ", res.data);
     } catch (error: any) {
       message.error(error.message);
     } finally {
