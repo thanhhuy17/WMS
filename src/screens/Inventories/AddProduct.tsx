@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import unorm from "unorm";
 import { Editor } from "@tinymce/tinymce-react";
 import {
   Button,
@@ -10,6 +11,7 @@ import {
   Select,
   Space,
   Spin,
+  TreeSelect,
   Typography,
 } from "antd";
 import { colors } from "../../constants/colors";
@@ -94,8 +96,7 @@ const AddProduct = () => {
     console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
   };
 
- 
-  //--------------- Get Categories ---------------------
+  //--------------- Get All Categories ---------------------
   const getCategories = async () => {
     const api = `/product/get-categories`;
     try {
@@ -275,8 +276,10 @@ const AddProduct = () => {
                         ]
                       }
                     >
-                      <Select
-                        mode="multiple"
+                      <TreeSelect
+                        treeData={categories}
+                        allowClear
+                        showSearch
                         dropdownRender={(menu) => (
                           <>
                             {menu}
@@ -293,6 +296,36 @@ const AddProduct = () => {
                             </Button>
                           </>
                         )}
+                        // ------------ Lọc theo tiếng anh ------------
+
+                        // filterTreeNode={(input, option) => {
+                        //   const title = String(option?.title);
+                        //   console.log("input: ", input);
+                        //   console.log("label: ", title);
+                        //   return title
+                        //     .toLowerCase()
+                        //     .includes(input.toLowerCase());
+                        // }}
+
+                        // ------------ Lọc theo tiếng việt ------------
+                        filterTreeNode={(input, option) => {
+                          const title = String(option?.title);
+                          // Chuẩn hóa chuỗi trước khi so sánh
+                          const normalizedInput = unorm
+                            .nfkd(input)
+                            .replace(/[\u0300-\u036f]/g, "");
+                          const normalizedTitle = unorm
+                            .nfkd(title)
+                            .replace(/[\u0300-\u036f]/g, "");
+
+                          // console.log("normalizedInput: ", normalizedInput);
+                          // console.log("normalizedTitle: ", normalizedTitle);
+
+                          // So sánh chuỗi đã chuẩn hóa
+                          return normalizedTitle
+                            .toLowerCase()
+                            .includes(normalizedInput.toLowerCase());
+                        }}
                       />
                     </Form.Item>
                   </Card>
@@ -311,11 +344,29 @@ const AddProduct = () => {
                       <Select
                         options={supplierOptions}
                         showSearch={true}
-                        filterOption={(input, option) =>
-                          replaceName(
-                            option?.label ? option.label : ""
-                          ).includes(replaceName(input))
-                        }
+                        // filterOption={(input, option) =>
+                        //   replaceName(
+                        //     option?.label ? option.label : ""
+                        //   ).includes(replaceName(input))
+                        // }
+                        filterOption={(input, option)=>{
+                          const label = String(option?.label);
+                          // Chuẩn hóa chuỗi trước khi so sánh
+                          const normalizedInput = unorm
+                            .nfkd(input)
+                            .replace(/[\u0300-\u036f]/g, "");
+                          const normalizedLabel = unorm
+                            .nfkd(label)
+                            .replace(/[\u0300-\u036f]/g, "");
+
+                          // console.log("normalizedInput: ", normalizedInput);
+                          // console.log("normalizedLabel: ", normalizedLabel);
+
+                          // So sánh chuỗi đã chuẩn hóa
+                          return normalizedLabel
+                            .toLowerCase()
+                            .includes(normalizedInput.toLowerCase());
+                        }}
                         dropdownRender={(menu) => (
                           <>
                             {menu}
@@ -374,7 +425,7 @@ const AddProduct = () => {
           // Thêm trực tiếp vào danh sách hiện tại
           const newOption = { value: newSupplier._id, label: newSupplier.name };
           setSupplierOptions((prevOptions) => [...prevOptions, newOption]);
-      
+
           // Nếu cần, cập nhật cả danh sách đầy đủ
           setSuppliers((prevSuppliers) => [...prevSuppliers, newSupplier]);
         }}

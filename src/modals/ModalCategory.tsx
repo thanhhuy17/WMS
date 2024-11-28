@@ -1,4 +1,6 @@
 import { Form, Input, message, Modal, TreeSelect } from "antd";
+import unorm from "unorm";
+
 import { useEffect, useState } from "react";
 import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
@@ -102,7 +104,29 @@ const ModalCategory = (props: Props) => {
               </span>
             }
           >
-            <TreeSelect treeData={values} allowClear showSearch></TreeSelect>
+            <TreeSelect
+              treeData={values}
+              allowClear
+              showSearch // ------------ Lọc theo tiếng việt ------------
+              filterTreeNode={(input, option) => {
+                const title = String(option?.title);
+                // Chuẩn hóa chuỗi trước khi so sánh
+                const normalizedInput = unorm
+                  .nfkd(input)
+                  .replace(/[\u0300-\u036f]/g, "");
+                const normalizedTitle = unorm
+                  .nfkd(title)
+                  .replace(/[\u0300-\u036f]/g, "");
+
+                // console.log("normalizedInput: ", normalizedInput);
+                // console.log("normalizedTitle: ", normalizedTitle);
+
+                // So sánh chuỗi đã chuẩn hóa
+                return normalizedTitle
+                  .toLowerCase()
+                  .includes(normalizedInput.toLowerCase());
+              }}
+            />
           </Form.Item>
           <Form.Item
             name={"title"}
