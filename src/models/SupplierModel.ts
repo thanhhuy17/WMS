@@ -1,3 +1,11 @@
+// Định nghĩa kiểu Category
+// export interface Category {
+//   _id: string;
+//   title: string;
+//   slug: string;
+//   description: string;
+// }
+
 export interface SupplierModel {
   index: number
   name: string
@@ -5,7 +13,7 @@ export interface SupplierModel {
   product: string
   email: string
   active: number
-  categories: any[]
+  category: string[];  // Dùng kiểu Category[] thay vì any[]
   price: number
   contactNumber: string
   isTaking: boolean

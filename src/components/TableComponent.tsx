@@ -74,7 +74,7 @@ const TableComponent = (props: Props) => {
               );
             }
             if (item.key === "category") {
-              return <Text>{record.categories}</Text>;
+              return <Text>{record.category}</Text>;
             }
             if (item.key === "expiryDate") {
               const date = dayjs(record.expiryDate).format("DD-MM-YYYY");
