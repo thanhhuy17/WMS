@@ -164,7 +164,7 @@ const AddProduct = () => {
                     </Form.Item>
                   ))}
 
-                  <Editor
+                  {/* <Editor
                     disabled={isLoading}
                     apiKey="w7vw37v1rmgydmiiv9zxlerwmzlucno2kxa1xqbnmqu7cfnh"
                     onInit={(evt, editor) => (editorRef.current = editor)}
@@ -249,7 +249,7 @@ const AddProduct = () => {
                       },
                     }}
                     //   initialValue="Welcome to TinyMCE!"
-                  />
+                  /> */}
                 </div>
                 <div className="col-4">
                   <Card className="mt-4">
