@@ -13,7 +13,7 @@ export interface SupplierModel {
   product: string
   email: string
   active: number
-  categories: Category[];  // Dùng kiểu Category[] thay vì any[]
+  category: Category[];  // Dùng kiểu Category[] thay vì any[]
   price: number
   contactNumber: string
   isTaking: boolean
