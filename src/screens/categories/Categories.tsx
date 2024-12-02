@@ -56,7 +56,8 @@ const Categories = () => {
     try {
       const res = await handleAPI(api); // default = get
       // console.log("Check Get Categories: ", res);
-      res?.data?.categories && setCategories(res?.data?.categories);
+      res?.data?.categories &&
+        setCategories(getTreeValues(res?.data?.categories, false));
 
       // ---- Page, PageSize ----
       const items: CategoryModel[] = [];
@@ -67,12 +68,6 @@ const Categories = () => {
         })
       );
       setTotal(res.data.total);
-
-      // const data: any =
-      //   res.data.categories.length > 0
-      //     ? getTreeValues(res.data.categories, "parentId")
-      //     : [];
-      // setCategoriesTreeModel(data);
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -91,7 +86,8 @@ const Categories = () => {
 
       const data: any =
         res.data.categories.length > 0
-          ? getTreeValues(res.data.categories, "parentId")
+          ? // ? getTreeValues(res.data.categories, "parentId")
+            getTreeValues(res.data.categories, true)
           : [];
       setCategoriesTreeModel(data);
     } catch (error: any) {
@@ -261,7 +257,7 @@ const Categories = () => {
               columns={columns}
               // onChange={(val: any) => console.log(val)}
               loading={isLoading}
-              bordered
+              // bordered
               pagination={{
                 size: "default",
                 current: page,

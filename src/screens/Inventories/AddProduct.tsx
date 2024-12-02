@@ -103,7 +103,8 @@ const AddProduct = () => {
       const res = await handleAPI(api);
       const datas = res.data.categories;
       const data: any =
-        datas.length > 0 ? getTreeValues(datas, "parentId") : [];
+        // datas.length > 0 ? getTreeValues(datas, "parentId") : [];
+        datas.length > 0 ? getTreeValues(datas, true) : [];
 
       setCategories(data);
       // console.log("Check data get Category: ", datas);
