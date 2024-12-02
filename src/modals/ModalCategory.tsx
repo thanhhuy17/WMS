@@ -7,6 +7,7 @@ import handleAPI from "../apis/handleAPI";
 import { replaceName } from "../utils/replaceName";
 import { TreeModel } from "../models/FormModel";
 import { CategoryModel } from "../models/CategoryModel";
+import { useSelector } from "react-redux";
 
 interface Props {
   visible: boolean;
@@ -21,7 +22,8 @@ const ModalCategory = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
 
-  // ------------- GET ALL TREE CATEGORY ------------
+  //Add User Created
+  const userLogin = useSelector((state: any) => state.authReducer?.data?.name);
 
   //-------------- CLOSE TOGGLE ---------------
   const handleClose = () => {
@@ -52,6 +54,18 @@ const ModalCategory = (props: Props) => {
       data[i] = values[i] ?? "";
     }
     data.slug = replaceName(values.title);
+    // --------- ADD EDITED AND CREATED ---------
+    data.userCreated = userLogin;
+    // data.createdAt = new Date().toISOString()
+
+    if (!category) {
+      data.userEdited = undefined;
+      data.updatedAt = "";
+      data.createdAt = new Date().toISOString();
+    } else {
+      data.userEdited = userLogin;
+      data.updatedAt = new Date().toISOString();
+    }
 
     try {
       const res: any = await handleAPI(api, data, category ? `put` : `post`);

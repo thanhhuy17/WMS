@@ -13,6 +13,7 @@ import { MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -72,7 +73,6 @@ const Categories = () => {
       //     ? getTreeValues(res.data.categories, "parentId")
       //     : [];
       // setCategoriesTreeModel(data);
-
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -89,14 +89,11 @@ const Categories = () => {
       // console.log("Check Get All Categories: ", res);
       res?.data?.categories && setCategories(res?.data?.categories);
 
-      
-
       const data: any =
         res.data.categories.length > 0
           ? getTreeValues(res.data.categories, "parentId")
           : [];
       setCategoriesTreeModel(data);
-
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -147,9 +144,47 @@ const Categories = () => {
       dataIndex: "description",
     },
     {
+      key: "userCreated",
+      title: "User Created",
+      dataIndex: `userCreated`,
+      render: (userCreated: string) => (userCreated ? userCreated : "-"),
+      align: `center`,
+      width: `10rem`,
+    },
+    {
+      key: "dateCreated",
+      title: "Date Created",
+      dataIndex: `createdAt`,
+      render: (dateCreated: string) => {
+        const date = dayjs(dateCreated).format("DD-MM-YYYY HH:mm:ss");
+        return date;
+      },
+      width: `10rem`,
+    },
+    {
+      key: "userEdited",
+      title: "User Edited",
+      dataIndex: `userEdited`,
+      render: (userEdited: string) => (userEdited ? userEdited : "-"),
+      align: `center`,
+      width: `10rem`,
+    },
+    {
+      key: "updatedAt",
+      title: "Date Edited",
+      dataIndex: `updatedAt`,
+      render: (dateEdited: string) => {
+        const date = dayjs(dateEdited).format("DD-MM-YYYY HH:mm:ss");
+        return date === "Invalid Date" ? "-" : date;
+      },
+      align: `center`,
+      width: `10rem`,
+    },
+    {
       key: "btnContainer",
       title: "Actions",
       dataIndex: "",
+      fixed: "right",
       render: (item: any) => (
         <Space>
           <Tooltip title="Edit Categories" key={"btnEdit"}>

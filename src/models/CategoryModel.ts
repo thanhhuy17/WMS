@@ -5,7 +5,9 @@ export interface CategoryModel {
     slug: string
     description: string
     createdAt: string
+    userCreated: string,
     updatedAt: string
+    userEdited: string,
     isDeleted: boolean
     __v: number
 }
