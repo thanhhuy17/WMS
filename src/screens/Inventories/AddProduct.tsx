@@ -32,6 +32,7 @@ const initContent = {
 
 const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isAddProduct, setIsAddProduct] = useState(false);
   const [content, setContent] = useState("");
   const [values, setValues] = useState(initContent);
   const [supplierOptions, setSupplierOptions] = useState<SelectModel[]>([]);
@@ -92,8 +93,31 @@ const AddProduct = () => {
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
     console.log("Values From Add Product :", values);
-    const content = editorRef.current.getContent();
-    console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
+    // const content = editorRef.current.getContent();
+    // console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
+
+    const data: any = {};
+    for (const i in values) {
+      data[`${i}`] = values[i] ?? "";
+    }
+
+    data.content = "";
+    data.slug = replaceName(values.productName);
+    console.log("check data: ", data);
+
+    //----------- POST API ------------
+    const api = `/product/add-new-product`;
+    try {
+      setIsAddProduct(true);
+      const res: any = await handleAPI(api, data, "post");
+      console.log(res);
+      message.success(res?.message);
+      window.history.back()
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsAddProduct(false);
+    }
   };
 
   //--------------- Get All Categories ---------------------
@@ -129,6 +153,7 @@ const AddProduct = () => {
               {formDynamic.title}
             </Title>
             <Form
+              disabled={isAddProduct}
               form={form}
               onFinish={handleAddNewProduct}
               layout={formDynamic?.layout}
@@ -249,14 +274,19 @@ const AddProduct = () => {
                         },
                       },
                     }}
-                    //   initialValue="Welcome to TinyMCE!"
                   /> */}
                 </div>
                 <div className="col-4">
                   <Card className="mt-4">
                     <Space>
-                      <Button onClick={() => {}}>Cancel</Button>
-                      <Button type="primary" onClick={() => form.submit()}>
+                      <Button loading={isAddProduct} onClick={() => {}}>
+                        Cancel
+                      </Button>
+                      <Button
+                        loading={isAddProduct}
+                        type="primary"
+                        onClick={() => form.submit()}
+                      >
                         Submit
                       </Button>
                     </Space>
@@ -279,6 +309,7 @@ const AddProduct = () => {
                     >
                       <TreeSelect
                         treeData={categories}
+                        multiple
                         allowClear
                         showSearch
                         dropdownRender={(menu) => (
@@ -350,7 +381,7 @@ const AddProduct = () => {
                         //     option?.label ? option.label : ""
                         //   ).includes(replaceName(input))
                         // }
-                        filterOption={(input, option)=>{
+                        filterOption={(input, option) => {
                           const label = String(option?.label);
                           // Chuẩn hóa chuỗi trước khi so sánh
                           const normalizedInput = unorm
