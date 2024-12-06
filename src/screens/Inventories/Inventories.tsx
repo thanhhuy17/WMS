@@ -16,9 +16,9 @@ const Inventories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      console.log("Get Product: ", res);
+      console.log("Get Product1: ", res);
       res.data && setProducts(res.data.items);
-      console.log("Get Products: ", products);
+      console.log("Get Products2: ", products);
       const items: ProductModel[] = [];
       res.data.items.forEach((item: any, index: number) =>
         items.push({
