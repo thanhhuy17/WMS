@@ -92,7 +92,7 @@ const AddProduct = () => {
 
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
-    console.log("Values From Add Product :", values);
+    // console.log("Values From Add Product :", values);
     // const content = editorRef.current.getContent();
     // console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
 
@@ -103,16 +103,17 @@ const AddProduct = () => {
 
     data.content = "";
     data.slug = replaceName(values.productName);
-    console.log("check data: ", data);
+    console.log("Check data send to server: ", data);
 
     //----------- POST API ------------
     const api = `/product/add-new-product`;
     try {
       setIsAddProduct(true);
       const res: any = await handleAPI(api, data, "post");
-      console.log(res);
+      console.log("Response form server: ", res);
+
       message.success(res?.message);
-      window.history.back()
+      window.history.back();
     } catch (error: any) {
       message.error(error.message);
     } finally {

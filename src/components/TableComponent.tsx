@@ -66,6 +66,7 @@ const TableComponent = (props: Props) => {
           align: `${item.key !== "productName" ? "center" : "left"}`,
 
           render: (text: any, record: SupplierModel & ProductModel) => {
+            // render: (text: any, record: any) => {
             if (item.key === "type") {
               return (
                 <Text type={record.isTaking ? "success" : "danger"}>
@@ -74,11 +75,14 @@ const TableComponent = (props: Props) => {
               );
             }
             if (item.key === "category") {
-              return <Text>{record.categories}</Text>;
+              const items = record.category.map((item) => (
+                <Text key={item._id}>{item.title}</Text>
+              ));
+              return items;
             }
             if (item.key === "expiryDate") {
               const date = dayjs(record.expiryDate).format("DD-MM-YYYY");
-              return <Text >{date}</Text>;
+              return <Text>{date}</Text>;
             }
             return text;
           },

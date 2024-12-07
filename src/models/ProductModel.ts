@@ -4,6 +4,7 @@ export interface ProductModel {
   productName: string
   productId: string
   categories: string[]
+  suppliers:string[]
   buyingPrice: number
   quantity: number
   unit: string[]
