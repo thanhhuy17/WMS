@@ -1,4 +1,13 @@
-import { Button, Card, message, Modal, Space, Spin, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  message,
+  Modal,
+  Space,
+  Spin,
+  Tooltip,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import handleAPI from "../../apis/handleAPI";
@@ -11,6 +20,7 @@ import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Trash } from "iconsax-react";
+import { SupplierModel } from "../../models/SupplierModel";
 
 const Inventories = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +38,7 @@ const Inventories = () => {
     navigate(`/inventory/add-product`);
   };
   const { confirm } = Modal;
+  const { Title, Text } = Typography;
 
   useEffect(() => {
     getProducts();
@@ -43,6 +54,8 @@ const Inventories = () => {
       res.data && setProducts(res.data.items);
       // console.log("Get Products2: ", products);
       const items: ProductModel[] = [];
+      console.log("Check Index: ", items);
+
       res.data.items.forEach((item: any, index: number) =>
         items.push({
           index: (page - 1) * pageSize + (index + 1),
@@ -68,6 +81,12 @@ const Inventories = () => {
       key: "categories",
       title: "Category",
       dataIndex: "categories", // Fix name
+      render: (text: any, record: ProductModel) => {
+        const items = record.categories.map((item) => (
+          <Text key={item._id}>{item.title}</Text>
+        ));
+        return items;
+      },
     },
     {
       key: "description",
@@ -77,7 +96,13 @@ const Inventories = () => {
     {
       key: "supplier",
       title: "Supplier",
-      dataIndex: "suppliers", // Fix name
+      dataIndex: "suppliers",
+      render: (text: any, record: ProductModel) => {
+        const items = record.suppliers.map((item) => (
+          <Text key={item._id}>{item.name}</Text>
+        ));
+        return items;
+      },
     },
     {
       key: "userCreated",
