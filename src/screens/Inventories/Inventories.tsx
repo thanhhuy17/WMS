@@ -9,18 +9,17 @@ import {
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import handleAPI from "../../apis/handleAPI";
 import { ProductModel } from "../../models/ProductModel";
 import Table, { ColumnProps } from "antd/es/table";
-import Title from "antd/es/typography/Title";
+
 import { colors } from "../../constants/colors";
 import { MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Trash } from "iconsax-react";
-import { SupplierModel } from "../../models/SupplierModel";
 
 const Inventories = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +33,15 @@ const Inventories = () => {
   });
 
   const navigate = useNavigate();
-  const handleClick = () => {
+  // ------------- NAVIGATE ----------------
+  const handleOpenFormAddProduct = () => {
     navigate(`/inventory/add-product`);
   };
+
+  const handleOpenFormEditProduct = (id?: string) => {
+    navigate(`/inventory/add-product`);
+  };
+
   const { confirm } = Modal;
   const { Title, Text } = Typography;
 
@@ -50,11 +55,11 @@ const Inventories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      console.log("Get Product1: ", res);
+      // console.log("Get Product1: ", res);
       res.data && setProducts(res.data.items);
       // console.log("Get Products2: ", products);
       const items: ProductModel[] = [];
-      console.log("Check Index: ", items);
+      // console.log("Check Index: ", items);
 
       res.data.items.forEach((item: any, index: number) =>
         items.push({
@@ -66,6 +71,23 @@ const Inventories = () => {
       setTotal(res.data?.total);
     } catch (error: any) {
       message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // -------- DELETE PRODUCT -----------
+  const handleDeletedProduct = async (id: string) => {
+    console.log("Id Delete Product: ", id);
+    setIsLoading(true);
+    try {
+      const api = `/product/delete-product?id=${id}`;
+      const res: any = await handleAPI(api, undefined, "delete");
+      console.log("Check Delete Response to Server: ", res);
+      await getProducts();
+      message.success(res.message);
+    } catch (error: any) {
+      message.error(error.message);
+      console.log("Delete Product Error!: ", error);
     } finally {
       setIsLoading(false);
     }
@@ -96,7 +118,7 @@ const Inventories = () => {
     {
       key: "supplier",
       title: "Supplier",
-      dataIndex: "suppliers",
+      dataIndex: "suppliers", // Fix name
       render: (text: any, record: ProductModel) => {
         const items = record.suppliers.map((item) => (
           <Text key={item._id}>{item.name}</Text>
@@ -153,6 +175,7 @@ const Inventories = () => {
               icon={<Edit2 size={20} />}
               className="text-info"
               onClick={() => {
+                handleOpenFormEditProduct(item._id);
                 // setIsVisibleAddNewCategory(true);
                 // setCategorySelected(item);
                 // console.log("Check select category: ", item);
@@ -166,7 +189,7 @@ const Inventories = () => {
                 confirm({
                   title: "Confirm",
                   content: `Are you sure want to Delete this Product?`,
-                  // onOk: () => handleDeletedCategory(item._id, false), // False (Xóa mềm)
+                  onOk: () => handleDeletedProduct(item._id), // False (Xóa mềm)
                 })
               }
             />
@@ -200,7 +223,7 @@ const Inventories = () => {
                         icon={<MdOutlineAddToPhotos size={20} />}
                         type="primary"
                         // Show Modal Supplier when to onclick
-                        onClick={handleClick}
+                        onClick={handleOpenFormAddProduct}
                       >
                         Add Product
                       </Button>

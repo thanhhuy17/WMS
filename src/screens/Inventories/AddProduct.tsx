@@ -23,18 +23,20 @@ import { ModalCategory, ToggleSupplier } from "../../modals";
 import { Add } from "iconsax-react";
 import { SupplierModel } from "../../models/SupplierModel";
 import { getTreeValues } from "../../utils/getTreeValues";
+import { useSelector } from "react-redux";
 
-const initContent = {
-  title: "",
-  description: "",
-  supplier: "",
-};
+
+// const initContent = {
+//   title: "",
+//   description: "",
+//   supplier: "",
+// };
 
 const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isAddProduct, setIsAddProduct] = useState(false);
-  const [content, setContent] = useState("");
-  const [values, setValues] = useState(initContent);
+  // const [content, setContent] = useState("");
+  // const [values, setValues] = useState(initContent);
   const [supplierOptions, setSupplierOptions] = useState<SelectModel[]>([]);
   const [fileUrl, setFileUrl] = useState("");
   const [isVisibleCategory, setIsVisibleCategory] = useState(false);
@@ -44,6 +46,9 @@ const AddProduct = () => {
 
   //------------- Supplier Modal ---------------
   const [suppliers, setSuppliers] = useState<SupplierModel[]>([]);
+
+  //Add User Created
+  const userLogin = useSelector((state: any) => state.authReducer?.data?.name);
 
   const editorRef = useRef<any>(null);
   const [form] = Form.useForm();
@@ -103,6 +108,18 @@ const AddProduct = () => {
 
     data.content = "";
     data.slug = replaceName(values.productName);
+    data.userCreated = userLogin
+
+    // if (!(suppliers && categories)) {
+    //   data.userEdited = undefined;
+    //   data.dateEdited = "";
+    //   data.dateCreated = new Date().toISOString();
+    // } else {
+    //   data.userEdited = userLogin;
+    //   data.dateEdited = new Date().toISOString();
+    // }
+
+
     console.log("Check data send to server: ", data);
 
     //----------- POST API ------------
