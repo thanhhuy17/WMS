@@ -137,8 +137,8 @@ const ToggleSupplier = (props: Props) => {
 
       const data: any =
         res.data.categories.length > 0
-          // ? getTreeValues(res.data.categories, "parentId")
-          ? getTreeValues(res.data.categories, true)
+          ? getTreeValues(res.data.categories, "parentId")
+          // ? getTreeValues(res.data.categories, true)
           : [];
       setCategoriesTreeModel(data);
     } catch (error: any) {

@@ -20,8 +20,11 @@ import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Trash } from "iconsax-react";
+import AddProduct from "./AddProduct";
+
 
 const Inventories = () => {
+  // const [productSelected, setProductSelected] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [page, setPage] = useState(1);
@@ -38,9 +41,9 @@ const Inventories = () => {
     navigate(`/inventory/add-product`);
   };
 
-  const handleOpenFormEditProduct = (id?: string) => {
-    navigate(`/inventory/add-product`);
-  };
+  // const handleOpenFormEditProduct = () => {
+  //   navigate(`/inventory/add-product`);
+  // };
 
   const { confirm } = Modal;
   const { Title, Text } = Typography;
@@ -175,10 +178,13 @@ const Inventories = () => {
               icon={<Edit2 size={20} />}
               className="text-info"
               onClick={() => {
-                handleOpenFormEditProduct(item._id);
-                // setIsVisibleAddNewCategory(true);
-                // setCategorySelected(item);
-                // console.log("Check select category: ", item);
+                // if (item) {
+                //   setProductSelected(item);
+                //   console.log("Item selected: ", item);
+                // handleOpenFormEditProduct();
+                  
+                // }
+                // console.log("Item selected2: ", productSelected);
               }}
             ></Button>
           </Tooltip>
@@ -268,6 +274,7 @@ const Inventories = () => {
           </Card>
         </div>
       </div>
+      {/* {productSelected && <AddProduct productSelected={productSelected}/>} */}
     </div>
   );
 };

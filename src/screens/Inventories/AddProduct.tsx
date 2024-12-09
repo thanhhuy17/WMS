@@ -25,14 +25,19 @@ import { SupplierModel } from "../../models/SupplierModel";
 import { getTreeValues } from "../../utils/getTreeValues";
 import { useSelector } from "react-redux";
 
-
 // const initContent = {
 //   title: "",
 //   description: "",
 //   supplier: "",
 // };
 
-const AddProduct = () => {
+interface Props {
+  productSelected?: any[];
+}
+
+const AddProduct = (props : Props) => {
+  // const {productSelected} = props
+  // console.log("oke: ", productSelected)
   const [isLoading, setIsLoading] = useState(false);
   const [isAddProduct, setIsAddProduct] = useState(false);
   // const [content, setContent] = useState("");
@@ -108,7 +113,7 @@ const AddProduct = () => {
 
     data.content = "";
     data.slug = replaceName(values.productName);
-    data.userCreated = userLogin
+    data.userCreated = userLogin;
 
     // if (!(suppliers && categories)) {
     //   data.userEdited = undefined;
@@ -118,7 +123,6 @@ const AddProduct = () => {
     //   data.userEdited = userLogin;
     //   data.dateEdited = new Date().toISOString();
     // }
-
 
     console.log("Check data send to server: ", data);
 
@@ -145,8 +149,8 @@ const AddProduct = () => {
       const res = await handleAPI(api);
       const datas = res.data.categories;
       const data: any =
-        // datas.length > 0 ? getTreeValues(datas, "parentId") : [];
-        datas.length > 0 ? getTreeValues(datas, true) : [];
+        datas.length > 0 ? getTreeValues(datas, "parentId") : [];
+      // datas.length > 0 ? getTreeValues(datas, true) : [];
 
       setCategories(data);
       // console.log("Check data get Category: ", datas);
@@ -295,20 +299,6 @@ const AddProduct = () => {
                   /> */}
                 </div>
                 <div className="col-4">
-                  <Card className="mt-4">
-                    <Space>
-                      <Button loading={isAddProduct} onClick={() => {}}>
-                        Cancel
-                      </Button>
-                      <Button
-                        loading={isAddProduct}
-                        type="primary"
-                        onClick={() => form.submit()}
-                      >
-                        Submit
-                      </Button>
-                    </Space>
-                  </Card>
                   <Card
                     className="mt-3"
                     title={
@@ -455,6 +445,20 @@ const AddProduct = () => {
                       }}
                       //   allowClear
                     />
+                  </Card>
+                  <Card className="mt-4">
+                    <Space>
+                      <Button loading={isAddProduct} onClick={() => {}}>
+                        Cancel
+                      </Button>
+                      <Button
+                        loading={isAddProduct}
+                        type="primary"
+                        onClick={() => form.submit()}
+                      >
+                        Submit
+                      </Button>
+                    </Space>
                   </Card>
                 </div>
               </div>
