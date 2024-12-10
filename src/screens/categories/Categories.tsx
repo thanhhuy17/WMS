@@ -55,7 +55,7 @@ const Categories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api); // default = get
-      // console.log("Check Get Categories: ", res);
+      console.log("Check Get Categories: ", res);
       // res?.data?.categories &&
       // setCategories(getTreeValues(res?.data?.categories, false));
       // setCategories(getTreeValues(res?.data?.categories, 'parentId'));
