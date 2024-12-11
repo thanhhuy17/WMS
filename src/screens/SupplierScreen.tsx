@@ -83,7 +83,7 @@ const SupplierScreen = () => {
       const res = await handleAPI(api);
       res.data && setSuppliers(res.data.items);
       const items: SupplierModel[] = [];
-      // console.log("Check Index: ", items);
+      console.log("Check Index: ", items);
 
       res.data.items.forEach((item: any, index: number) =>
         items.push({

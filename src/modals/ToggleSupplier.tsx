@@ -8,10 +8,10 @@ import { uploadFile } from "../utils/uploadFile";
 import { replaceName } from "../utils/replaceName";
 import { SupplierModel } from "../models/SupplierModel";
 import { useSelector } from "react-redux";
-import { FormModel, TreeModel } from "../models/FormModel";
+import { FormModel, SelectModel, TreeModel } from "../models/FormModel";
 import FormItem from "../components/FormItem";
 import { getTreeValues } from "../utils/getTreeValues";
-// import { ProductModel } from "../models/ProductModel";
+
 
 interface Props {
   visible: boolean;
@@ -32,6 +32,7 @@ const ToggleSupplier = (props: Props) => {
   const [categoriesTreeModel, setCategoriesTreeModel] = useState<TreeModel[]>(
     []
   );
+  const [productsOption, setProductsOption] = useState<SelectModel[]>([]);
 
   const [form] = Form.useForm<any>();
   const inpRef = useRef<any>();
@@ -53,6 +54,7 @@ const ToggleSupplier = (props: Props) => {
   useEffect(() => {
     getFormSupplier();
     getAllCategories();
+    getAllProducts();
   }, []);
 
   // ---------- SEND DATA TO BACKEND ------------
@@ -138,9 +140,28 @@ const ToggleSupplier = (props: Props) => {
       const data: any =
         res.data.categories.length > 0
           ? getTreeValues(res.data.categories, "parentId")
-          // ? getTreeValues(res.data.categories, true)
-          : [];
+          : // ? getTreeValues(res.data.categories, true)
+            [];
       setCategoriesTreeModel(data);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //----------------- GET ALL PRODUCTS USE TO SELECT PRODUCT---------------------
+  const getAllProducts = async () => {
+    const api = `/product`;
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api); // default = get
+      const data = res?.data?.items;
+      const options = data.map((item: any) => ({
+        value: item._id,
+        label: item.productName,
+      }));
+      setProductsOption(options)
     } catch (error: any) {
       message.error(error.message);
     } finally {
@@ -215,6 +236,7 @@ const ToggleSupplier = (props: Props) => {
                 onIsTakingChange={handleIsTakingChange}
                 supplier={supplier}
                 values={categoriesTreeModel}
+                productsOption = {productsOption}
               ></FormItem>
             ))}
           </Form>

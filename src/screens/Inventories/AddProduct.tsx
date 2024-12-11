@@ -35,7 +35,7 @@ interface Props {
   productSelected?: any[];
 }
 
-const AddProduct = (props : Props) => {
+const AddProduct = (props: Props) => {
   // const {productSelected} = props
   // console.log("oke: ", productSelected)
   const [isLoading, setIsLoading] = useState(false);
@@ -185,6 +185,7 @@ const AddProduct = (props : Props) => {
                 <div className="col-8">
                   {formDynamic?.formItems?.map((item) => (
                     <Form.Item
+                      key={item.key}
                       style={{ fontWeight: 500 }}
                       name={item.value}
                       label={

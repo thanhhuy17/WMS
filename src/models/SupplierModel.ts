@@ -1,3 +1,5 @@
+import { ProductModel } from "./ProductModel";
+
 // Định nghĩa kiểu Category
 export interface Category {
   _id: string;
@@ -10,7 +12,7 @@ export interface SupplierModel {
   index: number
   name: string
   slug: string
-  product: string
+  product: ProductModel[];
   email: string
   active: number
   category: Category[];  // Dùng kiểu Category[] thay vì any[]

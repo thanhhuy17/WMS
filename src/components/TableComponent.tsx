@@ -66,7 +66,7 @@ const TableComponent = (props: Props) => {
           align: `${item.key !== "productName" ? "center" : "left"}`,
 
           render: (text: any, record: SupplierModel & ProductModel) => {
-            // render: (text: any, record: any) => {
+            // console.log("check record: ", record.product)
             if (item.key === "type") {
               return (
                 <Text type={record.isTaking ? "success" : "danger"}>
@@ -79,6 +79,27 @@ const TableComponent = (props: Props) => {
                 <Text key={item._id}>{item.title}</Text>
               ));
               return items;
+            }
+            // if (item.key === "product") {
+            //   // console.log("oke product", record.product[0].productName);
+            //   const items = record.product.map((item) => (
+            //     <Text key={item._id}>{item.productName}</Text>
+            //   ));
+            //   return items;
+            // }
+            if (item.key === "product") {
+              // Kiểm tra nếu product là mảng
+              if (Array.isArray(record.product)) {
+                // Nếu là mảng, dùng map để render từng sản phẩm
+                const items = record.product.map((product) => (
+                  <Text key={product._id}>{product.productName}</Text>
+                ));
+                return items;
+              } 
+              // else {
+              //   // Nếu chỉ có một sản phẩm duy nhất
+              //   return <Text key={record.product._id}>{record.product.productName}</Text>;
+              // }
             }
             if (item.key === "expiryDate") {
               const date = dayjs(record.expiryDate).format("DD-MM-YYYY");

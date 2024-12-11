@@ -2,8 +2,8 @@ import axios from "axios";
 import queryString from "query-string";
 import { localDataNames } from "../constants/appInfos";
 
-const baseURL = `http://192.168.100.194:3001`
-// const baseURL = `http://192.168.100.191:3001`
+// const baseURL = `http://192.168.100.194:3001`
+const baseURL = `http://192.168.2.125:3002`
 
 const getAccessToken = () => {
     const res = localStorage.getItem(localDataNames.authData);
