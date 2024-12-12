@@ -64,8 +64,9 @@ const AddProduct = (props: Props) => {
   const [content, setContent] = useState("");
   var toolbarOptions = [
     ["bold", "italic"],
-    ["link", "blockquote", "code-block", "image"],
-    [{ list: "ordered" }, { list: "bullet" }],
+    // ["link", "blockquote", "code-block", "image"],
+    ["link", "blockquote",],
+    // [{ list: "ordered" }, { list: "bullet" }],
   ];
   const module = {
     toolbar: toolbarOptions,
@@ -220,14 +221,14 @@ const AddProduct = (props: Props) => {
                           allowClear
                           maxLength={300}
                           showCount
-                          rows={4}
+                          rows={8}
                         />
                       ) : (
                         <Input allowClear maxLength={100} showCount />
                       )}
                     </Form.Item>
                   ))}
-
+                  {/* EDITOR */}
                   <ReactQuill
                     style={{ height: 300 }}
                     theme="snow"
