@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import unorm from "unorm";
-import { Editor } from "@tinymce/tinymce-react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import {
   Button,
   Card,
@@ -20,7 +21,7 @@ import { FormModel, SelectModel, TreeModel } from "../../models/FormModel";
 import { replaceName } from "../../utils/replaceName";
 import { uploadFile } from "../../utils/uploadFile";
 import { ModalCategory, ToggleSupplier } from "../../modals";
-import { Add } from "iconsax-react";
+import { Add, CloudFog } from "iconsax-react";
 import { SupplierModel } from "../../models/SupplierModel";
 import { getTreeValues } from "../../utils/getTreeValues";
 import { useSelector } from "react-redux";
@@ -40,10 +41,10 @@ const AddProduct = (props: Props) => {
   // console.log("oke: ", productSelected)
   const [isLoading, setIsLoading] = useState(false);
   const [isAddProduct, setIsAddProduct] = useState(false);
-  const [content, setContent] = useState("");
+
   const [values, setValues] = useState(initContent);
   const [supplierOptions, setSupplierOptions] = useState<SelectModel[]>([]);
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileUrl, setFileUrl] = useState<string[]>([]);
   const [isVisibleCategory, setIsVisibleCategory] = useState(false);
   const [isVisibleSupplier, setIsVisibleSupplier] = useState(false);
   const [formDynamic, setFormDynamic] = useState<FormModel>();
@@ -58,6 +59,17 @@ const AddProduct = (props: Props) => {
   const editorRef = useRef<any>(null);
   const [form] = Form.useForm();
   const { Title } = Typography;
+
+  // ---------- EDITOR ------------
+  const [content, setContent] = useState("");
+  var toolbarOptions = [
+    ["bold", "italic"],
+    ["link", "blockquote", "code-block", "image"],
+    [{ list: "ordered" }, { list: "bullet" }],
+  ];
+  const module = {
+    toolbar: toolbarOptions,
+  };
 
   useEffect(() => {
     getData();
@@ -88,6 +100,8 @@ const AddProduct = (props: Props) => {
       message.error(error.message);
     }
   };
+
+  //--------- Get All Data Supplier -----------
   const getSuppliers = async () => {
     const api = `/supplier`;
     const res = await handleAPI(api);
@@ -104,14 +118,15 @@ const AddProduct = (props: Props) => {
   const handleAddNewProduct = async (values: any) => {
     // console.log("Values From Add Product :", values);
     // const content = editorRef.current.getContent();
-    // console.log("Check handleAddNewProduct: ", content); // IN TinyMCE
+    // console.log("Check handleAddNewProduct: ", content);
 
     const data: any = {};
     for (const i in values) {
       data[`${i}`] = values[i] ?? "";
     }
 
-    data.content = "";
+    data.content = content.replace(/<\/?p>/g, "");
+    data.photoUrls = fileUrl;
     data.slug = replaceName(values.productName);
     data.userCreated = userLogin;
 
@@ -213,91 +228,13 @@ const AddProduct = (props: Props) => {
                     </Form.Item>
                   ))}
 
-                  {/* <Editor
-                    disabled={isLoading}
-                    apiKey="w7vw37v1rmgydmiiv9zxlerwmzlucno2kxa1xqbnmqu7cfnh"
-                    onInit={(evt, editor) => (editorRef.current = editor)}
-                    initialValue={content !== "" ? content : ""}
-                    init={{
-                      height: 500,
-                      menubar: true,
-                      plugins: [
-                        // Core editing features
-                        "anchor",
-                        "autolink",
-                        "charmap",
-                        "codesample",
-                        "emoticons",
-                        "image",
-                        "link",
-                        "lists",
-                        "media",
-                        "searchreplace",
-                        "table",
-                        "visualblocks",
-                        "wordcount",
-                        // Your account includes a free trial of TinyMCE premium features
-                        // Try the most popular premium features until Nov 27, 2024:
-                        "checklist",
-                        "mediaembed",
-                        "casechange",
-                        "export",
-                        "formatpainter",
-                        "pageembed",
-                        "a11ychecker",
-                        "tinymcespellchecker",
-                        "permanentpen",
-                        "powerpaste",
-                        "advtable",
-                        "advcode",
-                        "editimage",
-                        "advtemplate",
-                        "ai",
-                        "mentions",
-                        "tinycomments",
-                        "tableofcontents",
-                        "footnotes",
-                        "mergetags",
-                        "autocorrect",
-                        "typography",
-                        "inlinecss",
-                        "markdown",
-                        // Early access to document converters
-                        "importword",
-                        "exportword",
-                        "exportpdf",
-                      ],
-                      toolbar:
-                        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-                      tinycomments_mode: "embedded",
-                      tinycomments_author: "Author name",
-                      mergetags_list: [
-                        { value: "First.Name", title: "First Name" },
-                        { value: "Email", title: "Email" },
-                      ],
-                      ai_request: (request: any, respondWith: any) =>
-                        respondWith.string(() =>
-                          Promise.reject("See docs to implement AI Assistant")
-                        ),
-                      exportpdf_converter_options: {
-                        format: "Letter",
-                        margin_top: "1in",
-                        margin_right: "1in",
-                        margin_bottom: "1in",
-                        margin_left: "1in",
-                      },
-                      exportword_converter_options: {
-                        document: { size: "Letter" },
-                      },
-                      importword_converter_options: {
-                        formatting: {
-                          styles: "inline",
-                          resets: "inline",
-                          defaults: "inline",
-                        },
-                      },
-                    }}
-                  />  */}
+                  <ReactQuill
+                    style={{ height: 300 }}
+                    theme="snow"
+                    value={content !== "" ? content : ""}
+                    onChange={setContent}
+                    modules={module}
+                  />
                 </div>
                 <div className="col-4">
                   <Card
@@ -427,21 +364,34 @@ const AddProduct = (props: Props) => {
                       />
                     </Form.Item>
                   </Card>
-                  <Card className="mt-4">
+                  <Card
+                    title={
+                      <span style={{ color: colors.mainColor }}>Image</span>
+                    }
+                    className="mt-4"
+                  >
                     <Input
                       value={fileUrl}
-                      onChange={(val) => setFileUrl(val.target.value)}
+                      onChange={(val: any) => setFileUrl(val.target.value)}
                       allowClear
                     />
                     <Input
                       className="mt-3"
                       type="file"
                       accept="image/*"
-                      onChange={async (files: any) => {
-                        const file = files.target.files[0];
-                        if (file) {
-                          const downLoadUrl = await uploadFile(file);
-                          downLoadUrl && setFileUrl(downLoadUrl);
+                      multiple
+                      onChange={async (event: any) => {
+                        const files = event.target.files;
+                        const uploadedUrls: string[] = []; // Tạo một mảng để lưu URL đã tải lên
+                        if (files && files.length > 0) {
+                          for (const file of files) {
+                            const downLoadUrl: string = await uploadFile(file);
+                            if (downLoadUrl) {
+                              uploadedUrls.push(downLoadUrl); // Thêm URL vào mảng
+                            }
+                          }
+                          console.log("Image", uploadedUrls);
+                          setFileUrl(uploadedUrls);
                         }
                       }}
                       //   allowClear

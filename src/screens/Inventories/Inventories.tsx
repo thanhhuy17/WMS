@@ -41,10 +41,6 @@ const Inventories = () => {
     navigate(`/inventory/add-product`);
   };
 
-  // const handleOpenFormEditProduct = () => {
-  //   navigate(`/inventory/add-product`);
-  // };
-
   const { confirm } = Modal;
   const { Title, Text } = Typography;
 
