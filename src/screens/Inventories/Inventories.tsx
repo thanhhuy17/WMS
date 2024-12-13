@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   Card,
+  Image,
   message,
   Modal,
   Space,
@@ -131,9 +132,12 @@ const Inventories = () => {
       dataIndex: "photoUrls",
       render: (text: any, record: ProductModel) => {
         const urls = record.photoUrls;
-        return urls.map((url: string, index: number) => (
-          <Avatar key={index} src={url} />
+        const img = urls.map((url: string, index: number) => (
+            // <Avatar key={index} src={url} /> 
+            <Image key={index} src={url} />         
         ));
+
+        return <div className="d-flex flex-row">{img}</div>;
       },
     },
     {
