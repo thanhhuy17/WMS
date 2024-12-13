@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Card,
   message,
@@ -21,7 +22,6 @@ import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Trash } from "iconsax-react";
 import AddProduct from "./AddProduct";
-
 
 const Inventories = () => {
   // const [productSelected, setProductSelected] = useState<any[]>([]);
@@ -126,6 +126,17 @@ const Inventories = () => {
       },
     },
     {
+      key: "photoUrls",
+      title: "Image",
+      dataIndex: "photoUrls",
+      render: (text: any, record: ProductModel) => {
+        const urls = record.photoUrls;
+        return urls.map((url: string, index: number) => (
+          <Avatar key={index} src={url} />
+        ));
+      },
+    },
+    {
       key: "userCreated",
       title: "User Created",
       dataIndex: `userCreated`,
@@ -178,7 +189,6 @@ const Inventories = () => {
                 //   setProductSelected(item);
                 //   console.log("Item selected: ", item);
                 // handleOpenFormEditProduct();
-                  
                 // }
                 // console.log("Item selected2: ", productSelected);
               }}

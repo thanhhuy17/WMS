@@ -80,13 +80,6 @@ const TableComponent = (props: Props) => {
               ));
               return items;
             }
-            // if (item.key === "product") {
-            //   // console.log("oke product", record.product[0].productName);
-            //   const items = record.product.map((item) => (
-            //     <Text key={item._id}>{item.productName}</Text>
-            //   ));
-            //   return items;
-            // }
             if (item.key === "product") {
               // Kiểm tra nếu product là mảng
               if (Array.isArray(record.product)) {
@@ -95,7 +88,7 @@ const TableComponent = (props: Props) => {
                   <Text key={product._id}>{product.productName}</Text>
                 ));
                 return items;
-              } 
+              }
               // else {
               //   // Nếu chỉ có một sản phẩm duy nhất
               //   return <Text key={record.product._id}>{record.product.productName}</Text>;
@@ -117,7 +110,9 @@ const TableComponent = (props: Props) => {
           dataIndex: "photoUrl",
           fixed: "left",
           align: `center`,
-          render: (url: string) => <Avatar src={url} />,
+          render: (url: string, index: number) => (
+            <Avatar key={index} src={url} />
+          ),
         });
       }
       items.unshift({
