@@ -1,10 +1,19 @@
-import { Button, Card, message, Modal, Space, Spin, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Input,
+  message,
+  Modal,
+  Space,
+  Spin,
+  Tooltip,
+} from "antd";
 import { useEffect, useState } from "react";
 import handleAPI from "../../apis/handleAPI";
 import { CategoryModel } from "../../models/CategoryModel";
 import { TreeModel } from "../../models/FormModel";
 import Table, { ColumnProps } from "antd/es/table";
-import { Edit2, Trash } from "iconsax-react";
+import { CloudFog, Edit2, Trash } from "iconsax-react";
 import { ModalCategory } from "../../modals";
 import { getTreeValues } from "../../utils/getTreeValues";
 import Title from "antd/es/typography/Title";
@@ -14,6 +23,7 @@ import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
+import Item from "antd/es/list/Item";
 
 const Categories = () => {
   const [page, setPage] = useState(1);
@@ -120,6 +130,11 @@ const Categories = () => {
     }
   };
 
+  // ------------- categoryForFilter --------------
+  // const categoryForFilter = categories.map((category) => ({
+  //   text: category.title,
+  //   value: category.title,
+  // }));
   //------------- COLUMN ---------------
   const columns: ColumnProps<CategoryModel>[] = [
     {
@@ -135,11 +150,25 @@ const Categories = () => {
           {item.title}
         </Link>
       ),
+      filters: categories.map((category) => ({
+        text: category.title,
+        value: category.title,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.title.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      filters: categories.map((category) => ({
+        text: category.description,
+        value: category.description,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.description.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "userCreated",
@@ -148,6 +177,15 @@ const Categories = () => {
       render: (userCreated: string) => (userCreated ? userCreated : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(categories.map((item) => item.userCreated))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.userCreated.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "dateCreated",
@@ -158,6 +196,10 @@ const Categories = () => {
         return date;
       },
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        // Sử dụng dayjs để chuyển đổi thành đối tượng ngày
+        return dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? -1 : 1;
+      },
     },
     {
       key: "userEdited",
@@ -166,6 +208,17 @@ const Categories = () => {
       render: (userEdited: string) => (userEdited ? userEdited : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(categories.map((item) => item.userEdited))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) => {
+        const userEdited = record.userEdited || "";
+        return userEdited.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       key: "updatedAt",
@@ -177,6 +230,10 @@ const Categories = () => {
       },
       align: `center`,
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        // Sử dụng dayjs để chuyển đổi thành đối tượng ngày
+        return dayjs(a.updatedAt).isBefore(dayjs(b.updatedAt)) ? -1 : 1;
+      },
     },
     {
       key: "btnContainer",
@@ -283,6 +340,7 @@ const Categories = () => {
                   });
                 },
               }}
+              locale={{ emptyText: "No categories available" }}
             />
           </Card>
         </div>

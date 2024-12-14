@@ -64,7 +64,7 @@ const TableComponent = (props: Props) => {
           ellipsis: true,
           width: item.displayLength,
           align: `${item.key !== "productName" ? "center" : "left"}`,
-
+          
           render: (text: any, record: SupplierModel & ProductModel) => {
             // console.log("check record: ", record.product)
             if (item.key === "type") {
@@ -300,6 +300,7 @@ const TableComponent = (props: Props) => {
             cell: RenderTitle,
           },
         }}
+        
       />
       <ModalExportData
         api={api}
