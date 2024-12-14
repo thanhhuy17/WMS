@@ -51,6 +51,13 @@ const TableComponent = (props: Props) => {
     onPageChange(pageInfo);
   }, [pageInfo]);
 
+
+  // ------------------------------------
+  const renderFilterAll =  records.map((item: any) => ({
+    text: item.name,
+    value: item.name,
+  }))
+
   //-------------- ADD TABLE SUPPLIER ------------------
   useEffect(() => {
     // console.log("Check Records: ", forms.formItems);
@@ -64,7 +71,7 @@ const TableComponent = (props: Props) => {
           ellipsis: true,
           width: item.displayLength,
           align: `${item.key !== "productName" ? "center" : "left"}`,
-          
+
           render: (text: any, record: SupplierModel & ProductModel) => {
             // console.log("check record: ", record.product)
             if (item.key === "type") {
@@ -100,6 +107,11 @@ const TableComponent = (props: Props) => {
             }
             return text;
           },
+
+          // filters: renderFilterAll,
+          // filterSearch: true,
+          // onFilter: (value: any, record: any) =>
+          //   record.name.toLowerCase().includes(value.toLowerCase()),
         })
       );
 
@@ -146,6 +158,15 @@ const TableComponent = (props: Props) => {
           render: (userCreated: string) => (userCreated ? userCreated : "-"),
           align: `center`,
           width: `10rem`,
+          filters: [...new Set(records.map((item) => item.userCreated))].map(
+            (user) => ({
+              text: user,
+              value: user,
+            })
+          ),
+          filterSearch: true,
+          onFilter: (value: any, record: any) =>
+            record.userCreated.toLowerCase().includes(value.toLowerCase()),
         },
         {
           key: "dateCreated",
@@ -156,6 +177,10 @@ const TableComponent = (props: Props) => {
             return date.replace("00:02:17 28-10-2024", "-");
           },
           width: `10rem`,
+          sorter: (a: any, b: any) => {
+            // Sử dụng dayjs để chuyển đổi thành đối tượng ngày
+            return dayjs(a.dateCreated).isBefore(dayjs(b.dateCreated)) ? -1 : 1;
+          },
         },
         {
           key: "userEdited",
@@ -164,6 +189,15 @@ const TableComponent = (props: Props) => {
           render: (userEdited: string) => (userEdited ? userEdited : "-"),
           align: `center`,
           width: `10rem`,
+          filters: [...new Set(records.map((item) => item.userEdited))].map(
+            (user) => ({
+              text: user,
+              value: user,
+            })
+          ),
+          filterSearch: true,
+          onFilter: (value: any, record: any) =>
+            record.userEdited.toLowerCase().includes(value.toLowerCase()),
         },
         {
           key: "dateEdited",
@@ -178,6 +212,10 @@ const TableComponent = (props: Props) => {
           },
           align: `center`,
           width: `10rem`,
+          sorter: (a: any, b: any) => {
+            // Sử dụng dayjs để chuyển đổi thành đối tượng ngày
+            return dayjs(a.dateEdited).isBefore(dayjs(b.dateEdited)) ? -1 : 1;
+          },
         }
       );
       if (extraColumn)
@@ -295,12 +333,11 @@ const TableComponent = (props: Props) => {
             </div>
           </div>
         )}
-        components={{
-          header: {
-            cell: RenderTitle,
-          },
-        }}
-        
+        // components={{
+        //   header: {
+        //     cell: RenderTitle,
+        //   },
+        // }}
       />
       <ModalExportData
         api={api}
