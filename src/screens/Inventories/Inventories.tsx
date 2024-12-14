@@ -21,7 +21,7 @@ import { MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
-import { Edit2, Trash } from "iconsax-react";
+import { Edit2, Record, Trash } from "iconsax-react";
 import AddProduct from "./AddProduct";
 
 const Inventories = () => {
@@ -98,6 +98,13 @@ const Inventories = () => {
       key: "productName",
       title: "Product Name",
       dataIndex: "productName",
+      filters: products.map((product) => ({
+        text: product.productName,
+        value: product.productName,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.productName.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "categories",
@@ -109,11 +116,33 @@ const Inventories = () => {
         ));
         return items;
       },
+
+      filters: [
+        ...new Set(
+          products.flatMap((item) => item.categories.map((cate) => cate.title))
+        ),
+      ].map((title) => ({
+        text: title,
+        value: title,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record: any) =>
+        record.categories.some((category: any) =>
+          category.title.toLowerCase().includes(value.toLowerCase())
+        ),
     },
+
     {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      filters: products.map((product) => ({
+        text: product.description,
+        value: product.description,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.description.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "supplier",
@@ -125,6 +154,19 @@ const Inventories = () => {
         ));
         return items;
       },
+      filters: [
+        ...new Set(
+          products.flatMap((item) => item.suppliers.map((supp) => supp.name))
+        ),
+      ].map((nameSupp) => ({
+        text: nameSupp,
+        value: nameSupp,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record: any) =>
+        record.suppliers.some((supplier: any) =>
+          supplier.name.toLowerCase().includes(value.toLowerCase())
+        ),
     },
     {
       key: "photoUrls",
@@ -133,11 +175,14 @@ const Inventories = () => {
       render: (text: any, record: ProductModel) => {
         const urls = record.photoUrls;
         const img = urls.map((url: string, index: number) => (
-            // <Avatar key={index} src={url} /> 
-            <Image key={index} src={url} />         
+          // <Avatar key={index} src={url} />
+          <Image key={index} src={url} />
         ));
 
         return <div className="d-flex flex-row">{img}</div>;
+      },
+      sorter: (a: any, b: any) => {
+        return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
       },
     },
     {
@@ -147,6 +192,17 @@ const Inventories = () => {
       render: (userCreated: string) => (userCreated ? userCreated : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(products.map((item) => item.userCreated))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) => {
+        const userCreated = record.userCreated || "";
+        return userCreated.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       key: "dateCreated",
@@ -157,6 +213,9 @@ const Inventories = () => {
         return date;
       },
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        return dayjs(a.dateCreated).isBefore(dayjs(b.dateCreated)) ? -1 : 1;
+      },
     },
     {
       key: "userEdited",
@@ -165,6 +224,17 @@ const Inventories = () => {
       render: (userEdited: string) => (userEdited ? userEdited : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(products.map((item) => item.userEdited))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) => {
+        const userEdited = record.userEdited || "";
+        return userEdited.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       key: "dateEdited",
@@ -176,6 +246,9 @@ const Inventories = () => {
       },
       align: `center`,
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        return dayjs(a.dateEdited).isBefore(dayjs(b.dateEdited)) ? -1 : 1;
+      },
     },
     {
       key: "btnContainer",
