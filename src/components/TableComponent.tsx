@@ -108,10 +108,10 @@ const TableComponent = (props: Props) => {
             return text;
           },
 
-          // filters: renderFilterAll,
-          // filterSearch: true,
-          // onFilter: (value: any, record: any) =>
-          //   record.name.toLowerCase().includes(value.toLowerCase()),
+          filters: renderFilterAll,
+          filterSearch: true,
+          onFilter: (value: any, record: any) =>
+            record.name.toLowerCase().includes(value.toLowerCase()),
         })
       );
 
