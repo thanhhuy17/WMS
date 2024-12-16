@@ -7,6 +7,7 @@ import {
   Modal,
   Space,
   Spin,
+  Tag,
   Tooltip,
   Typography,
 } from "antd";
@@ -23,6 +24,7 @@ import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Record, Trash } from "iconsax-react";
 import AddProduct from "./AddProduct";
+import CategoryComponent from "../../components/CategoryComponent";
 
 const Inventories = () => {
   // const [productSelected, setProductSelected] = useState<any[]>([]);
@@ -110,12 +112,19 @@ const Inventories = () => {
       key: "categories",
       title: "Category",
       dataIndex: "categories", // Fix name
-      render: (text: any, record: ProductModel) => {
-        const items = record.categories.map((item) => (
-          <Text key={item._id}>{item.title}</Text>
-        ));
-        return items;
-      },
+      // render: (text: any, record: ProductModel) => {
+      //   const items = record.categories.map((item) => (
+      //     <Tag key={item._id}>{item.title}</Tag>
+      //   ));
+      //   return items;
+      // },
+      render: (value: any, record: ProductModel) => (
+        <Space>
+          {record.categories.map((item) => (
+            <CategoryComponent id={item._id} />
+          ))}
+        </Space>
+      ),
 
       filters: [
         ...new Set(
@@ -150,7 +159,7 @@ const Inventories = () => {
       dataIndex: "suppliers", // Fix name
       render: (text: any, record: ProductModel) => {
         const items = record.suppliers.map((item) => (
-          <Text key={item._id}>{item.name}</Text>
+          <Tag key={item._id}>{item.name}</Tag>
         ));
         return items;
       },
@@ -174,12 +183,15 @@ const Inventories = () => {
       dataIndex: "photoUrls",
       render: (text: any, record: ProductModel) => {
         const urls = record.photoUrls;
-        const img = urls.map((url: string, index: number) => (
-          // <Avatar key={index} src={url} />
-          <Image key={index} src={url} />
-        ));
+        const img =
+          urls &&
+          urls.map((url: string, index: number) => (
+            <Avatar key={index} src={url} size={40} />
+            // <Image key={index} src={url} />
+          ));
 
-        return <div className="d-flex flex-row">{img}</div>;
+        // return <div className="d-flex flex-row">{img}</div>;
+        return <Avatar.Group className="d-flex flex-row">{img}</Avatar.Group>;
       },
       sorter: (a: any, b: any) => {
         return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
