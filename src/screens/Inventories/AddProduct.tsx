@@ -194,8 +194,8 @@ const AddProduct = (props: Props) => {
   const handleInputImageChange = (event: any) => {
     const files = event.target.files;
     const fileNames = Array.from(files).map((item: any) => item.name);
-    console.log("fileNames: ",fileNames)
-    setFileUrl(fileNames)
+    console.log("fileNames: ", fileNames);
+    setFileUrl(fileNames);
     setImagesFile(files);
   };
 
