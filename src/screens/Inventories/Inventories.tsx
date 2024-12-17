@@ -41,6 +41,7 @@ const Inventories = () => {
   });
   const [isVisibleModalAddSubProduct, setIsVisibleModalAddSubProduct] =
     useState(false);
+  const [productSelected, setProductSelected] = useState<ProductModel>();
 
   const navigate = useNavigate();
   // ------------- NAVIGATE ----------------
@@ -286,7 +287,10 @@ const Inventories = () => {
           <Tooltip title="Add Sub Product" key={"addSubProduct"}>
             <Button
               icon={<MdLibraryAdd size={20} className="text-info" />}
-              onClick={() => setIsVisibleModalAddSubProduct(true)}
+              onClick={() => {
+                setProductSelected(item);
+                setIsVisibleModalAddSubProduct(true);
+              }}
             />
           </Tooltip>
           <Tooltip title="Edit Categories" key={"btnEdit"}>
@@ -391,7 +395,11 @@ const Inventories = () => {
       </div>
       <ModalAddSubProduct
         visible={isVisibleModalAddSubProduct}
-        onClose={() => setIsVisibleModalAddSubProduct(false)}
+        onClose={() => {
+          setIsVisibleModalAddSubProduct(false);
+          setProductSelected(undefined);
+        }}
+        product={productSelected}
       />
     </div>
   );
