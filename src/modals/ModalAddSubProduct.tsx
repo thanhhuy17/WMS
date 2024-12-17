@@ -54,8 +54,8 @@ const ModalAddSubProduct = (props: Props) => {
     // } finally {
     //   setIsLoading(false);
     // }
-    console.log("Form values:", values);  // Kiểm tra xem giá trị đã được truyền đúng chưa
-  console.log("Selected Color:", values.color);  // In ra màu sắc được chọn
+    console.log("Form values:", values); // Kiểm tra xem giá trị đã được truyền đúng chưa
+    console.log("Selected Color:", values.color); // In ra màu sắc được chọn
   };
 
   useEffect(() => {
@@ -63,12 +63,12 @@ const ModalAddSubProduct = (props: Props) => {
   }, []);
 
   // --------- HANDLE COLOR --------------
-  const [color, setColor] = useState(colors.mainColor); 
+  const [color, setColor] = useState(colors.mainColor);
 
-    const handleChangeComplete = (color: any) => {
-      setColor(color.hex);  // Lưu màu dưới dạng hex
-      form.setFieldValue("color", color.hex); // Cập nhật giá trị trong form
-    };
+  const handleChangeComplete = (color: any) => {
+    setColor(color.hex); // Lưu màu dưới dạng hex
+    form.setFieldValue("color", color.hex); // Cập nhật giá trị trong form
+  };
   // ------------ -MAIN ---------------
   return (
     <div>
@@ -168,7 +168,7 @@ const ModalAddSubProduct = (props: Props) => {
             label={<span style={{ color: `${colors.mainColor}` }}>Color</span>}
           >
             <ColorPicker
-              value={color}              
+              value={color}
               onChange={handleChangeComplete}
               format="hex"
             />
