@@ -5,6 +5,7 @@ import {
   Image,
   message,
   Modal,
+  QRCode,
   Space,
   Spin,
   Tag,
@@ -18,13 +19,14 @@ import { ProductModel } from "../../models/ProductModel";
 import Table, { ColumnProps } from "antd/es/table";
 
 import { colors } from "../../constants/colors";
-import { MdOutlineAddToPhotos } from "react-icons/md";
+import { MdLibraryAdd, MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
 import { Edit2, Record, Trash } from "iconsax-react";
 import AddProduct from "./AddProduct";
 import CategoryComponent from "../../components/CategoryComponent";
+import { ModalAddSubProduct } from "../../modals";
 
 const Inventories = () => {
   // const [productSelected, setProductSelected] = useState<any[]>([]);
@@ -37,6 +39,8 @@ const Inventories = () => {
     page: 1,
     pageSize: 10,
   });
+  const [isVisibleModalAddSubProduct, setIsVisibleModalAddSubProduct] =
+    useState(false);
 
   const navigate = useNavigate();
   // ------------- NAVIGATE ----------------
@@ -108,6 +112,16 @@ const Inventories = () => {
       onFilter: (value: any, record) =>
         record.productName.toLowerCase().includes(value.toLowerCase()),
     },
+    {
+      key: "qrCode",
+      title: "QR Code",
+      dataIndex: "_id", // Id Product
+      render: (id: string) => (
+        // <QRCode size={80} value={`https://whms/product/detail?id=${id}`} />
+        <QRCode size={80} value={id} />
+      ),
+    },
+
     {
       key: "categories",
       title: "Category",
@@ -269,6 +283,12 @@ const Inventories = () => {
       fixed: "right",
       render: (item: any) => (
         <Space>
+          <Tooltip title="Add Sub Product" key={"addSubProduct"}>
+            <Button
+              icon={<MdLibraryAdd size={20} className="text-info" />}
+              onClick={() => setIsVisibleModalAddSubProduct(true)}
+            />
+          </Tooltip>
           <Tooltip title="Edit Categories" key={"btnEdit"}>
             <Button
               icon={<Edit2 size={20} />}
@@ -369,9 +389,18 @@ const Inventories = () => {
           </Card>
         </div>
       </div>
-      {/* {productSelected && <AddProduct productSelected={productSelected}/>} */}
+      <ModalAddSubProduct
+        visible={isVisibleModalAddSubProduct}
+        onClose={() => setIsVisibleModalAddSubProduct(false)}
+      />
     </div>
   );
 };
+
+// -------- SUB PRODUCT ---------
+// color
+// size?
+// price
+// qty : quantity
 
 export default Inventories;
