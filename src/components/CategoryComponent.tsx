@@ -19,7 +19,7 @@ const CategoryComponent = (props: Props) => {
 
     try {
       const res = await handleAPI(api);
-      console.log("Res from server: ", res);
+      // console.log("Res from server: ", res);
       res.data && setCategoryDetail(res.data);
     } catch (error: any) {
       console.log(error);

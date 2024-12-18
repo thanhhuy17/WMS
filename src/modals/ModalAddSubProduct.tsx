@@ -2,6 +2,7 @@ import {
   ColorPicker,
   Form,
   Input,
+  message,
   Modal,
   Select,
   Typography,
@@ -11,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { ProductModel } from "../models/ProductModel";
 import { colors } from "../constants/colors";
+import handleAPI from "../apis/handleAPI";
 
 interface Props {
   visible: boolean;
@@ -47,15 +49,37 @@ const ModalAddSubProduct = (props: Props) => {
 
   // ----------- ADD SUB PRODUCT -------------
   const handleAddSubProduct = async (values: any) => {
-    // try {
-    //   setIsLoading(true);
-    // } catch (error: any) {
-    //   message.error(error.message);
-    // } finally {
-    //   setIsLoading(false);
-    // }
-    console.log("Form values:", values); // Kiểm tra xem giá trị đã được truyền đúng chưa
-    console.log("Selected Color:", values.color); // In ra màu sắc được chọn
+    if (product) {
+      const data: any = {};
+      for (const i in values) {
+        data[i] = values[i] ?? "";
+      }
+      data.color = color;
+      data.price = values.price ? parseInt(values.price) : 0;
+      data.qty = values.qty ? parseInt(values.qty) : 0;
+      data.productId = product._id
+      console.log("Check data send to Server: ", data);
+
+      const api = `/product/add-sub-product`;
+
+      try {
+        setIsLoading(true);
+        const res: any = await handleAPI(api, data, "post");
+        
+        console.log("Response from Server: ", res);
+        message.success(res.message);
+        handleClose();
+      } catch (error: any) {
+        message.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      message.error("Need To Product Detail !!!");
+    }
+
+    // console.log("Form values:", values); // Kiểm tra xem giá trị đã được truyền đúng chưa
+    // console.log("Selected Color:", values.color); // In ra màu sắc được chọn
   };
 
   useEffect(() => {
