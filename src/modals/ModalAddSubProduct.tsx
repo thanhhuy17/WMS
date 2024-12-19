@@ -191,11 +191,11 @@ const ModalAddSubProduct = (props: Props) => {
             name={"color"}
             label={<span style={{ color: `${colors.mainColor}` }}>Color</span>}
           >
-            <ColorPicker
+            {/* <ColorPicker
               value={color}
               onChange={handleChangeComplete}
               format="hex"
-            />
+            /> */}
           </Form.Item>
         </Form>
         {/* Upload Image */}
