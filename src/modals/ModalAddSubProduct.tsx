@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { ProductModel } from "../models/ProductModel";
 import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
+import { uploadFile } from "../utils/uploadFile";
 
 interface Props {
   visible: boolean;
@@ -25,6 +26,7 @@ const ModalAddSubProduct = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
   const [fileList, setFileList] = useState<any[]>([]);
+  const [fileListTotal, setFileListTotal] = useState<any[]>([]);
 
   const handleClose = () => {
     form.resetFields();
@@ -47,6 +49,21 @@ const ModalAddSubProduct = (props: Props) => {
     setFileList(items);
   };
 
+  // ----------- HandleImage -----------
+  const handleImage = async () => {
+    const uploadedImageUrls: string[] = [];
+    const listImage = fileList.map((item) => item.name);
+    if (listImage && listImage.length > 0) {
+      for (const image of listImage) {
+        const totalImage: string = await uploadFile(image);
+        if (totalImage) {
+          uploadedImageUrls.push(totalImage);
+        }
+      }
+    }
+    console.log("...", uploadedImageUrls);
+  };
+
   // ----------- ADD SUB PRODUCT -------------
   const handleAddSubProduct = async (values: any) => {
     if (product) {
@@ -57,15 +74,33 @@ const ModalAddSubProduct = (props: Props) => {
       data.color = color;
       data.price = values.price ? parseInt(values.price) : 0;
       data.qty = values.qty ? parseInt(values.qty) : 0;
-      data.productId = product._id
+      data.productId = product._id;
+
+      const uploadedImageUrls: string[] = [];
+      // const listImage = fileList.map((item) => item.name);
+      const listImage = fileList.map((item: any) => item.name);
+      console.log(listImage)
+      if (listImage && listImage.length > 0) {
+        for (const image of listImage) {
+          const totalImage = await uploadFile(image);
+          if (totalImage) {
+            uploadedImageUrls.push(totalImage);
+          }
+        }
+        setFileListTotal(uploadedImageUrls)
+      }
+      // console.log("...", uploadedImageUrls);
+
+      data.fileList = fileListTotal; // New Update
       console.log("Check data send to Server: ", data);
+      console.log("Check data.fileList: ", data.fileList);
 
       const api = `/product/add-sub-product`;
 
       try {
         setIsLoading(true);
         const res: any = await handleAPI(api, data, "post");
-        
+
         console.log("Response from Server: ", res);
         message.success(res.message);
         handleClose();
@@ -194,7 +229,7 @@ const ModalAddSubProduct = (props: Props) => {
             <ColorPicker
               value={color}
               onChange={handleChangeComplete}
-              // format="hex"
+              format="hex" // ĐỊnh dạng hex
             />
           </Form.Item>
         </Form>
