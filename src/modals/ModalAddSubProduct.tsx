@@ -49,20 +49,21 @@ const ModalAddSubProduct = (props: Props) => {
     setFileList(items);
   };
 
+
   // ----------- HandleImage -----------
-  const handleImage = async () => {
-    const uploadedImageUrls: string[] = [];
-    const listImage = fileList.map((item) => item.name);
-    if (listImage && listImage.length > 0) {
-      for (const image of listImage) {
-        const totalImage: string = await uploadFile(image);
-        if (totalImage) {
-          uploadedImageUrls.push(totalImage);
-        }
-      }
-    }
-    console.log("...", uploadedImageUrls);
-  };
+  // const handleImage = async () => {
+  //   const uploadedImageUrls: string[] = [];
+  //   const listImage = fileList.map((item) => item.name);
+  //   if (listImage && listImage.length > 0) {
+  //     for (const image of listImage) {
+  //       const totalImage: string = await uploadFile(image);
+  //       if (totalImage) {
+  //         uploadedImageUrls.push(totalImage);
+  //       }
+  //     }
+  //   }
+  //   console.log("...", uploadedImageUrls);
+  // };
 
   // ----------- ADD SUB PRODUCT -------------
   const handleAddSubProduct = async (values: any) => {
@@ -76,19 +77,28 @@ const ModalAddSubProduct = (props: Props) => {
       data.qty = values.qty ? parseInt(values.qty) : 0;
       data.productId = product._id;
 
-      const uploadedImageUrls: string[] = [];
-      // const listImage = fileList.map((item) => item.name);
-      const listImage = fileList.map((item: any) => item.name);
-      console.log(listImage)
-      if (listImage && listImage.length > 0) {
-        for (const image of listImage) {
-          const totalImage = await uploadFile(image);
-          if (totalImage) {
-            uploadedImageUrls.push(totalImage);
-          }
+      const listImage: string[] = fileList.map((item: any) => {
+        if (item.originFileObj && item.originFileObj.name) {
+          console.log(item.originFileObj.name.type)
+          return item.originFileObj.name;
+        } else {
+          console.error("File does not have a valid name:", item);
+          return ""; // Hoặc xử lý logic khác nếu cần
         }
-        setFileListTotal(uploadedImageUrls)
-      }
+      }).filter((name) => name); // Loại bỏ các giá trị rỗng hoặc undefined
+      console.log("Check danh sach Image: ", listImage);
+
+      // const uploadedImageUrls: string[] = [];
+      // if (listImage && listImage.length > 0) {
+      //   for (const image of listImage) {
+      //     const totalImage: string = await uploadFile(image);
+      //     console.log("Check :", image);
+      //     if (totalImage) {
+      //       uploadedImageUrls.push(totalImage);
+      //     }
+      //   }
+      //   setFileListTotal(uploadedImageUrls);
+      // }
       // console.log("...", uploadedImageUrls);
 
       data.fileList = fileListTotal; // New Update
