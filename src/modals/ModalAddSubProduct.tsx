@@ -101,7 +101,7 @@ const ModalAddSubProduct = (props: Props) => {
       // }
       // console.log("...", uploadedImageUrls);
 
-      data.fileList = fileListTotal; // New Update
+      // data.fileList = fileListTotal; // New Update
       console.log("Check data send to Server: ", data);
       console.log("Check data.fileList: ", data.fileList);
 
