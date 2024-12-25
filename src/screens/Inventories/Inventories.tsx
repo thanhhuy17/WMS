@@ -5,8 +5,10 @@ import {
   Image,
   message,
   Modal,
+  QRCode,
   Space,
   Spin,
+  Tag,
   Tooltip,
   Typography,
 } from "antd";
@@ -17,12 +19,14 @@ import { ProductModel } from "../../models/ProductModel";
 import Table, { ColumnProps } from "antd/es/table";
 
 import { colors } from "../../constants/colors";
-import { MdOutlineAddToPhotos } from "react-icons/md";
+import { MdLibraryAdd, MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
-import { Edit2, Trash } from "iconsax-react";
+import { Edit2, Record, Trash } from "iconsax-react";
 import AddProduct from "./AddProduct";
+import CategoryComponent from "../../components/CategoryComponent";
+import { ModalAddSubProduct } from "../../modals";
 
 const Inventories = () => {
   // const [productSelected, setProductSelected] = useState<any[]>([]);
@@ -35,6 +39,9 @@ const Inventories = () => {
     page: 1,
     pageSize: 10,
   });
+  const [isVisibleModalAddSubProduct, setIsVisibleModalAddSubProduct] =
+    useState(false);
+  const [productSelected, setProductSelected] = useState<ProductModel>();
 
   const navigate = useNavigate();
   // ------------- NAVIGATE ----------------
@@ -98,22 +105,68 @@ const Inventories = () => {
       key: "productName",
       title: "Product Name",
       dataIndex: "productName",
+      filters: products.map((product) => ({
+        text: product.productName,
+        value: product.productName,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.productName.toLowerCase().includes(value.toLowerCase()),
     },
+    {
+      key: "qrCode",
+      title: "QR Code",
+      dataIndex: "_id", // Id Product
+      render: (id: string) => (
+        // <QRCode size={80} value={`https://whms/product/detail?id=${id}`} />
+        <QRCode size={80} value={id} />
+      ),
+    },
+
     {
       key: "categories",
       title: "Category",
       dataIndex: "categories", // Fix name
-      render: (text: any, record: ProductModel) => {
-        const items = record.categories.map((item) => (
-          <Text key={item._id}>{item.title}</Text>
-        ));
-        return items;
-      },
+      // render: (text: any, record: ProductModel) => {
+      //   const items = record.categories.map((item) => (
+      //     <Tag key={item._id}>{item.title}</Tag>
+      //   ));
+      //   return items;
+      // },
+      render: (value: any, record: ProductModel) => (
+        <Space>
+          {record.categories.map((item) => (
+            <CategoryComponent id={item._id} />
+          ))}
+        </Space>
+      ),
+
+      filters: [
+        ...new Set(
+          products.flatMap((item) => item.categories.map((cate) => cate.title))
+        ),
+      ].map((title) => ({
+        text: title,
+        value: title,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record: any) =>
+        record.categories.some((category: any) =>
+          category.title.toLowerCase().includes(value.toLowerCase())
+        ),
     },
+
     {
       key: "description",
       title: "Description",
       dataIndex: "description",
+      filters: products.map((product) => ({
+        text: product.description,
+        value: product.description,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record) =>
+        record.description.toLowerCase().includes(value.toLowerCase()),
     },
     {
       key: "supplier",
@@ -121,10 +174,23 @@ const Inventories = () => {
       dataIndex: "suppliers", // Fix name
       render: (text: any, record: ProductModel) => {
         const items = record.suppliers.map((item) => (
-          <Text key={item._id}>{item.name}</Text>
+          <Tag key={item._id}>{item.name}</Tag>
         ));
         return items;
       },
+      filters: [
+        ...new Set(
+          products.flatMap((item) => item.suppliers.map((supp) => supp.name))
+        ),
+      ].map((nameSupp) => ({
+        text: nameSupp,
+        value: nameSupp,
+      })),
+      filterSearch: true,
+      onFilter: (value: any, record: any) =>
+        record.suppliers.some((supplier: any) =>
+          supplier.name.toLowerCase().includes(value.toLowerCase())
+        ),
     },
     {
       key: "photoUrls",
@@ -132,12 +198,18 @@ const Inventories = () => {
       dataIndex: "photoUrls",
       render: (text: any, record: ProductModel) => {
         const urls = record.photoUrls;
-        const img = urls.map((url: string, index: number) => (
-            // <Avatar key={index} src={url} /> 
-            <Image key={index} src={url} />         
-        ));
+        const img =
+          urls &&
+          urls.map((url: string, index: number) => (
+            <Avatar key={index} src={url} size={40} />
+            // <Image key={index} src={url} />
+          ));
 
-        return <div className="d-flex flex-row">{img}</div>;
+        // return <div className="d-flex flex-row">{img}</div>;
+        return <Avatar.Group className="d-flex flex-row">{img}</Avatar.Group>;
+      },
+      sorter: (a: any, b: any) => {
+        return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
       },
     },
     {
@@ -147,6 +219,17 @@ const Inventories = () => {
       render: (userCreated: string) => (userCreated ? userCreated : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(products.map((item) => item.userCreated))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) => {
+        const userCreated = record.userCreated || "";
+        return userCreated.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       key: "dateCreated",
@@ -157,6 +240,9 @@ const Inventories = () => {
         return date;
       },
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        return dayjs(a.dateCreated).isBefore(dayjs(b.dateCreated)) ? -1 : 1;
+      },
     },
     {
       key: "userEdited",
@@ -165,6 +251,17 @@ const Inventories = () => {
       render: (userEdited: string) => (userEdited ? userEdited : "-"),
       align: `center`,
       width: `10rem`,
+      filters: [...new Set(products.map((item) => item.userEdited))].map(
+        (user) => ({
+          text: user,
+          value: user,
+        })
+      ),
+      filterSearch: true,
+      onFilter: (value: any, record) => {
+        const userEdited = record.userEdited || "";
+        return userEdited.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       key: "dateEdited",
@@ -176,6 +273,9 @@ const Inventories = () => {
       },
       align: `center`,
       width: `10rem`,
+      sorter: (a: any, b: any) => {
+        return dayjs(a.dateEdited).isBefore(dayjs(b.dateEdited)) ? -1 : 1;
+      },
     },
     {
       key: "btnContainer",
@@ -184,6 +284,15 @@ const Inventories = () => {
       fixed: "right",
       render: (item: any) => (
         <Space>
+          <Tooltip title="Add Sub Product" key={"addSubProduct"}>
+            <Button
+              icon={<MdLibraryAdd size={20} className="text-info" />}
+              onClick={() => {
+                setProductSelected(item);
+                setIsVisibleModalAddSubProduct(true);
+              }}
+            />
+          </Tooltip>
           <Tooltip title="Edit Categories" key={"btnEdit"}>
             <Button
               icon={<Edit2 size={20} />}
@@ -284,9 +393,22 @@ const Inventories = () => {
           </Card>
         </div>
       </div>
-      {/* {productSelected && <AddProduct productSelected={productSelected}/>} */}
+      <ModalAddSubProduct
+        visible={isVisibleModalAddSubProduct}
+        onClose={() => {
+          setIsVisibleModalAddSubProduct(false);
+          setProductSelected(undefined);
+        }}
+        product={productSelected}
+      />
     </div>
   );
 };
+
+// -------- SUB PRODUCT ---------
+// color
+// size?
+// price
+// qty : quantity
 
 export default Inventories;

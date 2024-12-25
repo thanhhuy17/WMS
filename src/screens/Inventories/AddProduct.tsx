@@ -45,6 +45,7 @@ const AddProduct = (props: Props) => {
   const [values, setValues] = useState(initContent);
   const [supplierOptions, setSupplierOptions] = useState<SelectModel[]>([]);
   const [fileUrl, setFileUrl] = useState<string[]>([]);
+  const [imagesFile, setImagesFile] = useState<string[]>([]); // New
   const [isVisibleCategory, setIsVisibleCategory] = useState(false);
   const [isVisibleSupplier, setIsVisibleSupplier] = useState(false);
   const [formDynamic, setFormDynamic] = useState<FormModel>();
@@ -65,7 +66,7 @@ const AddProduct = (props: Props) => {
   var toolbarOptions = [
     ["bold", "italic"],
     // ["link", "blockquote", "code-block", "image"],
-    ["link", "blockquote",],
+    ["link", "blockquote"],
     // [{ list: "ordered" }, { list: "bullet" }],
   ];
   const module = {
@@ -121,13 +122,27 @@ const AddProduct = (props: Props) => {
     // const content = editorRef.current.getContent();
     // console.log("Check handleAddNewProduct: ", content);
 
+    // ----------------
+    const uploadedUrls: string[] = []; // Tạo một mảng để lưu URL đã tải lên
+    if (imagesFile && imagesFile.length > 0) {
+      for (const file of imagesFile) {
+        const downLoadUrl: string = await uploadFile(file);
+        if (downLoadUrl) {
+          uploadedUrls.push(downLoadUrl); // Thêm URL vào mảng
+        }
+      }
+      console.log("Image", uploadedUrls);
+      // setFileUrl(uploadedUrls);
+    }
+    //-----------------
+
     const data: any = {};
     for (const i in values) {
       data[`${i}`] = values[i] ?? "";
     }
 
     data.content = content.replace(/<\/?p>/g, "");
-    data.photoUrls = fileUrl;
+    data.photoUrls = uploadedUrls;
     data.slug = replaceName(values.productName);
     data.userCreated = userLogin;
 
@@ -173,6 +188,15 @@ const AddProduct = (props: Props) => {
     } catch (error: any) {
       message.error(error.message);
     }
+  };
+
+  // --------- Handle Input Image Change ------------
+  const handleInputImageChange = (event: any) => {
+    const files = event.target.files;
+    const fileNames = Array.from(files).map((item: any) => item.name);
+    console.log("fileNames: ", fileNames);
+    setFileUrl(fileNames);
+    setImagesFile(files);
   };
 
   return isLoading ? (
@@ -373,28 +397,22 @@ const AddProduct = (props: Props) => {
                   >
                     <Input
                       value={fileUrl}
-                      onChange={(val: any) => setFileUrl(val.target.value)}
+                      onChange={(val: any) =>
+                        setFileUrl(
+                          val.target.value
+                            .split(", ")
+                            .map((name: string) => name.trim())
+                        )
+                      }
                       allowClear
+                      placeholder="File names"
                     />
                     <Input
                       className="mt-3"
                       type="file"
                       accept="image/*"
                       multiple
-                      onChange={async (event: any) => {
-                        const files = event.target.files;
-                        const uploadedUrls: string[] = []; // Tạo một mảng để lưu URL đã tải lên
-                        if (files && files.length > 0) {
-                          for (const file of files) {
-                            const downLoadUrl: string = await uploadFile(file);
-                            if (downLoadUrl) {
-                              uploadedUrls.push(downLoadUrl); // Thêm URL vào mảng
-                            }
-                          }
-                          console.log("Image", uploadedUrls);
-                          setFileUrl(uploadedUrls);
-                        }
-                      }}
+                      onChange={handleInputImageChange}
                       //   allowClear
                     />
                   </Card>
