@@ -9,6 +9,8 @@
 //         .replace(/[:!@#$%^&*()?;/]/g, '');
 // }
 
+// Thay thế tên = ký tự gạch nối
+
 export const replaceName = (str: string) => {
     if (!str || typeof str !== 'string') {
         console.error('Invalid input to replaceName:', str);
