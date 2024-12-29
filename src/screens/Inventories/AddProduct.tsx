@@ -118,7 +118,7 @@ const AddProduct = (props: Props) => {
 
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
-    // console.log("Values From Add Product :", values);
+    console.log("Values From Add Product :", values);
     // const content = editorRef.current.getContent();
     // console.log("Check handleAddNewProduct: ", content);
 
