@@ -120,7 +120,7 @@ const AddProduct = (props: Props) => {
   const handleAddNewProduct = async (values: any) => {
     console.log("Values From Add Product :", values);
     // const content = editorRef.current.getContent();
-    // console.log("Check handleAddNewProduct: ", content);
+    // console.log("Check handleAddNewProduct: ", content);//
 
     // ----------------
     const uploadedUrls: string[] = []; // Tạo một mảng để lưu URL đã tải lên
