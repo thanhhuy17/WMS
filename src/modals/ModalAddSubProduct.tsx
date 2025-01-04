@@ -26,7 +26,6 @@ const ModalAddSubProduct = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
   const [fileList, setFileList] = useState<any[]>([]);
-  const [fileListTotal, setFileListTotal] = useState<any[]>([]);
 
   const handleClose = () => {
     form.resetFields();
@@ -49,22 +48,6 @@ const ModalAddSubProduct = (props: Props) => {
     setFileList(items);
   };
 
-
-  // ----------- HandleImage -----------
-  // const handleImage = async () => {
-  //   const uploadedImageUrls: string[] = [];
-  //   const listImage = fileList.map((item) => item.name);
-  //   if (listImage && listImage.length > 0) {
-  //     for (const image of listImage) {
-  //       const totalImage: string = await uploadFile(image);
-  //       if (totalImage) {
-  //         uploadedImageUrls.push(totalImage);
-  //       }
-  //     }
-  //   }
-  //   console.log("...", uploadedImageUrls);
-  // };
-
   // ----------- ADD SUB PRODUCT -------------
   const handleAddSubProduct = async (values: any) => {
     if (product) {
@@ -77,33 +60,24 @@ const ModalAddSubProduct = (props: Props) => {
       data.qty = values.qty ? parseInt(values.qty) : 0;
       data.productId = product._id;
 
-      const listImage: string[] = fileList.map((item: any) => {
-        if (item.originFileObj && item.originFileObj.name) {
-          console.log(item.originFileObj.name.type)
-          return item.originFileObj.name;
-        } else {
-          console.error("File does not have a valid name:", item);
-          return ""; // Hoặc xử lý logic khác nếu cần
+      const uploadedImageUrls: string[] = []; // Save Images Before UpLoad
+      // Upload từng ảnh trong file list
+      for (const item of fileList) {
+        if (item.originFileObj) {
+          try {
+            const imageUrl: string = await uploadFile(item.originFileObj);
+            if (imageUrl) {
+              uploadedImageUrls.push(imageUrl);
+            }
+          } catch (error) {
+            console.error("False to upload image:", error);
+          }
         }
-      }).filter((name) => name); // Loại bỏ các giá trị rỗng hoặc undefined
-      console.log("Check danh sach Image: ", listImage);
+      }
 
-      // const uploadedImageUrls: string[] = [];
-      // if (listImage && listImage.length > 0) {
-      //   for (const image of listImage) {
-      //     const totalImage: string = await uploadFile(image);
-      //     console.log("Check :", image);
-      //     if (totalImage) {
-      //       uploadedImageUrls.push(totalImage);
-      //     }
-      //   }
-      //   setFileListTotal(uploadedImageUrls);
-      // }
-      // console.log("...", uploadedImageUrls);
-
-      // data.fileList = fileListTotal; // New Update
+      data.image = uploadedImageUrls;
       console.log("Check data send to Server: ", data);
-      console.log("Check data.fileList: ", data.fileList);
+      console.log("Check data.fileList: ", data.image);
 
       const api = `/product/add-sub-product`;
 
