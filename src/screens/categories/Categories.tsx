@@ -44,7 +44,7 @@ const Categories = () => {
   });
 
   const { confirm } = Modal;
-
+  // ---------------- Pagination-----------------
   const onPageChange = (val: { page: number; pageSize: number }) => {
     setPage(val.page);
     setPageSize(val.pageSize);

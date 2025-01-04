@@ -14,6 +14,7 @@ import { ProductModel } from "../models/ProductModel";
 import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
 import { uploadFile } from "../utils/uploadFile";
+import { rgbToHex } from "../utils/rbgToHex";
 
 interface Props {
   visible: boolean;
@@ -44,18 +45,18 @@ const ModalAddSubProduct = (props: Props) => {
           status: "done",
         }
     );
-    console.log(items);
+    // console.log(items);
     setFileList(items);
   };
 
   // ----------- ADD SUB PRODUCT -------------
   const handleAddSubProduct = async (values: any) => {
     if (product) {
-      const data: any = {};
+      const data: any = { ...values };
       for (const i in values) {
         data[i] = values[i] ?? "";
       }
-      data.color = color;
+      data.color = values.color || values.mainColor;
       data.price = values.price ? parseInt(values.price) : 0;
       data.qty = values.qty ? parseInt(values.qty) : 0;
       data.productId = product._id;
@@ -77,10 +78,8 @@ const ModalAddSubProduct = (props: Props) => {
 
       data.image = uploadedImageUrls;
       console.log("Check data send to Server: ", data);
-      console.log("Check data.fileList: ", data.image);
 
       const api = `/product/add-sub-product`;
-
       try {
         setIsLoading(true);
         const res: any = await handleAPI(api, data, "post");
@@ -96,21 +95,26 @@ const ModalAddSubProduct = (props: Props) => {
     } else {
       message.error("Need To Product Detail !!!");
     }
-
-    // console.log("Form values:", values); // Kiểm tra xem giá trị đã được truyền đúng chưa
-    // console.log("Selected Color:", values.color); // In ra màu sắc được chọn
   };
 
   useEffect(() => {
-    form.setFieldValue("color", colors.mainColor);
-  }, []);
+    setColor(colors.mainColor);
+    form.setFieldsValue({ color: colors.mainColor });
+  }, [form]);
 
   // --------- HANDLE COLOR --------------
-  const [color, setColor] = useState(colors.mainColor);
+  const [color, setColor] = useState<any>(colors.mainColor);
 
   const handleChangeComplete = (color: any) => {
-    setColor(color.hex); // Lưu màu dưới dạng hex
-    form.setFieldValue("color", color.hex); // Cập nhật giá trị trong form
+    // Extract RGB values
+    const { r, g, b } = color.metaColor || color; // Adjust depending on structure
+    // Convert to hex
+    const hexColor = rgbToHex(r, g, b);
+    console.log("Hex Color:", hexColor);
+
+    // Update state and form
+    setColor(hexColor);
+    form.setFieldsValue({ color: hexColor });
   };
   // ------------ -MAIN ---------------
   return (
@@ -132,6 +136,9 @@ const ModalAddSubProduct = (props: Props) => {
           onFinish={handleAddSubProduct}
           size="middle"
           form={form}
+          initialValues={{
+            color: color, // Set the default color
+          }}
           disabled={isLoading}
         >
           <Form.Item
@@ -209,6 +216,12 @@ const ModalAddSubProduct = (props: Props) => {
           <Form.Item
             name={"color"}
             label={<span style={{ color: `${colors.mainColor}` }}>Color</span>}
+            rules={[
+              {
+                required: true,
+                message: "Please select a color!",
+              },
+            ]}
           >
             <ColorPicker
               value={color}

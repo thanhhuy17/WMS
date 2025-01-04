@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Card,
-  Image,
   message,
   Modal,
   QRCode,
@@ -23,8 +22,7 @@ import { MdLibraryAdd, MdOutlineAddToPhotos } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
 import { PiExportLight } from "react-icons/pi";
 import dayjs from "dayjs";
-import { Edit2, Record, Trash } from "iconsax-react";
-import AddProduct from "./AddProduct";
+import { Edit2, Trash } from "iconsax-react";
 import CategoryComponent from "../../components/CategoryComponent";
 import { ModalAddSubProduct } from "../../modals";
 
@@ -50,11 +48,20 @@ const Inventories = () => {
   };
 
   const { confirm } = Modal;
-  const { Title, Text } = Typography;
+  const { Title } = Typography;
 
   useEffect(() => {
     getProducts();
   }, [page, pageSize]);
+
+  // ---------------- Pagination-----------------
+  const onPageChange = (val: { page: number; pageSize: number }) => {
+    setPage(val.page);
+    setPageSize(val.pageSize);
+  };
+  useEffect(() => {
+    onPageChange(pageInfo);
+  }, [pageInfo]);
 
   // -------- GET ALL PRODUCTS -----------
   const getProducts = async () => {
@@ -405,10 +412,5 @@ const Inventories = () => {
   );
 };
 
-// -------- SUB PRODUCT ---------
-// color
-// size?
-// price
-// qty : quantity
 
 export default Inventories;
