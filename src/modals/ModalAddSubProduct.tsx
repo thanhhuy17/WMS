@@ -10,7 +10,7 @@ import {
   UploadProps,
 } from "antd";
 import { useEffect, useState } from "react";
-import { ProductModel } from "../models/ProductModel";
+import { ProductModel, SubProductModel } from "../models/ProductModel";
 import { colors } from "../constants/colors";
 import handleAPI from "../apis/handleAPI";
 import { uploadFile } from "../utils/uploadFile";
@@ -20,10 +20,11 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   product?: ProductModel;
+  onAddNew: (val: SubProductModel) => void;
 }
 
 const ModalAddSubProduct = (props: Props) => {
-  const { visible, onClose, product } = props;
+  const { visible, onClose, product, onAddNew } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<any>();
   const [fileList, setFileList] = useState<any[]>([]);
@@ -86,6 +87,7 @@ const ModalAddSubProduct = (props: Props) => {
 
         console.log("Response from Server: ", res);
         message.success(res.message);
+        onAddNew(res.data);
         handleClose();
       } catch (error: any) {
         message.error(error.message);

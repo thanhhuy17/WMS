@@ -21,4 +21,18 @@ export interface ProductModel {
   userEdited: string;
   dateEdited: string;
   _id: string;
+  children: SubProductModel[];
+}
+
+export interface SubProductModel {
+  size: string;
+  color: string;
+  price: number;
+  qty: number;
+  productId: string;
+  image: string[];
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }

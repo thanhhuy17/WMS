@@ -69,7 +69,7 @@ const Inventories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      // console.log("Get Product1: ", res);
+      console.log("Get Product1: ", res.data);
       res.data && setProducts(res.data.items);
       // console.log("Get Products2: ", products);
       const items: ProductModel[] = [];
@@ -407,10 +407,10 @@ const Inventories = () => {
           setProductSelected(undefined);
         }}
         product={productSelected}
+        onAddNew={(val) => console.log(val)}
       />
     </div>
   );
 };
-
 
 export default Inventories;
