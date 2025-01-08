@@ -69,7 +69,7 @@ const Inventories = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      console.log("Get Product1: ", res.data);
+      // console.log("Get Product1: ", res.data);
       res.data && setProducts(res.data.items);
       // console.log("Get Products2: ", products);
       const items: ProductModel[] = [];
@@ -96,7 +96,7 @@ const Inventories = () => {
     try {
       const api = `/product/delete-product?id=${id}`;
       const res: any = await handleAPI(api, undefined, "delete");
-      console.log("Check Delete Response to Server: ", res);
+      // console.log("Check Delete Response to Server: ", res);
       await getProducts();
       message.success(res.message);
     } catch (error: any) {
