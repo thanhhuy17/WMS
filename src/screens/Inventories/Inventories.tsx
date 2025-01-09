@@ -27,7 +27,7 @@ import CategoryComponent from "../../components/CategoryComponent";
 import { ModalAddSubProduct } from "../../modals";
 
 const Inventories = () => {
-  // const [productSelected, setProductSelected] = useState<any[]>([]);
+  // const [productSelected, setProductSelected] = useState<any[]>([]); // No use
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [page, setPage] = useState(1);
