@@ -21,7 +21,8 @@ export interface ProductModel {
   userEdited: string;
   dateEdited: string;
   _id: string;
-  children: SubProductModel[];
+  // children: SubProductModel[]
+  subItems: SubProductModel[];
 }
 
 export interface SubProductModel {

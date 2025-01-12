@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import handleAPI from "../../apis/handleAPI";
-import { ProductModel } from "../../models/ProductModel";
+import { ProductModel, SubProductModel } from "../../models/ProductModel";
 import Table, { ColumnProps } from "antd/es/table";
 
 import { colors } from "../../constants/colors";
@@ -218,6 +218,27 @@ const Inventories = () => {
       sorter: (a: any, b: any) => {
         return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
       },
+    },
+    {
+      key: "colors",
+      title: "Colors",
+      dataIndex: "subItems",
+      render: (items: SubProductModel[]) => (
+        <Space>
+          {items.length > 0 &&
+            items.map((item) => (
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  backgroundColor: item.color,
+                  borderRadius: 12,
+                }}
+                key={`color${item.color}`}
+              />
+            ))}
+        </Space>
+      ),
     },
     {
       key: "userCreated",
