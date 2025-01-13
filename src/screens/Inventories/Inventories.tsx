@@ -241,6 +241,34 @@ const Inventories = () => {
       ),
     },
     {
+      key: "sizes",
+      title: "Sizes",
+      dataIndex: "subItems",
+      render: (items: SubProductModel[]) => (
+        <Space>
+          {items.length > 0 &&
+            items.map((item) => (
+              <Tag key={`color${item.size}`}>{item.size}</Tag>
+            ))}
+        </Space>
+      ),
+    },
+    {
+      key: "prices",
+      title: "Prices",
+      dataIndex: "subItems",
+      render: (items: SubProductModel[]) => (
+        <Typography.Text>{`200000 - 10000000`}</Typography.Text>
+      ),
+    },
+    {
+      key: "stocks",
+      title: "Stocks",
+      dataIndex: "subItems",
+      render: (items: SubProductModel[]) =>
+        items.reduce((a, b) => a + b.qty, 0),
+    },
+    {
       key: "userCreated",
       title: "User Created",
       dataIndex: `userCreated`,
