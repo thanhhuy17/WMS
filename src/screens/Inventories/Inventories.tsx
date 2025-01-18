@@ -270,6 +270,7 @@ const Inventories = () => {
       render: (items: SubProductModel[]) => (
         <Typography.Text>{getMinMaxValues(items)}</Typography.Text>
       ),
+      width: '200px'
     },
     {
       key: "stocks",
@@ -455,6 +456,7 @@ const Inventories = () => {
                   });
                 },
               }}
+              bordered
             ></Table>
           </Card>
         </div>
