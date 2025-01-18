@@ -89,6 +89,16 @@ const Inventories = () => {
       setIsLoading(false);
     }
   };
+
+  // -------- GET MIN MAX VALUE PRICE -----------
+  const getMinMaxValues = (data: SubProductModel[]) => {
+    const nums: number[] = [];
+    if (data.length > 0) {
+      data.forEach((item) => nums.push(item.price));
+    }
+    return nums.length > 0 && `${Math.min(...nums)} - ${Math.max(...nums)}`;
+  };
+
   // -------- DELETE PRODUCT -----------
   const handleDeletedProduct = async (id: string) => {
     console.log("Id Delete Product: ", id);
@@ -258,7 +268,7 @@ const Inventories = () => {
       title: "Prices",
       dataIndex: "subItems",
       render: (items: SubProductModel[]) => (
-        <Typography.Text>{`200000 - 10000000`}</Typography.Text>
+        <Typography.Text>{getMinMaxValues(items)}</Typography.Text>
       ),
     },
     {
