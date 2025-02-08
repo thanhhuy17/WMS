@@ -91,7 +91,7 @@ const Inventories = () => {
   };
 
   // -------- GET MIN MAX VALUE PRICE -----------
-  const getMinMaxValues = (data: SubProductModel[]) => {
+  const getMinMaxValues: any = (data: SubProductModel[]) => {
     const nums: number[] = [];
     if (data.length > 0) {
       data.forEach((item) => nums.push(item.price));
@@ -267,10 +267,11 @@ const Inventories = () => {
       key: "prices",
       title: "Prices",
       dataIndex: "subItems",
+      width: 500,
       render: (items: SubProductModel[]) => (
         <Typography.Text>{getMinMaxValues(items)}</Typography.Text>
       ),
-      width: '200px'
+      
     },
     {
       key: "stocks",

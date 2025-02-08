@@ -5,7 +5,7 @@ import { localDataNames } from "../constants/appInfos";
 //const baseURL = `http://192.168.100.194:3001` // ip của wifi HuyNguyen Change 03/01/2024
 // const baseURL = `http://192.168.100.151:3002` // Máy Dell HuyBen99 Mua 3tr 
 // const baseURL = `http://192.168.2.125:3002`
-const baseURL = `http://192.168.1.15:3002`
+const baseURL = `http://192.168.1.17:3002`
 
 const getAccessToken = () => {
     const res = localStorage.getItem(localDataNames.authData);
