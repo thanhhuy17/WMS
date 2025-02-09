@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import handleAPI from "../../apis/handleAPI";
 import { ProductModel, SubProductModel } from "../../models/ProductModel";
 import Table, { ColumnProps } from "antd/es/table";
@@ -121,7 +121,8 @@ const Inventories = () => {
     {
       key: "productName",
       title: "Product Name",
-      dataIndex: "productName",
+      // dataIndex: "productName",
+      dataIndex: "",
       filters: products.map((product) => ({
         text: product.productName,
         value: product.productName,
@@ -129,6 +130,14 @@ const Inventories = () => {
       filterSearch: true,
       onFilter: (value: any, record) =>
         record.productName.toLowerCase().includes(value.toLowerCase()),
+      render: (item: ProductModel) => (
+        <Link
+          to={`/inventory/detail/${item.slug}?id=${item._id}`}
+          style={{ textDecoration: "none" }}
+        >
+          {item.productName}
+        </Link>
+      ),
     },
     {
       key: "qrCode",
@@ -267,11 +276,10 @@ const Inventories = () => {
       key: "prices",
       title: "Prices",
       dataIndex: "subItems",
-      width: 500,
+      width: 400,
       render: (items: SubProductModel[]) => (
         <Typography.Text>{getMinMaxValues(items)}</Typography.Text>
       ),
-      
     },
     {
       key: "stocks",

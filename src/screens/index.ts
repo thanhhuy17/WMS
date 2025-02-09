@@ -7,6 +7,17 @@ import OrderScreen from "./OrderScreen";
 import ReportScreen from "./ReportScreen";
 import SupplierScreen from "./SupplierScreen";
 import SettingScreen from "./SettingScreen";
+import ProductDetail from "./Inventories/ProductDetail";
 
-
-export { Login, SignUp, HomeScreen, InventoryScreen, ManageScreen, OrderScreen, ReportScreen, SupplierScreen, SettingScreen }
+export {
+  Login,
+  SignUp,
+  HomeScreen,
+  InventoryScreen,
+  ManageScreen,
+  OrderScreen,
+  ReportScreen,
+  SupplierScreen,
+  SettingScreen,
+  ProductDetail,
+};

@@ -9,6 +9,7 @@ import {
   InventoryScreen,
   ManageScreen,
   OrderScreen,
+  ProductDetail,
   ReportScreen,
   SettingScreen,
   SupplierScreen,
@@ -38,6 +39,7 @@ const MainRouter = () => {
               <Route>
                 <Route path="/inventory" element={<Inventories />} />
                 <Route path="/inventory/add-product" element={<AddProduct />} />
+                <Route path="/inventory/detail:slug" element={<ProductDetail />} />
               </Route>
 
               <Route path="/reports" element={<ReportScreen />} />
