@@ -477,7 +477,9 @@ const Inventories = () => {
           setProductSelected(undefined);
         }}
         product={productSelected}
-        onAddNew={(val) => console.log(val)}
+        onAddNew={async(val) => 
+          //C1: ReCall API GetProducts 
+           await getProducts()}
       />
     </div>
   );
