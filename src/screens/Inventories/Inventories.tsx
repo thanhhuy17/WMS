@@ -223,17 +223,20 @@ const Inventories = () => {
       title: "Image",
       dataIndex: "photoUrls",
       render: (text: any, record: ProductModel) => {
-        const urls = record.photoUrls;
+        const urls = record.photoUrls;        
         const img =
           urls &&
           urls.map((url: string, index: number) => (
             <Avatar key={index} src={url} size={40} />
-            // <Image key={index} src={url} />
           ));
 
-        // return <div className="d-flex flex-row">{img}</div>;
         return <Avatar.Group className="d-flex flex-row">{img}</Avatar.Group>;
       },
+      // render: (text: any, record: ProductModel) => {
+      //   console.log('Check Image 0123: ',record.photoUrls)
+      //   return <Avatar.Group className="d-flex flex-row">{record.photoUrls}</Avatar.Group>;
+      // }
+    
       sorter: (a: any, b: any) => {
         return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
       },
