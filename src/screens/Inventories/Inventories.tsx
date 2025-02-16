@@ -107,7 +107,17 @@ const Inventories = () => {
       const api = `/product/delete-product?id=${id}`;
       const res: any = await handleAPI(api, undefined, "delete");
       // console.log("Check Delete Response to Server: ", res);
-      await getProducts();
+      // Cach 1: goi lai API de load lai data
+      // await getProducts();
+      // Cach 2: xoa Item ra khoi bang, set lai state 
+      const items = [...products]
+      const index = items.findIndex((element)=> element._id === id)
+      if(index !== -1){
+        items.splice(index, 1)
+      }
+      setProducts(items)
+
+
       message.success(res.message);
     } catch (error: any) {
       message.error(error.message);
