@@ -109,14 +109,13 @@ const Inventories = () => {
       // console.log("Check Delete Response to Server: ", res);
       // Cach 1: goi lai API de load lai data
       // await getProducts();
-      // Cach 2: xoa Item ra khoi bang, set lai state 
-      const items = [...products]
-      const index = items.findIndex((element)=> element._id === id)
-      if(index !== -1){
-        items.splice(index, 1)
+      // Cach 2: xoa Item ra khoi bang, set lai state
+      const items = [...products];
+      const index = items.findIndex((element) => element._id === id);
+      if (index !== -1) {
+        items.splice(index, 1);
       }
-      setProducts(items)
-
+      setProducts(items);
 
       message.success(res.message);
     } catch (error: any) {
@@ -233,17 +232,17 @@ const Inventories = () => {
       title: "Image",
       dataIndex: "photoUrls",
       render: (text: any, record: ProductModel) => {
-        const urls = record.photoUrls;        
+        const urls = record.photoUrls;
         const img =
           urls &&
           urls.map((url: string, index: number) => (
             <Avatar key={index} src={url} size={40} />
           ));
-          // console.log("test img: ", urls)
+        // console.log("test img: ", urls)
 
         return <Avatar.Group className="d-flex flex-row">{img}</Avatar.Group>;
       },
-    
+
       sorter: (a: any, b: any) => {
         return dayjs(a.photoUrls).isBefore(dayjs(b.photoUrls)) ? -1 : 1;
       },
@@ -379,21 +378,14 @@ const Inventories = () => {
               }}
             />
           </Tooltip>
-          <Tooltip title="Edit Categories" key={"btnEdit"}>
+          <Tooltip title="Edit Product" key={"btnEdit"}>
             <Button
               icon={<Edit2 size={20} />}
               className="text-info"
-              onClick={() => {
-                // if (item) {
-                //   setProductSelected(item);
-                //   console.log("Item selected: ", item);
-                // handleOpenFormEditProduct();
-                // }
-                // console.log("Item selected2: ", productSelected);
-              }}
+              onClick={() => navigate(`/inventory/add-product?id=${item._id}`)}
             ></Button>
           </Tooltip>
-          <Tooltip title="Delete Categories" key={"btnDelete"}>
+          <Tooltip title="Delete Product" key={"btnDelete"}>
             <Button
               icon={<Trash size={20} className="text-danger" />}
               onClick={(val) =>
@@ -487,9 +479,10 @@ const Inventories = () => {
           setProductSelected(undefined);
         }}
         product={productSelected}
-        onAddNew={async(val) => 
-          //C1: ReCall API GetProducts 
-           await getProducts()}
+        onAddNew={async (val) =>
+          //C1: ReCall API GetProducts
+          await getProducts()
+        }
       />
     </div>
   );

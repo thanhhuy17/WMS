@@ -5,6 +5,7 @@ export interface ProductModel {
   slug: string;
   productName: string;
   description: string;
+  content: string;
   productId: string;
   categories: Category[];
   suppliers: SupplierModel[];
