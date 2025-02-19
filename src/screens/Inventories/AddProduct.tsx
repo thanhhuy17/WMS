@@ -162,7 +162,7 @@ const AddProduct = () => {
       data[`${i}`] = values[i] ?? "";
     }
 
-    // data.content = content.replace(/<\/?p>/g, "");
+    data.content = content.replace(/<\/?p>/g, "");
     data.photoUrls = uploadedUrls;
     data.slug = replaceName(values.productName);
     data.userCreated = userLogin;
