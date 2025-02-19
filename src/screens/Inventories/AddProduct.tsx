@@ -110,6 +110,20 @@ const AddProduct = () => {
     }
   };
 
+  //---------- Handle Update Product ------------
+  // const handleUpdateProduct = async (id: string, values: any) => {
+
+  //   // Start Call API Update
+  //   const api = `/product/update-product?id=${id}`;
+
+  //   try {
+  //     const res = await handleAPI(api);
+  //     console.log("Response from Server for Update Product: ", res.data);
+  //   } catch (error: any) {
+  //     message.error(error.message);
+  //   }
+  // };
+
   //--------- Get All Data Supplier -----------
   const getSuppliers = async () => {
     const api = `/supplier`;
@@ -149,7 +163,6 @@ const AddProduct = () => {
     }
 
     // data.content = content.replace(/<\/?p>/g, "");
-    // data.content = content
     data.photoUrls = uploadedUrls;
     data.slug = replaceName(values.productName);
     data.userCreated = userLogin;
@@ -166,10 +179,12 @@ const AddProduct = () => {
     console.log("Check data send to server: ", data);
 
     //----------- POST API ------------
-    const api = `/product/add-new-product`;
+    const api = id
+      ? `/product/update-product?id=${id}`
+      : `/product/add-new-product`;
     try {
       setIsAddProduct(true);
-      const res: any = await handleAPI(api, data, "post");
+      const res: any = await handleAPI(api, data, id ? `put` : `post`);
       console.log("Response form server: ", res);
 
       message.success(res?.message);
@@ -229,238 +244,230 @@ const AddProduct = () => {
               layout={formDynamic?.layout}
               size={formDynamic?.size}
             >
-             
-                  <div className="row">
-                    <div className="col-8">
-                      {formDynamic?.formItems?.map((item) => (
-                        <Form.Item
-                          key={item.key}
-                          style={{ fontWeight: 500 }}
-                          name={item.value}
-                          label={
-                            <span
-                              style={{ color: colors.mainColor, fontSize: 16 }}
-                            >
-                              {item.label}
-                            </span>
-                          }
-                          rules={[
-                            {
-                              required: item.require,
-                              message: item.message,
-                            },
-                          ]}
-                        >
-                          {item.type !== "input" ? (
-                            <Input.TextArea
-                              allowClear
-                              maxLength={300}
-                              showCount
-                              rows={8}
-                              defaultValue={id ? productDetail?.description : ''}
-                            />
-                          ) : (
-                            <Input
-                              allowClear
-                              maxLength={100}
-                              showCount
-                              defaultValue={id ? productDetail?.productName : ''}
-                            />
-                          )}
-                        </Form.Item>
-                      ))}
-                      {/* EDITOR */}
-                      <ReactQuill
-                        style={{ height: 300 }}
-                        theme="snow"
-                        // value={id ? productDetail?.content : ''}
-                        value={(content !== "" ? content : "")}
-                        onChange={setContent}
-                        modules={module}
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Card
-                        className="mt-3"
-                        title={
-                          <span style={{ color: colors.mainColor }}>
-                            Categories
-                          </span>
-                        }
-                      >
-                        <Form.Item
-                          name={"categories"}
-                          rules={
-                            [
-                              // { required: true, message: "Please Select Category" },
-                            ]
-                          }
-                        >
-                          <TreeSelect
-                            treeData={categories}
-                            multiple
-                            allowClear
-                            showSearch
-                            defaultValue={id ? productDetail?.categories : ''}
-                            dropdownRender={(menu) => (
-                              <>
-                                {menu}
-                                <Divider />
-                                {/* Show Modal Add Category */}
-                                <Button
-                                  size="small"
-                                  type="link"
-                                  icon={<Add size={20} />}
-                                  style={{ padding: "-16px 0 16px 0" }}
-                                  onClick={() => setIsVisibleCategory(true)}
-                                >
-                                  Add New
-                                </Button>
-                              </>
-                            )}
-                            // ------------ Lọc theo tiếng anh ------------
-
-                            // filterTreeNode={(input, option) => {
-                            //   const title = String(option?.title);
-                            //   console.log("input: ", input);
-                            //   console.log("label: ", title);
-                            //   return title
-                            //     .toLowerCase()
-                            //     .includes(input.toLowerCase());
-                            // }}
-
-                            // ------------ Lọc theo tiếng việt ------------
-                            filterTreeNode={(input, option) => {
-                              const title = String(option?.title);
-                              // Chuẩn hóa chuỗi trước khi so sánh
-                              const normalizedInput = unorm
-                                .nfkd(input)
-                                .replace(/[\u0300-\u036f]/g, "");
-                              const normalizedTitle = unorm
-                                .nfkd(title)
-                                .replace(/[\u0300-\u036f]/g, "");
-
-                              // console.log("normalizedInput: ", normalizedInput);
-                              // console.log("normalizedTitle: ", normalizedTitle);
-
-                              // So sánh chuỗi đã chuẩn hóa
-                              return normalizedTitle
-                                .toLowerCase()
-                                .includes(normalizedInput.toLowerCase());
-                            }}
-                          />
-                        </Form.Item>
-                      </Card>
-                      <Card
-                        className="mt-3"
-                        title={
-                          <span style={{ color: colors.mainColor }}>
-                            Suppliers
-                          </span>
-                        }
-                      >
-                        <Form.Item
-                          name={"suppliers"}
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please Select Supplier",
-                            },
-                          ]}
-                        >
-                          <Select
-                            options={supplierOptions}
-                            showSearch={true}
-                            defaultValue={id ? productDetail?.suppliers : ''}
-                            // filterOption={(input, option) =>
-                            //   replaceName(
-                            //     option?.label ? option.label : ""
-                            //   ).includes(replaceName(input))
-                            // }
-                            filterOption={(input, option) => {
-                              const label = String(option?.label);
-                              // Chuẩn hóa chuỗi trước khi so sánh
-                              const normalizedInput = unorm
-                                .nfkd(input)
-                                .replace(/[\u0300-\u036f]/g, "");
-                              const normalizedLabel = unorm
-                                .nfkd(label)
-                                .replace(/[\u0300-\u036f]/g, "");
-
-                              // console.log("normalizedInput: ", normalizedInput);
-                              // console.log("normalizedLabel: ", normalizedLabel);
-
-                              // So sánh chuỗi đã chuẩn hóa
-                              return normalizedLabel
-                                .toLowerCase()
-                                .includes(normalizedInput.toLowerCase());
-                            }}
-                            dropdownRender={(menu) => (
-                              <>
-                                {menu}
-                                <Divider />
-                                {/* Show Modal Add Category */}
-                                <Button
-                                  size="small"
-                                  type="link"
-                                  icon={<Add size={20} />}
-                                  style={{ padding: "-16px 0 16px 0" }}
-                                  onClick={() => setIsVisibleSupplier(true)}
-                                >
-                                  Add New
-                                </Button>
-                              </>
-                            )}
-                          />
-                        </Form.Item>
-                      </Card>
-                      <Card
-                        title={
-                          <span style={{ color: colors.mainColor }}>Image</span>
-                        }
-                        className="mt-4"
-                      >
-                        <Input
-                          value={id ? productDetail?.photoUrls : fileUrl}
-                          defaultValue={id ? productDetail?.photoUrls : ''}
-
-                          onChange={(val: any) =>
-                            setFileUrl(
-                              val.target.value
-                                .split(", ")
-                                .map((name: string) => name.trim())
-                            )
-                          }
+              <div className="row">
+                <div className="col-8">
+                  {formDynamic?.formItems?.map((item) => (
+                    <Form.Item
+                      key={item.key}
+                      style={{ fontWeight: 500 }}
+                      name={item.value}
+                      label={
+                        <span style={{ color: colors.mainColor, fontSize: 16 }}>
+                          {item.label}
+                        </span>
+                      }
+                      rules={[
+                        {
+                          required: item.require,
+                          message: item.message,
+                        },
+                      ]}
+                    >
+                      {item.type !== "input" ? (
+                        <Input.TextArea
                           allowClear
-                          placeholder="File names"
+                          maxLength={300}
+                          showCount
+                          rows={8}
+                          defaultValue={id ? productDetail?.description : ""}
                         />
+                      ) : (
                         <Input
-                          className="mt-3"
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleInputImageChange}
-                          //   allowClear
-
+                          allowClear
+                          maxLength={100}
+                          showCount
+                          defaultValue={id ? productDetail?.productName : ""}
                         />
-                      </Card>
-                      <Card className="mt-4">
-                        <Space>
-                          <Button loading={isAddProduct} onClick={() => {}}>
-                            Cancel
-                          </Button>
-                          <Button
-                            loading={isAddProduct}
-                            type="primary"
-                            onClick={() => form.submit()}
-                          >
-                            {id ? `Update` : `Submit`}
-                          </Button>
-                        </Space>
-                      </Card>
-                    </div>
-                  </div>
-                
+                      )}
+                    </Form.Item>
+                  ))}
+                  {/* EDITOR */}
+                  <ReactQuill
+                    style={{ height: 300 }}
+                    theme="snow"
+                    value={id ? productDetail?.content : content}
+                    // value={(content !== "" ? content : "")}
+                    onChange={setContent}
+                    modules={module}
+                  />
+                </div>
+                <div className="col-4">
+                  <Card
+                    className="mt-3"
+                    title={
+                      <span style={{ color: colors.mainColor }}>
+                        Categories
+                      </span>
+                    }
+                  >
+                    <Form.Item
+                      name={"categories"}
+                      rules={
+                        [
+                          // { required: true, message: "Please Select Category" },
+                        ]
+                      }
+                    >
+                      <TreeSelect
+                        treeData={categories}
+                        multiple
+                        allowClear
+                        showSearch
+                        defaultValue={id ? productDetail?.categories : []}
+                        dropdownRender={(menu) => (
+                          <>
+                            {menu}
+                            <Divider />
+                            {/* Show Modal Add Category */}
+                            <Button
+                              size="small"
+                              type="link"
+                              icon={<Add size={20} />}
+                              style={{ padding: "-16px 0 16px 0" }}
+                              onClick={() => setIsVisibleCategory(true)}
+                            >
+                              Add New
+                            </Button>
+                          </>
+                        )}
+                        // ------------ Lọc theo tiếng anh ------------
+
+                        // filterTreeNode={(input, option) => {
+                        //   const title = String(option?.title);
+                        //   console.log("input: ", input);
+                        //   console.log("label: ", title);
+                        //   return title
+                        //     .toLowerCase()
+                        //     .includes(input.toLowerCase());
+                        // }}
+
+                        // ------------ Lọc theo tiếng việt ------------
+                        filterTreeNode={(input, option) => {
+                          const title = String(option?.title);
+                          // Chuẩn hóa chuỗi trước khi so sánh
+                          const normalizedInput = unorm
+                            .nfkd(input)
+                            .replace(/[\u0300-\u036f]/g, "");
+                          const normalizedTitle = unorm
+                            .nfkd(title)
+                            .replace(/[\u0300-\u036f]/g, "");
+
+                          // console.log("normalizedInput: ", normalizedInput);
+                          // console.log("normalizedTitle: ", normalizedTitle);
+
+                          // So sánh chuỗi đã chuẩn hóa
+                          return normalizedTitle
+                            .toLowerCase()
+                            .includes(normalizedInput.toLowerCase());
+                        }}
+                      />
+                    </Form.Item>
+                  </Card>
+                  <Card
+                    className="mt-3"
+                    title={
+                      <span style={{ color: colors.mainColor }}>Suppliers</span>
+                    }
+                  >
+                    <Form.Item
+                      name={"suppliers"}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please Select Supplier",
+                        },
+                      ]}
+                    >
+                      <Select
+                        options={supplierOptions}
+                        showSearch={true}
+                        defaultValue={id ? productDetail?.suppliers : ""}
+                        // filterOption={(input, option) =>
+                        //   replaceName(
+                        //     option?.label ? option.label : ""
+                        //   ).includes(replaceName(input))
+                        // }
+                        filterOption={(input, option) => {
+                          const label = String(option?.label);
+                          // Chuẩn hóa chuỗi trước khi so sánh
+                          const normalizedInput = unorm
+                            .nfkd(input)
+                            .replace(/[\u0300-\u036f]/g, "");
+                          const normalizedLabel = unorm
+                            .nfkd(label)
+                            .replace(/[\u0300-\u036f]/g, "");
+
+                          // console.log("normalizedInput: ", normalizedInput);
+                          // console.log("normalizedLabel: ", normalizedLabel);
+
+                          // So sánh chuỗi đã chuẩn hóa
+                          return normalizedLabel
+                            .toLowerCase()
+                            .includes(normalizedInput.toLowerCase());
+                        }}
+                        dropdownRender={(menu) => (
+                          <>
+                            {menu}
+                            <Divider />
+                            {/* Show Modal Add Category */}
+                            <Button
+                              size="small"
+                              type="link"
+                              icon={<Add size={20} />}
+                              style={{ padding: "-16px 0 16px 0" }}
+                              onClick={() => setIsVisibleSupplier(true)}
+                            >
+                              Add New
+                            </Button>
+                          </>
+                        )}
+                      />
+                    </Form.Item>
+                  </Card>
+                  <Card
+                    title={
+                      <span style={{ color: colors.mainColor }}>Image</span>
+                    }
+                    className="mt-4"
+                  >
+                    <Input
+                      value={id ? productDetail?.photoUrls : fileUrl}
+                      defaultValue={id ? productDetail?.photoUrls : ""}
+                      onChange={(val: any) =>
+                        setFileUrl(
+                          val.target.value
+                            .split(", ")
+                            .map((name: string) => name.trim())
+                        )
+                      }
+                      allowClear
+                      placeholder="File names"
+                    />
+                    <Input
+                      className="mt-3"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleInputImageChange}
+                      //   allowClear
+                    />
+                  </Card>
+                  <Card className="mt-4">
+                    <Space>
+                      <Button loading={isAddProduct} onClick={() => {}}>
+                        Cancel
+                      </Button>
+                      <Button
+                        loading={isAddProduct}
+                        type="primary"
+                        onClick={() => form.submit()}
+                      >
+                        {id ? `Update` : `Submit`}
+                      </Button>
+                    </Space>
+                  </Card>
+                </div>
+              </div>
             </Form>
           </>
         )}
