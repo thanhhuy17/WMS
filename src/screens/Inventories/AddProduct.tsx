@@ -60,18 +60,18 @@ const AddProduct = () => {
 
   const [form] = Form.useForm();
   const { Title } = Typography;
+
+  useEffect(() => {
+    getData();
+    getFormProduct();
+  }, []);
+
   useEffect(() => {
     if (id) {
       console.log(id);
       getProductDetail(id);
     }
   }, [id]);
-  useEffect(() => {
-    getData();
-    getFormProduct();
-  }, []);
-
-
 
   //--------- GET FORM "ADD NEW PRODUCT" -----------
   const getFormProduct = async () => {
