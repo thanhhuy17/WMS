@@ -60,18 +60,18 @@ const AddProduct = () => {
 
   const [form] = Form.useForm();
   const { Title } = Typography;
-
-  useEffect(() => {
-    getData();
-    getFormProduct();
-  }, []);
-
   useEffect(() => {
     if (id) {
       console.log(id);
       getProductDetail(id);
     }
   }, [id]);
+  useEffect(() => {
+    getData();
+    getFormProduct();
+  }, []);
+
+
 
   //--------- GET FORM "ADD NEW PRODUCT" -----------
   const getFormProduct = async () => {
@@ -269,14 +269,14 @@ const AddProduct = () => {
                           maxLength={300}
                           showCount
                           rows={8}
-                          defaultValue={id ? productDetail?.description : ""}
+                          defaultValue={productDetail ? productDetail?.description : ""}
                         />
                       ) : (
                         <Input
                           allowClear
                           maxLength={100}
                           showCount
-                          defaultValue={id ? productDetail?.productName : ""}
+                          defaultValue={productDetail ? productDetail?.productName : ""}
                         />
                       )}
                     </Form.Item>
@@ -285,7 +285,7 @@ const AddProduct = () => {
                   <ReactQuill
                     style={{ height: 300 }}
                     theme="snow"
-                    value={id ? productDetail?.content : content}
+                    value={productDetail ? productDetail?.content : content}
                     // value={(content !== "" ? content : "")}
                     onChange={setContent}
                     modules={module}
@@ -313,7 +313,7 @@ const AddProduct = () => {
                         multiple
                         allowClear
                         showSearch
-                        defaultValue={id ? productDetail?.categories : []}
+                        defaultValue={productDetail ? productDetail?.categories : [""]}
                         dropdownRender={(menu) => (
                           <>
                             {menu}
@@ -381,7 +381,7 @@ const AddProduct = () => {
                       <Select
                         options={supplierOptions}
                         showSearch={true}
-                        defaultValue={id ? productDetail?.suppliers : ""}
+                        defaultValue={productDetail ? productDetail?.suppliers : [""]}
                         // filterOption={(input, option) =>
                         //   replaceName(
                         //     option?.label ? option.label : ""
@@ -431,8 +431,8 @@ const AddProduct = () => {
                     className="mt-4"
                   >
                     <Input
-                      value={id ? productDetail?.photoUrls : fileUrl}
-                      defaultValue={id ? productDetail?.photoUrls : ""}
+                      value={productDetail ? productDetail?.photoUrls : fileUrl}
+                      defaultValue={productDetail ? productDetail?.photoUrls : [""]}
                       onChange={(val: any) =>
                         setFileUrl(
                           val.target.value
