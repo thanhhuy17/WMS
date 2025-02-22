@@ -27,6 +27,7 @@ import { getTreeValues } from "../../utils/getTreeValues";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { ProductModel } from "../../models/ProductModel";
+import ProductDetail from "./ProductDetail";
 
 const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +55,7 @@ const AddProduct = () => {
     toolbar: toolbarOptions,
   };
   const [searchParams] = useSearchParams();
-  const id = searchParams.get(`id`);
+  const id = searchParams.get(`id`); // Get ID on Search Params
   //Add User Created
   const userLogin = useSelector((state: any) => state.authReducer?.data?.name);
 
@@ -72,6 +73,22 @@ const AddProduct = () => {
       getProductDetail(id);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (productDetail) {
+      form.setFieldsValue({
+        productName: productDetail.productName,
+        description: productDetail.description,
+        categories: productDetail.categories,
+        suppliers: productDetail.suppliers,
+        photoUrls: productDetail.photoUrls,
+        content: productDetail.content,
+        // các trường khác...
+      });
+      setContent(productDetail.content);
+      setFileUrl(productDetail.photoUrls)
+    }
+  }, [productDetail]);
 
   //--------- GET FORM "ADD NEW PRODUCT" -----------
   const getFormProduct = async () => {
@@ -140,8 +157,6 @@ const AddProduct = () => {
   // -------- Add New Product ---------------
   const handleAddNewProduct = async (values: any) => {
     console.log("Values From Add Product :", values);
-    // const content = editorRef.current.getContent();
-    // console.log("Check handleAddNewProduct: ", content);//
 
     // ----------------
     const uploadedUrls: string[] = []; // Tạo một mảng để lưu URL đã tải lên
@@ -161,9 +176,9 @@ const AddProduct = () => {
     for (const i in values) {
       data[`${i}`] = values[i] ?? "";
     }
-
+    
     data.content = content.replace(/<\/?p>/g, "");
-    data.photoUrls = uploadedUrls;
+    data.photoUrls = uploadedUrls.length > 0 ? uploadedUrls : fileUrl;
     data.slug = replaceName(values.productName);
     data.userCreated = userLogin;
 
@@ -269,14 +284,14 @@ const AddProduct = () => {
                           maxLength={300}
                           showCount
                           rows={8}
-                          defaultValue={productDetail ? productDetail?.description : ""}
+                          // defaultValue={id ? productDetail?.description : ""}
                         />
                       ) : (
                         <Input
                           allowClear
                           maxLength={100}
                           showCount
-                          defaultValue={productDetail ? productDetail?.productName : ""}
+                          // defaultValue={id ? productDetail?.productName : ""}
                         />
                       )}
                     </Form.Item>
@@ -285,8 +300,8 @@ const AddProduct = () => {
                   <ReactQuill
                     style={{ height: 300 }}
                     theme="snow"
-                    value={productDetail ? productDetail?.content : content}
-                    // value={(content !== "" ? content : "")}
+                    // defaultValue={id ? productDetail?.content : content}
+                    value={(content !== "" ? content : "")}
                     onChange={setContent}
                     modules={module}
                   />
@@ -313,7 +328,7 @@ const AddProduct = () => {
                         multiple
                         allowClear
                         showSearch
-                        defaultValue={productDetail ? productDetail?.categories : [""]}
+                        // defaultValue={id ? productDetail?.categories : [""]}
                         dropdownRender={(menu) => (
                           <>
                             {menu}
@@ -381,7 +396,7 @@ const AddProduct = () => {
                       <Select
                         options={supplierOptions}
                         showSearch={true}
-                        defaultValue={productDetail ? productDetail?.suppliers : [""]}
+                        // defaultValue={id ? productDetail?.suppliers : [""]}
                         // filterOption={(input, option) =>
                         //   replaceName(
                         //     option?.label ? option.label : ""
@@ -431,8 +446,8 @@ const AddProduct = () => {
                     className="mt-4"
                   >
                     <Input
-                      value={productDetail ? productDetail?.photoUrls : fileUrl}
-                      defaultValue={productDetail ? productDetail?.photoUrls : [""]}
+                      value={ fileUrl.join(", ")}
+                      defaultValue={id ? productDetail?.photoUrls : ""}
                       onChange={(val: any) =>
                         setFileUrl(
                           val.target.value
