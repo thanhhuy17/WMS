@@ -27,7 +27,6 @@ import { getTreeValues } from "../../utils/getTreeValues";
 import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { ProductModel } from "../../models/ProductModel";
-import ProductDetail from "./ProductDetail";
 
 const AddProduct = () => {
   const [isLoading, setIsLoading] = useState(false);
