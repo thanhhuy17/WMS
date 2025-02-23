@@ -81,8 +81,8 @@ const AddProduct = () => {
         description: productDetail.description,
         categories: productDetail.categories,
         suppliers: productDetail.suppliers,
-        photoUrls: productDetail.photoUrls,
-        content: productDetail.content,
+        // photoUrls: productDetail.photoUrls,
+        // content: productDetail.content,
         // các trường khác...
       });
       setContent(productDetail.content);
