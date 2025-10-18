@@ -1,6 +1,6 @@
 import { Checkbox, DatePicker, Form, Input, Select, TreeSelect } from "antd";
 import { colors } from "../constants/colors";
-import { FormItemModel, FormModel, SelectModel, TreeModel } from "../models/FormModel";
+import { FormItemModel, SelectModel, TreeModel } from "../models/FormModel";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { SupplierModel } from "../models/SupplierModel";
 import { useEffect, useState } from "react";
@@ -28,9 +28,9 @@ const FormItem = (props: Props) => {
     onIsTakingChange,
     supplier,
     onExpiryDateChange,
-    onCategories,
+    //onCategories,
     values,
-    product,
+    //product,
     productsOption,
   } = props;
   const [isTakingSOS, setIsTakingSOS] = useState<boolean>(
