@@ -3,7 +3,8 @@ import queryString from "query-string";
 import { localDataNames } from "../constants/appInfos";
 
 //const baseURL = `http://192.168.100.194:3001` // ip của wifi HuyNguyen Change 03/01/2024
-const baseURL = `http://192.168.100.190:3001` // Máy MAC
+//const baseURL = `http://192.168.100.190:3001` // Máy MAC
+const baseURL = `http://127.0.0.1:3001` // Máy MAC Cty AIA
 // const baseURL = `http://192.168.2.125:3002`
 
 const getAccessToken = () => {
